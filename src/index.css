@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-plant-bg: #08130b;
+  --color-plant-panel: #0f1f15;
+  --color-plant-card: #17271d;
+  --color-plant-soft: #23392a;
+  --color-plant-green: #9fda63;
+  --color-plant-border: #33503d;
+  --color-plant-green-hover: #8ccc4b;
+  --color-text-secondary: #9fb4a2;
+  --color-plant-ink: #e8f3e8;
+  --font-family-sans: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pop {
+  animation: popIn 0.6s ease both;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(56rem 36rem at 12% 8%, rgba(157, 218, 99, 0.15), transparent 60%),
+    radial-gradient(46rem 30rem at 84% 22%, rgba(110, 169, 90, 0.1), transparent 62%),
+    linear-gradient(180deg, #08130b 0%, #061008 42%, #09150c 100%);
+  color: var(--color-plant-ink);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: 'Syne', 'Manrope', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background-color: rgba(159, 218, 99, 0.35);
+  color: #f5fff1;
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(25, 41, 30, 0.9), rgba(14, 25, 17, 0.9));
+  border: 1px solid rgba(121, 161, 122, 0.3);
+  box-shadow: 0 24px 70px rgba(3, 8, 4, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.section-shell {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.75rem;
+  box-shadow: 0 24px 64px rgba(2, 9, 4, 0.5);
+}
+
+.section-card {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.5rem;
+  box-shadow: 0 14px 30px rgba(1, 8, 3, 0.3);
+}
