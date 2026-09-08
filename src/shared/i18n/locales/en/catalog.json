@@ -1,0 +1,31 @@
+{
+  "title": "Catalog",
+  "searchLabel": "Search plants",
+  "searchPlaceholder": "Search by name",
+  "categoryLabel": "Category",
+  "allCategories": "All categories",
+  "sortLabel": "Sort by",
+  "sort": {
+    "newest": "Newest",
+    "price-asc": "Price: low to high",
+    "price-desc": "Price: high to low",
+    "name-asc": "Name: A to Z"
+  },
+  "results_one": "{{count}} plant",
+  "results_other": "{{count}} plants",
+  "empty": "No plants match those filters",
+  "emptyHint": "Try a broader search or clear the category.",
+  "clearFilters": "Clear filters",
+  "page": "Page {{page}} of {{total}}",
+  "previous": "Previous",
+  "next": "Next",
+  "filtersLabel": "Filters",
+  "priceMin": "Min price",
+  "priceMax": "Max price",
+  "inStockOnly": "In stock only",
+  "apply": "Apply",
+  "pagination": "Pagination",
+  "pageN": "Page {{page}}",
+  "currentPage": "Current page, page {{page}}",
+  "metaDescription": "Browse every plant in the Planto catalog — filter by category, price and availability."
+}

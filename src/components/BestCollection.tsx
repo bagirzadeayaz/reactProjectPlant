@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { topSellingPlants } from '../data/plants';
 
 const BestCollection = () => {
@@ -52,10 +53,10 @@ const BestCollection = () => {
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <button className="inline-flex items-center gap-2 rounded-full bg-plant-green px-6 py-3 text-sm font-bold text-plant-bg transition-colors hover:bg-plant-green-hover">
+              <Link to={`/product/${String(bestPlant.id)}`} className="inline-flex items-center gap-2 rounded-full bg-plant-green px-6 py-3 text-sm font-bold text-plant-bg transition-colors hover:bg-plant-green-hover">
                 Explore
                 <ArrowUpRight className="h-4 w-4" />
-              </button>
+              </Link>
 
               <button className="rounded-full border border-plant-border/80 bg-plant-card/70 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-plant-green/70 hover:text-plant-green">
                 Buy Now
@@ -66,7 +67,7 @@ const BestCollection = () => {
               {[1, 2, 3].map((dot) => (
                 <button
                   key={dot}
-                  aria-label={`Slide ${dot}`}
+                  aria-label={`Slide ${String(dot)}`}
                   className={`h-2.5 w-2.5 rounded-full transition-colors ${
                     dot === 1 ? 'bg-plant-green' : 'bg-plant-border/80'
                   }`}

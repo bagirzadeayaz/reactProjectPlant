@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ShoppingBag, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { topSellingPlants } from '../data/plants';
 
 const SmallPlantCard = ({ plant, index }: { plant: typeof topSellingPlants[0]; index: number }) => (
@@ -33,9 +34,9 @@ const SmallPlantCard = ({ plant, index }: { plant: typeof topSellingPlants[0]; i
         <button className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-plant-border/75 bg-plant-panel/70 text-text-secondary transition hover:border-plant-green hover:text-plant-green">
           <ShoppingBag className="h-3.5 w-3.5" />
         </button>
-        <button className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-plant-green text-plant-bg transition-colors hover:bg-plant-green-hover">
+        <Link to={`/product/${String(plant.id)}`} className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-plant-green text-plant-bg transition-colors hover:bg-plant-green-hover">
           <ArrowUpRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
     </div>
   </motion.div>

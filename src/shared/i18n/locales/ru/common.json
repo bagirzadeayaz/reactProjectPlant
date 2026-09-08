@@ -1,0 +1,99 @@
+{
+  "brand": "Planto.",
+  "nav": {
+    "home": "Главная",
+    "plantTypes": "Виды растений",
+    "more": "Ещё",
+    "contact": "Контакты",
+    "privacy": "Конфиденциальность",
+    "catalog": "Каталог",
+    "admin": "Управление"
+  },
+  "actions": {
+    "explore": "Смотреть",
+    "buyNow": "Купить",
+    "addToCart": "В корзину",
+    "retry": "Попробовать снова",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "save": "Сохранить",
+    "close": "Закрыть",
+    "back": "Назад"
+  },
+  "a11y": {
+    "search": "Поиск",
+    "cart": "Корзина",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню",
+    "closeDialog": "Закрыть диалог",
+    "notifications": "Уведомления",
+    "dismissNotification": "Закрыть уведомление",
+    "loading": "Загрузка",
+    "skipToContent": "Перейти к содержимому",
+    "mainNavigation": "Основная навигация",
+    "footerNavigation": "Навигация в подвале",
+    "navigatedTo": "Переход на страницу: {{page}}",
+    "cartWithCount_one": "Корзина, {{count}} товар",
+    "cartWithCount_few": "Корзина, {{count}} товара",
+    "cartWithCount_many": "Корзина, {{count}} товаров",
+    "cartWithCount_other": "Корзина, {{count}} товара",
+    "imageOf": "{{name}}",
+    "menuNavigation": "Меню"
+  },
+  "language": {
+    "label": "Язык",
+    "en": "Английский",
+    "ru": "Русский"
+  },
+  "state": {
+    "loading": "Загрузка…",
+    "empty": "Пока пусто",
+    "error": "Что-то пошло не так",
+    "errorDetail": "Проверьте соединение и попробуйте снова."
+  },
+  "footer": {
+    "quickLinks": "Быстрые ссылки",
+    "updates": "Новости и обновления",
+    "emailPlaceholder": "Введите e-mail...",
+    "subscribe": "Подписаться",
+    "rights": "Planto © Все права защищены",
+    "about": "Растения для небольших комнат и занятых людей — бережно упакованы, доставлены живыми.",
+    "emailLabel": "Адрес электронной почты"
+  },
+  "notFound": {
+    "title": "Страница не найдена",
+    "body": "Страницы, которую вы искали, не существует.",
+    "home": "На главную"
+  },
+  "pages": {
+    "home": "Главная",
+    "catalog": "Каталог",
+    "product": "Товар",
+    "admin": "Управление товарами",
+    "adminNew": "Новый товар",
+    "adminEdit": "Редактирование товара",
+    "notFound": "Страница не найдена",
+    "uiKit": "UI kit"
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Корзина пуста",
+    "emptyHint": "Добавьте растение из каталога.",
+    "browse": "Перейти в каталог",
+    "remove": "Убрать {{name}}",
+    "clear": "Очистить корзину",
+    "subtotal": "Итого",
+    "items_one": "{{count}} товар",
+    "items_few": "{{count}} товара",
+    "items_many": "{{count}} товаров",
+    "items_other": "{{count}} товара",
+    "quantityFor": "Количество: {{name}}",
+    "open": "Открыть корзину",
+    "close": "Закрыть корзину",
+    "unavailable": "Больше недоступен"
+  },
+  "meta": {
+    "siteName": "Planto.",
+    "homeDescription": "Растения для небольших комнат и занятых людей — бережно упакованы, доставлены живыми."
+  }
+}

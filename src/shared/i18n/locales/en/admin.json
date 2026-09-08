@@ -1,0 +1,109 @@
+{
+  "title": "Manage products",
+  "metaDescription": "Add, edit and remove the plants in the catalog.",
+  "new": "New product",
+  "edit": "Edit product",
+  "delete": "Delete product",
+  "deleteConfirm": "Delete {{name}}?",
+  "deleteWarning": "This cannot be undone.",
+  "gate": {
+    "title": "Admin area",
+    "description": "This is a demo. There is no login — the catalog lives in your browser, and anything you change here stays on this device.",
+    "enter": "Enter demo admin"
+  },
+  "fields": {
+    "nameEn": "Name (English)",
+    "nameRu": "Name (Russian)",
+    "descriptionEn": "Description (English)",
+    "descriptionRu": "Description (Russian)",
+    "name": "Name",
+    "description": "Description",
+    "slug": "URL slug",
+    "slugHint": "Leave empty to generate it from the English name.",
+    "price": "Price",
+    "priceHint": "Whole rupees.",
+    "category": "Category",
+    "categoryPlaceholder": "Choose a category",
+    "imageUrl": "Image URL",
+    "inStock": "In stock"
+  },
+  "languages": {
+    "en": "English",
+    "ru": "Russian",
+    "missing_en": "English is empty — shoppers reading English will see nothing here.",
+    "missing_ru": "Russian is empty — shoppers reading Russian will see the English text."
+  },
+  "image": {
+    "legend": "Image",
+    "dropzone": "Drop an image here, or",
+    "browse": "choose a file",
+    "input": "Upload an image",
+    "preview": "Preview of the product image",
+    "noPreview": "No image yet",
+    "remove": "Remove image",
+    "tooLarge": "The image must be under {{max}} KB.",
+    "badType": "Only PNG, JPEG, WebP or GIF images can be uploaded.",
+    "unreadable": "That file could not be read.",
+    "hint": "Paste a URL or upload a file under {{max}} KB. Uploads are stored in the browser."
+  },
+  "form": {
+    "save": "Save changes",
+    "create": "Create product",
+    "saving": "Saving",
+    "cancel": "Cancel",
+    "loading": "Loading product",
+    "notFound": "That product no longer exists.",
+    "backToList": "Back to products"
+  },
+  "unsaved": {
+    "title": "Discard changes?",
+    "body": "This form has changes that have not been saved.",
+    "stay": "Keep editing",
+    "leave": "Discard and leave"
+  },
+  "table": {
+    "caption": "All products",
+    "search": "Search products",
+    "searchPlaceholder": "Name or slug",
+    "name": "Name",
+    "price": "Price",
+    "category": "Category",
+    "stock": "Stock",
+    "created": "Created",
+    "actions": "Actions",
+    "sortBy": "Sort by {{column}}",
+    "selectAll": "Select all products",
+    "selectOne": "Select {{name}}",
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected",
+    "deleteSelected": "Delete selected",
+    "editOne": "Edit {{name}}",
+    "deleteOne": "Delete {{name}}",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "loading": "Loading products",
+    "empty": "No products yet",
+    "emptyHint": "Create the first one and it will appear in the catalog straight away.",
+    "noMatches": "No products match that search",
+    "count_one": "{{count}} product",
+    "count_other": "{{count}} products"
+  },
+  "bulk": {
+    "confirm_one": "Delete {{count}} product?",
+    "confirm_other": "Delete {{count}} products?",
+    "deleted_one": "{{count}} product deleted",
+    "deleted_other": "{{count}} products deleted"
+  },
+  "dialog": {
+    "close": "Close dialog",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete",
+    "deleting": "Deleting"
+  },
+  "created": "Product created",
+  "updated": "Product updated",
+  "deleted": "Product deleted",
+  "saveFailed": "Could not save the product",
+  "deleteFailed": "Could not delete — the change was rolled back",
+  "loadFailed": "Could not load products"
+}

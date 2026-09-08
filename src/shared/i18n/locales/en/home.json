@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "title": "Breath Natural",
+    "lead": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive.",
+    "liveDemo": "Live Demo...",
+    "eyebrow": "Trendy House Plant",
+    "playLabel": "Play the demo video",
+    "backgroundAlt": "Dense green foliage in soft light"
+  },
+  "sections": {
+    "trendy": "Our Trendy plants",
+    "topSelling": "Our Top Selling",
+    "reviews": "Customer Review",
+    "bestO2": "Our Best o2"
+  },
+  "bestO2": {
+    "title": "We Have Small And Best O2 Plants Collection's",
+    "body": "Every plant is handpicked, checked for root health, and packed to survive the trip.",
+    "note": "Free replacement if it arrives damaged.",
+    "pageOf": "{{current}} of {{total}}",
+    "prev": "Previous plant",
+    "next": "Next plant",
+    "carouselLabel": "Best O₂ plants"
+  },
+  "featured": {
+    "eyebrow": "Trendy House Plant",
+    "next": "Next featured plant"
+  },
+  "review": {
+    "ratingOf": "Rated {{rating}} out of 5",
+    "carouselLabel": "Customer reviews",
+    "prev": "Previous review",
+    "next": "Next review"
+  },
+  "banner": {
+    "lead": "Chosen for the space you actually have — sized for a desk, a shelf, a windowsill."
+  },
+  "newsletter": {
+    "success": "Thanks — you are on the list.",
+    "error": "Could not subscribe. Try again.",
+    "invalid": "Enter a valid email address"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "brand": "Planto.",
+  "nav": {
+    "home": "Home",
+    "plantTypes": "Plant Type's",
+    "more": "More",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "catalog": "Catalog",
+    "admin": "Manage"
+  },
+  "actions": {
+    "explore": "Explore",
+    "buyNow": "Buy Now",
+    "addToCart": "Add to cart",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "close": "Close",
+    "back": "Back"
+  },
+  "a11y": {
+    "search": "Search",
+    "cart": "Cart",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "closeDialog": "Close dialog",
+    "notifications": "Notifications",
+    "dismissNotification": "Dismiss notification",
+    "loading": "Loading",
+    "skipToContent": "Skip to content",
+    "mainNavigation": "Main navigation",
+    "footerNavigation": "Footer navigation",
+    "navigatedTo": "Navigated to {{page}}",
+    "cartWithCount_one": "Cart, {{count}} item",
+    "cartWithCount_other": "Cart, {{count}} items",
+    "imageOf": "{{name}}",
+    "menuNavigation": "Menu"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ru": "Russian"
+  },
+  "state": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong",
+    "errorDetail": "Check your connection and try again."
+  },
+  "footer": {
+    "quickLinks": "Quick Link's",
+    "updates": "For Every Update's",
+    "emailPlaceholder": "Enter Email...",
+    "subscribe": "Subscribe",
+    "rights": "Planto © All right reserve",
+    "about": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive.",
+    "emailLabel": "Email address"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you were looking for does not exist.",
+    "home": "Go to the home page"
+  },
+  "pages": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "product": "Product",
+    "admin": "Manage products",
+    "adminNew": "New product",
+    "adminEdit": "Edit product",
+    "notFound": "Page not found",
+    "uiKit": "UI kit"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty",
+    "emptyHint": "Add a plant from the catalog to get started.",
+    "browse": "Browse the catalog",
+    "remove": "Remove {{name}}",
+    "clear": "Clear cart",
+    "subtotal": "Subtotal",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "quantityFor": "Quantity for {{name}}",
+    "open": "Open cart",
+    "close": "Close cart",
+    "unavailable": "No longer available"
+  },
+  "meta": {
+    "siteName": "Planto.",
+    "homeDescription": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive."
+  }
+}

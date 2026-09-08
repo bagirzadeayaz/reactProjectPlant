@@ -1,0 +1,33 @@
+{
+  "title": "Каталог",
+  "searchLabel": "Поиск растений",
+  "searchPlaceholder": "Поиск по названию",
+  "categoryLabel": "Категория",
+  "allCategories": "Все категории",
+  "sortLabel": "Сортировка",
+  "sort": {
+    "newest": "Сначала новые",
+    "price-asc": "Цена: по возрастанию",
+    "price-desc": "Цена: по убыванию",
+    "name-asc": "Название: А–Я"
+  },
+  "results_one": "{{count}} растение",
+  "results_few": "{{count}} растения",
+  "results_many": "{{count}} растений",
+  "results_other": "{{count}} растения",
+  "empty": "Ничего не найдено",
+  "emptyHint": "Расширьте поиск или сбросьте категорию.",
+  "clearFilters": "Сбросить фильтры",
+  "page": "Страница {{page}} из {{total}}",
+  "previous": "Назад",
+  "next": "Вперёд",
+  "filtersLabel": "Фильтры",
+  "priceMin": "Цена от",
+  "priceMax": "Цена до",
+  "inStockOnly": "Только в наличии",
+  "apply": "Применить",
+  "pagination": "Постраничная навигация",
+  "pageN": "Страница {{page}}",
+  "currentPage": "Текущая страница, страница {{page}}",
+  "metaDescription": "Все растения каталога Planto — фильтр по категории, цене и наличию."
+}

@@ -1,94 +1,96 @@
 # Planto
 
-A modern, responsive e-commerce landing page for an online plant shop built with **React**, **TypeScript**, **Vite**, and **Tailwind CSS**.
+A plant shop built from a Figma design: landing page, catalog with URL-backed filters,
+product pages, a persistent cart, a mock admin with full product CRUD, and English/Russian
+throughout. Everything runs in the browser — the "backend" is a Mock Service Worker with a
+seeded catalog persisted to `localStorage`, so a static deploy is the whole app.
 
-## Features
+Design source: Figma file `jgggt59SlkGZe4CEVwebOJ`, frame `22:2`. The token layer in
+`src/index.css` cites the node every value came from.
 
-- **Hero Section** — Eye-catching landing area with a featured plant showcase
-- **Trendy Plants** — Carousel of trending plant selections
-- **Top Selling** — Grid display of the most popular plants with ratings and pricing
-- **Customer Reviews** — Testimonials section with user avatars and ratings
-- **Best Collection** — Highlighted collection call-to-action
-- **Responsive Design** — Fully responsive across mobile, tablet, and desktop
-- **Smooth Animations** — Powered by Framer Motion for polished transitions
-- **Custom SVG Icons** — Using Lucide React icon library
+## Stack, and why
 
-## Tech Stack
+| Piece                               | Why this one                                                                                                                                                |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React 19 + TypeScript (strict)      | `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` on; no `any`, non-null assertions or `@ts-ignore` — all lint errors.                            |
+| Vite 8                              | Build and dev server; route-level code splitting out of the box.                                                                                            |
+| Tailwind CSS 4                      | CSS-first: the `@theme` block in `src/index.css` _is_ the design system. Components reference tokens only.                                                  |
+| Redux Toolkit + RTK Query           | RTK Query owns server state (cache, tags, optimistic updates); one plain slice owns the cart. They never copy from each other.                              |
+| React Router 7 (data router)        | Lazy routes, `useBlocker` for the unsaved-changes guard. Language is a query parameter, not a path prefix, so every page has one canonical URL.             |
+| react-i18next                       | Typed `t()`, six namespaces, EN/RU parity enforced by a script in `lint`. Content (product names) is localized in the data instead.                         |
+| zod                                 | One schema per entity is the single source of validation truth — the mock backend and the admin form check the same one. Kept out of the storefront bundle. |
+| React Hook Form                     | The admin form, resolved by the zod schema above.                                                                                                           |
+| Mock Service Worker                 | The backend, in dev, in tests and in production. Same handlers everywhere.                                                                                  |
+| Vitest + Testing Library + axe-core | Unit, component, integration and accessibility tests in one runner.                                                                                         |
+| Playwright                          | The three user journeys, end to end, in Chromium desktop and mobile.                                                                                        |
+| Feature-Sliced Design               | `app → pages → widgets → features → entities → shared`, enforced by `eslint-plugin-boundaries` as an error. See `ARCHITECTURE.md`.                          |
 
-| Technology       | Purpose                        |
-|------------------|--------------------------------|
-| React 19         | UI library                     |
-| TypeScript       | Type safety                    |
-| Vite 8           | Build tool & dev server        |
-| Tailwind CSS 4   | Utility-first styling          |
-| Framer Motion    | Animations                     |
-| Lucide React     | Icon library                   |
+## Setup
 
-## Project Structure
+Node 22 and npm.
 
-```
-planto/
-├── public/                  # Static assets
-│   ├── favicon.svg
-│   └── icons.svg
-├── src/
-│   ├── assets/              # Images and SVGs
-│   ├── components/          # React components
-│   │   ├── BestCollection.tsx
-│   │   ├── CustomerReview.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Hero.tsx
-│   │   ├── Navbar.tsx
-│   │   ├── TopSelling.tsx
-│   │   └── TrendyPlants.tsx
-│   ├── data/                # Mock data
-│   │   ├── plants.ts
-│   │   └── reviews.ts
-│   ├── types/               # TypeScript interfaces
-│   │   └── index.ts
-│   ├── App.tsx              # Root component
-│   ├── main.tsx             # Entry point
-│   └── index.css            # Global styles & Tailwind
-├── index.html
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+```sh
+npm ci
+npm run dev        # http://localhost:5173
 ```
 
-## Getting Started
+The first request waits for the mock service worker to register; after that the catalog
+is served from `localStorage` (`planto:db`). Clear site data to reset it to the seed.
 
-### Prerequisites
+## Scripts
 
-- **Node.js** 18+ and **npm** (or **pnpm** / **yarn**)
+| Command                 | What it does                                                                |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `npm run dev`           | Dev server with HMR                                                         |
+| `npm run build`         | Typecheck, EN/RU key check, production build to `dist/`                     |
+| `npm run build:report`  | Build, then print every chunk's gzip size; fails above 200 KB               |
+| `npm run preview`       | Serve `dist/` locally                                                       |
+| `npm run lint`          | ESLint (type-aware, layer boundaries, a11y) + i18n key and plural parity    |
+| `npm run typecheck`     | `tsc -b --noEmit`                                                           |
+| `npm test`              | Vitest, jsdom                                                               |
+| `npm run test:coverage` | Same with coverage; 80% threshold on lines, branches, functions, statements |
+| `npm run e2e`           | Playwright against the production build (builds first)                      |
+| `npm run e2e:ui`        | Playwright's UI mode                                                        |
+| `npm run images`        | Regenerate AVIF/WebP variants from the PNG/JPG sources in `public/`         |
+| `npm run check:i18n`    | The parity check on its own                                                 |
 
-### Installation
+## Environment variables
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Sadiqov-Riad/Planto-.git
-   cd Planto-
-   ```
+None. There is no backend, no API key and no analytics. The only runtime switches are in
+the browser: `?lang=ru` (or `localStorage` `planto:lang`) for the language and
+`localStorage` `planto:admin` for the admin area.
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Admin is a mock
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+`/admin/products` adds, edits and deletes products, but **there is no login and no
+server**. The "Enter demo admin" button sets a flag in `localStorage` (`planto:admin`);
+that is the whole access control, and it is deliberate. Every change made in the admin is
+local to the browser it was made in. Uploaded images are stored there too, as base64 data
+URLs, which is why the upload limit is 300 KB.
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+## Deploy
 
-## Available Scripts
+The build is static. `vercel.json` and `netlify.toml` both carry the one rule a
+single-page app needs — rewrite every path to `index.html` — plus long cache headers for
+hashed assets and no cache for the service worker.
 
-| Command           | Description                          |
-|-------------------|--------------------------------------|
-| `npm run dev`     | Start the Vite development server    |
-| `npm run build`   | Type-check and build for production  |
-| `npm run preview` | Preview the production build locally |
+- **Vercel**: import the repository; the framework preset is detected. Every pull request
+  gets a preview deployment.
+- **Netlify**: import the repository; `netlify.toml` sets the build command and publish
+  directory. Deploy previews are on by default.
 
-## License
+Nothing to configure and no secrets to add.
 
-MIT
+## CI
+
+`.github/workflows/ci.yml` runs on every pull request and on `main`:
+lint → typecheck → test with coverage → build → bundle report, then Playwright in a second
+job. Dependencies and the Playwright browser are cached.
+
+## Where to read next
+
+- `ARCHITECTURE.md` — layers and import rules, where state lives, i18n and localized
+  fields, how to add a feature slice, the decisions log, the deviations from the Figma
+  comp, measured performance.
+- `CLAUDE.md` — working context and the list of gotchas already hit.
+- `docs/BUILD-PROMPTS.md` — the fourteen-step plan the project was built from.

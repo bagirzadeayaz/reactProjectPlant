@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ShoppingCart, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { trendyPlants } from '../data/plants';
 
 const PlantCard = ({ plant, index }: { plant: typeof trendyPlants[0]; index: number }) => (
@@ -19,18 +20,18 @@ const PlantCard = ({ plant, index }: { plant: typeof trendyPlants[0]; index: num
     </div>
     <h3 className="text-lg font-semibold">{plant.name}</h3>
     <p className="text-text-secondary text-sm mt-1">{plant.description}</p>
-    <div className="flex items-center justify-between mt-4">
-      <span className="text-plant-green font-bold text-lg">Rs. {plant.price}/-</span>
-      <div className="flex gap-2">
-        <button className="bg-plant-green hover:bg-plant-green-hover text-plant-bg px-4 py-2 rounded-full text-sm font-semibold transition-colors inline-flex items-center gap-1">
-          Explore
-          <ChevronRight className="w-3 h-3" />
-        </button>
-        <button className="border border-plant-border hover:border-plant-green text-text-secondary hover:text-plant-green p-2 rounded-full transition-colors">
-          <ShoppingCart className="w-4 h-4" />
-        </button>
+      <div className="flex items-center justify-between mt-4">
+        <span className="text-plant-green font-bold text-lg">Rs. {plant.price}/-</span>
+        <div className="flex gap-2">
+          <Link to={`/product/${String(plant.id)}`} className="bg-plant-green hover:bg-plant-green-hover text-plant-bg px-4 py-2 rounded-full text-sm font-semibold transition-colors inline-flex items-center gap-1">
+            Explore
+            <ChevronRight className="w-3 h-3" />
+          </Link>
+          <button className="border border-plant-border hover:border-plant-green text-text-secondary hover:text-plant-green p-2 rounded-full transition-colors">
+            <ShoppingCart className="w-4 h-4" />
+          </button>
+        </div>
       </div>
-    </div>
   </motion.div>
 );
 

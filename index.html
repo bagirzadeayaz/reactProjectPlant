@@ -4,13 +4,71 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Planto - Plant E-Commerce</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Planto.</title>
+    <meta
+      name="description"
+      content="Plants chosen for small rooms and short attention spans — packed carefully, delivered alive."
+    />
+    <meta name="theme-color" content="#222c1d" />
+    <!--
+      The landing page's largest paint is the hero photograph, which React
+      only requests once it has rendered. Preloading it here lets the browser
+      start the fetch with the HTML instead of after the script. Other routes
+      pay one small AVIF for it; the landing page is where most visits begin.
+    -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      imagesrcset="/images/hero-bg-960.avif 960w, /images/hero-bg-1920.avif 1920w"
+      imagesizes="100vw"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      The typefaces load without blocking first paint: the stylesheet is
+      requested as a print sheet (non-render-blocking) and promoted to `all`
+      once it arrives. `display=swap` shows the fallback stack meanwhile.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
   </head>
   <body>
-    <div id="root"></div>
+    <!--
+      App shell. Painted from the HTML alone, before any script has arrived:
+      the header bar with the wordmark, and on the landing page the hero
+      photograph (already preloaded above). React's first render replaces
+      the whole thing with the same frame in the same place. Everything here
+      is decorative and hidden from assistive tech; nothing is translated,
+      which is why it carries no copy. Sizes reference the tokens in
+      src/index.css so the two never drift apart.
+    -->
+    <div id="root">
+      <div aria-hidden="true" class="app-shell">
+        <div class="app-shell__header"><span class="app-shell__brand">Planto.</span></div>
+        <picture class="app-shell__hero" data-shell-route="/">
+          <source
+            type="image/avif"
+            srcset="/images/hero-bg-960.avif 960w, /images/hero-bg-1920.avif 1920w"
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcset="/images/hero-bg-960.webp 960w, /images/hero-bg-1920.webp 1920w"
+            sizes="100vw"
+          />
+          <img src="/images/hero-bg.jpg" alt="" width="1920" height="1080" fetchpriority="high" />
+        </picture>
+      </div>
+    </div>
+    <script>
+      // The hero belongs to the landing page only; every other route gets the bar.
+      if (location.pathname !== '/') document.querySelector('[data-shell-route="/"]')?.remove();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

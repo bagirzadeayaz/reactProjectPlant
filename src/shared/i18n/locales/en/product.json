@@ -1,0 +1,22 @@
+{
+  "inStock": "In stock",
+  "outOfStock": "Out of stock",
+  "quantity": "Quantity",
+  "description": "Description",
+  "reviews": "Reviews",
+  "reviewCount_one": "{{count}} review",
+  "reviewCount_other": "{{count}} reviews",
+  "noReviews": "No reviews yet",
+  "related": "You might also like",
+  "notFound": "That plant doesn't exist",
+  "notFoundHint": "It may have been removed from the catalog.",
+  "backToCatalog": "Back to catalog",
+  "addedToCart": "Added {{name}} to your cart",
+  "ratingOf": "Rated {{rating}} out of 5",
+  "gallery": "Product images",
+  "imageN": "Image {{n}} of {{total}}",
+  "decrease": "Decrease quantity",
+  "increase": "Increase quantity",
+  "category": "Category",
+  "metaDescription": "{{name}} — {{description}}"
+}

@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test and build output
+coverage
+html
+*.tsbuildinfo
+
+# Playwright
+test-results
+playwright-report
+.vercel

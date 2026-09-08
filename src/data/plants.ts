@@ -1,4 +1,4 @@
-import type { Plant } from '../types';
+import type { NonEmptyArray, Plant } from '../types';
 import plant1 from '../assets/plant1.png';
 import plant2 from '../assets/plant2.png';
 import plant3 from '../assets/plant3.png';
@@ -7,7 +7,7 @@ import plant5 from '../assets/plant5.png';
 import plant6 from '../assets/plant6.png';
 import hero from '../assets/hero.png';
 
-export const trendyPlants: Plant[] = [
+export const trendyPlants: NonEmptyArray<Plant> = [
   {
     id: 1,
     name: 'Monstera Deliciosa',
@@ -37,7 +37,7 @@ export const trendyPlants: Plant[] = [
   },
 ];
 
-export const topSellingPlants: Plant[] = [
+export const topSellingPlants: NonEmptyArray<Plant> = [
   {
     id: 4,
     name: 'Peace Lily',
