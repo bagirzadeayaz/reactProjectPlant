@@ -198,6 +198,10 @@ Append to this table when you make a judgment call, in the same change.
 
 ---
 
+### Windows startup and first-paint styles
+
+The entry point imports `./app/index` explicitly: on case-insensitive Windows filesystems, `./app` resolves to `App.tsx` before the directory barrel, which prevents React from starting because `AppProviders` is not exported there. The global stylesheet is linked from the HTML head so the initial app shell is styled before JavaScript executes; Vite processes this link in development and production.
+
 ## Deliberate deviations from the comp
 
 | Area                      | Comp                                              | Implementation                                                            | Why                                                                                                                                                                                                                   |

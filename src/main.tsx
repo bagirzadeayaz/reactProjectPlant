@@ -1,8 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
 import App from './App.tsx';
-import { AppProviders } from './app';
+import { AppProviders } from './app/index';
 import { signalBackendReady } from './shared/api';
 
 const rootElement = document.getElementById('root');
