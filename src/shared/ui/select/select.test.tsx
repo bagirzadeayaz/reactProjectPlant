@@ -17,12 +17,12 @@ describe('Select', () => {
 
   it('renders every option', () => {
     render(<Select label="Category" options={OPTIONS} />);
-    expect(screen.getAllByRole('option')).toHaveLength(3);
+    expect(screen.getAllByRole('option', { hidden: true })).toHaveLength(3);
   });
 
   it('renders the placeholder as a disabled first option', () => {
     render(<Select label="Category" options={OPTIONS} placeholder="Choose one" defaultValue="" />);
-    expect(screen.getByRole('option', { name: 'Choose one' })).toBeDisabled();
+    expect(screen.getByRole('option', { name: 'Choose one', hidden: true })).toBeDisabled();
   });
 
   it('selects by keyboard', async () => {
@@ -35,7 +35,7 @@ describe('Select', () => {
 
   it('keeps a disabled option unselectable', () => {
     render(<Select label="Category" options={OPTIONS} />);
-    expect(screen.getByRole('option', { name: 'Rare' })).toBeDisabled();
+    expect(screen.getByRole('option', { name: 'Rare', hidden: true })).toBeDisabled();
   });
 
   it('marks itself invalid and links the error', () => {

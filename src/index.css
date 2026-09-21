@@ -41,14 +41,14 @@
   --font-sans: 'Manrope', 'Inter', 'Segoe UI', sans-serif;
   --font-display: 'Syne', 'Manrope', sans-serif;
 
-  --text-display: 118px; /* node 22:37  "Breath Natural", semibold */
-  --text-h1: 55px; /* node 22:92  section heading, semibold */
-  --text-h2: 38px; /* node 22:28, 22:67, 22:99  title + price */
+  --text-display: clamp(4rem, 6.8vw, 7.375rem); /* node 22:37 */
+  --text-h1: clamp(2.5rem, 4vw, 3.4375rem); /* node 22:92 */
+  --text-h2: clamp(1.75rem, 2.6vw, 2.375rem); /* node 22:28, 22:67, 22:99 */
   --text-logo: 28px; /* node 22:4   wordmark, black */
-  --text-lg: 24px; /* node 22:6, 22:30, 22:153  nav, button, author */
-  --text-md: 23px; /* node 22:27, 22:38  eyebrow + lead */
-  --text-base: 21px; /* node 22:160 review body */
-  --text-sm: 18px; /* node 22:44  "Live Demo..." */
+  --text-lg: clamp(1.125rem, 1.5vw, 1.5rem); /* node 22:6, 22:30, 22:153 */
+  --text-md: clamp(1rem, 1.4vw, 1.4375rem); /* node 22:27, 22:38 */
+  --text-base: clamp(1rem, 1.25vw, 1.3125rem); /* node 22:160 */
+  --text-sm: clamp(0.9375rem, 1.1vw, 1.125rem); /* node 22:44 */
 
   --font-weight-heading: 600; /* node 22:37 — named to avoid colliding with --font-display */
   --font-weight-wordmark: 900; /* node 22:4 */

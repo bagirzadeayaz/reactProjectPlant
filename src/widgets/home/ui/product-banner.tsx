@@ -30,8 +30,8 @@ export const ProductBanner = ({ product, align = 'left' }: ProductBannerProps) =
     <article
       className={cn(
         'grid items-center gap-8 rounded-control border-(length:--border-width-panel) border-border-glass',
-        'bg-surface-glass px-8 py-10 backdrop-blur-panel',
-        'lg:grid-cols-2 lg:rounded-panel lg:px-24 lg:py-12',
+        'bg-surface-glass px-6 py-8 backdrop-blur-panel sm:px-8',
+        'lg:grid-cols-2 lg:rounded-card lg:px-12 lg:py-10',
       )}
     >
       <div className={cn('flex justify-center', align === 'right' && 'lg:order-2')}>
@@ -42,7 +42,7 @@ export const ProductBanner = ({ product, align = 'left' }: ProductBannerProps) =
           height={PRODUCT_IMAGE_SIZE}
           sizes="(min-width: 1024px) 601px, 70vw"
           alt={name}
-          className="w-[70%] max-w-(--size-banner-media) drop-shadow-media lg:-my-24"
+          className="h-64 w-[70%] object-contain drop-shadow-media sm:h-80 lg:-my-12 lg:h-96 lg:w-full"
         />
       </div>
 

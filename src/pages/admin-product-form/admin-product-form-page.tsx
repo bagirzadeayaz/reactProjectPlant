@@ -36,7 +36,7 @@ export const AdminProductFormPage = () => {
   };
 
   return (
-    <Container as="section" className="flex flex-col gap-8 py-16">
+    <Container as="section" className="flex max-w-6xl flex-col gap-8 py-12 sm:py-16">
       <DocumentMeta title={`${title} · ${t('common:meta.siteName')}`} robots="noindex" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-h1 font-(--font-weight-heading) text-ink">{title}</h1>

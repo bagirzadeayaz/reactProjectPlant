@@ -25,7 +25,7 @@ export const FeaturedProductCard = ({ product, onNext }: FeaturedProductCardProp
   const name = localized(product.name);
 
   return (
-    <article className="relative mt-24 min-h-(--size-hero-card-h) w-full max-w-(--size-column)">
+    <article className="relative mx-auto mt-8 w-full max-w-md xl:mt-10">
       <ResponsiveImage
         src={product.imageUrl}
         sources={productImageSources(product)}
@@ -34,16 +34,16 @@ export const FeaturedProductCard = ({ product, onNext }: FeaturedProductCardProp
         sizes="(min-width: 1280px) 459px, 80vw"
         priority
         alt={name}
-        className="relative z-10 mx-auto -mb-24 w-[90%] max-w-(--size-hero-media) drop-shadow-media"
+        className="relative z-10 mx-auto -mb-16 h-72 w-[78%] object-contain drop-shadow-media sm:h-80"
       />
-      <div className="rounded-card border-(length:--border-width-panel) border-border-glass bg-surface-glass px-6 pb-10 pt-32 backdrop-blur-panel sm:px-12 sm:pb-12">
+      <div className="rounded-card border-(length:--border-width-control) border-border-glass bg-surface-glass px-6 pb-7 pt-24 backdrop-blur-panel sm:px-8 sm:pb-8">
         <p className="text-md text-ink">{t('featured.eyebrow')}</p>
         <h2 className="mt-3 text-h2 text-ink-muted">
           <Link to={`/catalog/${product.slug}`} className="hover:text-ink">
             {name}
           </Link>
         </h2>
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <AddToCartButton product={product} variant="label" />
           {onNext !== undefined && (
             <button

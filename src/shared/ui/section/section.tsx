@@ -19,7 +19,7 @@ export interface SectionProps extends Omit<ComponentPropsWithRef<'section'>, 'ti
  */
 export const Section = ({ title, titleId, className, children, ...props }: SectionProps) => (
   <section
-    className={cn('py-16 lg:py-24', className)}
+    className={cn('py-12 sm:py-16 lg:py-20', className)}
     {...(title !== undefined && titleId !== undefined ? { 'aria-labelledby': titleId } : {})}
     {...props}
   >

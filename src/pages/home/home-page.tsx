@@ -81,9 +81,9 @@ export const HomePage = () => {
         }
       />
 
-      <Section title={undefined} className="pt-24">
+      <Section title={undefined} className="pt-16">
         <SectionHeading id="trendy-heading">{t('home:sections.trendy')}</SectionHeading>
-        <div className="mt-24 flex flex-col gap-24">
+        <div className="mt-14 flex flex-col gap-14 lg:mt-16 lg:gap-16">
           {trendy.slice(0, 2).map((product, index) => (
             <Reveal key={product.id}>
               <ProductBanner product={product} align={index === 0 ? 'left' : 'right'} />

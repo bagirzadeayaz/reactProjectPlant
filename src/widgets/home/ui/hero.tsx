@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '../../../shared/lib/cn';
 import { Button, Container, Icon } from '../../../shared/ui';
 
@@ -27,6 +28,12 @@ export interface HeroProps {
  */
 export const Hero = ({ aside, review }: HeroProps) => {
   const { t } = useTranslation(['home', 'common']);
+  const reducedMotion = useReducedMotion();
+  const entrance = (delay: number) => ({
+    initial: reducedMotion ? (false as const) : { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: reducedMotion ? 0 : 0.55, delay: reducedMotion ? 0 : delay },
+  });
 
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden">
@@ -45,8 +52,8 @@ export const Hero = ({ aside, review }: HeroProps) => {
         />
       </picture>
 
-      <Container className="grid gap-16 py-16 xl:grid-cols-[minmax(0,1fr)_var(--size-column)] xl:items-start xl:py-24">
-        <div className="flex flex-col gap-10">
+      <Container className="grid gap-10 py-12 sm:py-16 xl:grid-cols-[minmax(0,1fr)_minmax(22rem,28rem)] xl:items-start xl:gap-16 xl:py-20">
+        <div className="flex flex-col gap-7">
           <h1
             id="hero-heading"
             className={cn(
@@ -56,9 +63,11 @@ export const Hero = ({ aside, review }: HeroProps) => {
           >
             {t('home:hero.title')}
           </h1>
-          <p className="max-w-[52ch] text-md font-medium text-ink-muted">{t('home:hero.lead')}</p>
+          <motion.p {...entrance(0.05)} className="max-w-[52ch] text-md font-medium text-ink-muted">
+            {t('home:hero.lead')}
+          </motion.p>
 
-          <div className="flex flex-wrap items-center gap-6">
+          <motion.div {...entrance(0.12)} className="flex flex-wrap items-center gap-6">
             <Button as="a" href="/catalog">
               {t('common:actions.explore')}
             </Button>
@@ -77,12 +86,20 @@ export const Hero = ({ aside, review }: HeroProps) => {
             <span className="text-sm font-(--font-weight-heading) text-ink-muted">
               {t('home:hero.liveDemo')}
             </span>
-          </div>
+          </motion.div>
 
-          {review !== undefined && <div className="max-w-md xl:mt-16">{review}</div>}
+          {review !== undefined && (
+            <motion.div {...entrance(0.2)} className="max-w-md xl:mt-8">
+              {review}
+            </motion.div>
+          )}
         </div>
 
-        {aside !== undefined && <div className="xl:justify-self-end">{aside}</div>}
+        {aside !== undefined && (
+          <motion.div {...entrance(0.12)} className="xl:justify-self-end">
+            {aside}
+          </motion.div>
+        )}
       </Container>
     </section>
   );

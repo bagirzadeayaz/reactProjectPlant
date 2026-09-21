@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useFormatters, useLocale } from '../../../shared/i18n';
@@ -38,16 +39,19 @@ export const ProductCard = ({
   className,
 }: ProductCardProps) => {
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
+  const reducedMotion = useReducedMotion();
   const { t } = useTranslation('product');
   const { locale, localized } = useLocale();
   const format = useFormatters(locale);
   const name = localized(product.name);
 
   return (
-    <article
+    <motion.article
+      whileHover={reducedMotion ? {} : { y: -8 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 22 }}
       className={cn(
-        'flex h-(--size-card-h) flex-col rounded-card border-(length:--border-width-panel) border-border-glass',
-        'bg-surface-glass p-8 backdrop-blur-panel',
+        'flex h-full min-h-[30rem] flex-col rounded-card border-(length:--border-width-control) border-border-glass',
+        'bg-surface-glass p-6 backdrop-blur-panel sm:p-7',
         className,
       )}
     >
@@ -57,7 +61,7 @@ export const ProductCard = ({
         to={`/catalog/${product.slug}`}
         tabIndex={-1}
         aria-hidden="true"
-        className="group -mx-4 -mt-16 block"
+        className="group -mx-2 -mt-10 block"
       >
         <ResponsiveImage
           src={product.imageUrl}
@@ -67,11 +71,11 @@ export const ProductCard = ({
           sizes="(min-width: 1024px) 512px, (min-width: 640px) 50vw, 100vw"
           priority={priority}
           alt=""
-          className="mx-auto w-3/4 drop-shadow-media transition-transform group-hover:-translate-y-1"
+          className="mx-auto h-56 w-full object-contain drop-shadow-media transition-transform group-hover:-translate-y-1 sm:h-60"
         />
       </Link>
 
-      <div className="mt-6 flex flex-1 flex-col gap-3">
+      <div className="mt-4 flex flex-1 flex-col gap-3">
         <Heading className="text-h2 text-ink-muted">
           <Link to={`/catalog/${product.slug}`} className="hover:text-ink">
             {name}
@@ -81,10 +85,10 @@ export const ProductCard = ({
         {!product.inStock && <p className="text-sm text-ink-muted">{t('outOfStock')}</p>}
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-4">
+      <div className="mt-5 flex items-center justify-between gap-4">
         <p className="text-h2 text-ink-muted">{format.currency(product.price, product.currency)}</p>
         {action}
       </div>
-    </article>
+    </motion.article>
   );
 };

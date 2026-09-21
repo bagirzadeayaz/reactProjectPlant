@@ -30,10 +30,10 @@ export const StatusPage = ({
   role = 'status',
   className,
 }: StatusPageProps) => (
-  <Container as="section" className={cn('py-16 lg:py-24', className)}>
+  <Container as="section" className={cn('py-12 sm:py-16 lg:py-20', className)}>
     <Card
       role={role}
-      className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-16 text-center sm:px-12"
+      className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-12 text-center sm:px-12 sm:py-16"
     >
       <div aria-hidden="true" className="flex items-end gap-4">
         <Leaf direction="left" className="size-8 sm:size-(--size-leaf)" />

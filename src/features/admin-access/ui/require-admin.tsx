@@ -19,7 +19,7 @@ export const RequireAdmin = () => {
   if (enabled) return <Outlet />;
 
   return (
-    <Container as="section" className="py-16">
+    <Container as="section" className="max-w-4xl py-12 sm:py-16 lg:py-20">
       <DocumentMeta title={`${t('admin:gate.title')} · ${t('common:meta.siteName')}`} />
       <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('admin:gate.title')}</h1>
       <p className="mt-4 max-w-prose text-lg text-ink-muted">{t('admin:gate.description')}</p>

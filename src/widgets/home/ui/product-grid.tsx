@@ -22,15 +22,15 @@ export const ProductGrid = ({
   isLoading = false,
   placeholders = 6,
 }: ProductGridProps) => (
-  <ul className="grid grid-cols-1 gap-gutter pt-16 sm:grid-cols-2 lg:grid-cols-3">
+  <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
     {isLoading
       ? Array.from({ length: placeholders }, (_, index) => (
-          <li key={index} className="pt-16">
-            <Skeleton className="h-(--size-card-h) w-full rounded-card" />
+          <li key={index} className="pt-10">
+            <Skeleton className="h-[30rem] w-full rounded-card" />
           </li>
         ))
       : products.map((product, index) => (
-          <li key={product.id} className="pt-16">
+          <li key={product.id} className="pt-10">
             <ProductCard
               product={product}
               priority={index < 3}

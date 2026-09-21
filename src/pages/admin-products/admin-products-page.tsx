@@ -80,7 +80,7 @@ export const AdminProductsPage = () => {
   };
 
   return (
-    <Container as="section" className="flex flex-col gap-8 py-16">
+    <Container as="section" className="flex flex-col gap-8 py-12 sm:py-16">
       <DocumentMeta
         title={`${t('admin:title')} · ${t('common:meta.siteName')}`}
         description={t('admin:metaDescription')}

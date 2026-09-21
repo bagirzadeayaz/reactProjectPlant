@@ -32,7 +32,7 @@ export const CatalogPage = () => {
   const total = products.data?.total ?? 0;
 
   return (
-    <Container as="section" className="py-16">
+    <Container as="section" className="py-12 sm:py-16">
       <DocumentMeta
         title={`${t('catalog:title')} · ${t('common:meta.siteName')}`}
         description={t('catalog:metaDescription')}
@@ -40,7 +40,7 @@ export const CatalogPage = () => {
 
       <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('catalog:title')}</h1>
 
-      <div className="mt-10">
+      <div className="mt-8 lg:mt-10">
         <CatalogFilters
           params={params}
           categories={categories.data ?? []}
@@ -68,10 +68,10 @@ export const CatalogPage = () => {
           }
         />
       ) : products.isLoading ? (
-        <ul className="grid grid-cols-1 gap-gutter pt-16 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {Array.from({ length: PER_PAGE }, (_, index) => (
-            <li key={index} className="pt-16">
-              <Skeleton className="h-(--size-card-h) w-full rounded-card" />
+            <li key={index} className="pt-10">
+              <Skeleton className="h-[30rem] w-full rounded-card" />
             </li>
           ))}
         </ul>
@@ -82,9 +82,9 @@ export const CatalogPage = () => {
           action={<Button onClick={reset}>{t('catalog:clearFilters')}</Button>}
         />
       ) : (
-        <ul className="grid grid-cols-1 gap-gutter pt-16 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {items.map((product, index) => (
-            <li key={product.id} className="pt-16">
+            <li key={product.id} className="pt-10">
               <ProductCard
                 product={product}
                 priority={index < 3}

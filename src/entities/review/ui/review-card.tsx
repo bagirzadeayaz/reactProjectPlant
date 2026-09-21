@@ -25,7 +25,7 @@ export const ReviewCard = ({ review, variant = 'default', className }: ReviewCar
       className={cn(
         'flex flex-col rounded-control border-(length:--border-width-panel) border-border-glass',
         'bg-surface-glass backdrop-blur-panel',
-        isCompact ? 'gap-4 p-8' : 'gap-6 p-12',
+        isCompact ? 'gap-4 p-6 sm:p-8' : 'gap-5 p-7 sm:p-8',
         className,
       )}
     >

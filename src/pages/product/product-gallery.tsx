@@ -27,7 +27,7 @@ export const ProductGallery = ({ product, name }: ProductGalleryProps) => {
 
   return (
     <div role="group" aria-label={t('gallery')} className="flex flex-col gap-4">
-      <div className="overflow-hidden rounded-card border-(length:--border-width-panel) border-border-glass bg-surface-glass p-8 backdrop-blur-panel">
+      <div className="overflow-hidden rounded-card border-(length:--border-width-control) border-border-glass bg-surface-glass p-6 backdrop-blur-panel sm:p-8">
         <ResponsiveImage
           src={product.imageUrl}
           sources={sources}

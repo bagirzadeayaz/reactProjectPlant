@@ -29,8 +29,8 @@ export const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-24 bg-surface-footer py-16">
-      <Container as="div" className="grid gap-12 lg:grid-cols-3">
+    <footer className="mt-16 border-t border-border-glass/30 bg-surface-footer py-12 lg:py-16">
+      <Container as="div" className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
         <div>
           <Link
             to="/"
@@ -38,9 +38,11 @@ export const Footer = () => {
           >
             {t('brand')}
           </Link>
-          <p className="mt-6 max-w-prose text-md text-ink-muted">{t('footer.about')}</p>
+          <p className="mt-4 max-w-prose text-base leading-relaxed text-ink-muted">
+            {t('footer.about')}
+          </p>
 
-          <ul className="mt-8 flex gap-6">
+          <ul className="mt-6 flex gap-6">
             {SOCIALS.map((social) => (
               <li key={social.label}>
                 <a
@@ -60,7 +62,7 @@ export const Footer = () => {
           <h2 id="footer-links-heading" className="text-lg text-ink">
             {t('footer.quickLinks')}
           </h2>
-          <ul className="mt-6 flex flex-col gap-4">
+          <ul className="mt-5 flex flex-col gap-3">
             {NAV_LINKS.map((link) => (
               <li key={link.to}>
                 <Link to={link.to} className={linkClass}>
@@ -77,7 +79,7 @@ export const Footer = () => {
         </div>
       </Container>
 
-      <Container as="div" className="mt-16">
+      <Container as="div" className="mt-10 border-t border-border-glass/20 pt-6">
         <p className="text-sm text-ink-muted">{t('footer.rights')}</p>
       </Container>
     </footer>

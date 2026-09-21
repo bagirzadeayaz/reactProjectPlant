@@ -73,13 +73,13 @@ export const ProductPage = () => {
   const others = (related.data?.items ?? []).filter((entry) => entry.id !== item.id).slice(0, 3);
 
   return (
-    <Container as="article" className="py-16">
+    <Container as="article" className="py-12 sm:py-16">
       <DocumentMeta
         title={`${name} · ${t('common:meta.siteName')}`}
         description={t('product:metaDescription', { name, description })}
       />
 
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-24">
+      <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <ProductGallery product={item} name={name} />
 
         <div className="flex flex-col gap-6">
@@ -105,13 +105,13 @@ export const ProductPage = () => {
       </div>
 
       {others.length > 0 && (
-        <section aria-labelledby="related-heading" className="mt-32">
+        <section aria-labelledby="related-heading" className="mt-20 lg:mt-24">
           <h2 id="related-heading" className="text-h2 font-(--font-weight-heading) text-ink">
             {t('product:related')}
           </h2>
-          <ul className="grid grid-cols-1 gap-gutter pt-16 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {others.map((entry) => (
-              <li key={entry.id} className="pt-16">
+              <li key={entry.id} className="pt-10">
                 <ProductCard product={entry} action={<AddToCartButton product={entry} />} />
               </li>
             ))}
