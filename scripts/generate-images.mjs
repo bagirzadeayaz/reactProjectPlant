@@ -17,8 +17,8 @@ const variants = async (dir, file, widths) => {
   }
 };
 
-for (const file of await readdir('public/plants')) {
-  if (file.endsWith('.png')) await variants('public/plants', file, PLANT_WIDTHS);
+for (const file of await readdir('frontend/public/plants')) {
+  if (file.endsWith('.png')) await variants('frontend/public/plants', file, PLANT_WIDTHS);
 }
-await variants('public/images', 'hero-bg.jpg', HERO_WIDTHS);
+await variants('frontend/public/images', 'hero-bg.jpg', HERO_WIDTHS);
 console.log('images generated');

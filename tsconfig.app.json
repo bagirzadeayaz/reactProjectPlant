@@ -31,8 +31,8 @@
     /* Path aliases. No baseUrl — deprecated with a hard error in TS 6.
        `paths` resolves relative to this config file. */
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./frontend/src/*"]
     }
   },
-  "include": ["src", "vitest.setup.ts"]
+  "include": ["frontend/src", "frontend/test"]
 }

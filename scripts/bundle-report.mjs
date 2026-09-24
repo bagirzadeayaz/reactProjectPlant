@@ -5,7 +5,7 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 const BUDGET_KB = 200;
-const dir = 'dist/assets';
+const dir = 'frontend/dist/assets';
 
 const files = (await readdir(dir)).filter((file) => file.endsWith('.js'));
 const rows = [];

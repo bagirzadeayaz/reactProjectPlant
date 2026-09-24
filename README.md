@@ -1,96 +1,55 @@
 # Planto
 
-A plant shop built from a Figma design: landing page, catalog with URL-backed filters,
-product pages, a persistent cart, a mock admin with full product CRUD, and English/Russian
-throughout. Everything runs in the browser — the "backend" is a Mock Service Worker with a
-seeded catalog persisted to `localStorage`, so a static deploy is the whole app.
+React storefront with a Node.js API backed by Cloud Firestore. Product management uses Firebase Authentication with a server-side email allowlist. The storefront is English/Russian and keeps only cart and language preferences in the browser.
 
-Design source: Figma file `jgggt59SlkGZe4CEVwebOJ`, frame `22:2`. The token layer in
-`src/index.css` cites the node every value came from.
+## Folders
 
-## Stack, and why
+- `frontend/`: React, Vite, styles, assets, and frontend tests.
+- `backend/src/`: domain rules, application services, HTTP adapters and Firebase/Firestore infrastructure, connected by `bootstrap.js`.
+- `backend/src/application/seed.js`: one-time, non-destructive seed for the six sample plants, categories, and reviews after your first admin sign-in.
+- `backend/firestore.rules.template`: source for Firestore rules. `npm run rules:generate` fills in the admin email from `.env` and writes ignored `backend/firestore.rules` for manual publishing.
+- `frontend/test/`: isolated test setup, HTTP mocks and fixtures.
+- `e2e/`: browser tests against an isolated Node.js server; no Firebase login or live database access.
+- `ARCHITECTURE.md`: current dependency rules, data flow, tradeoffs and extension points.
 
-| Piece                               | Why this one                                                                                                                                                |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| React 19 + TypeScript (strict)      | `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` on; no `any`, non-null assertions or `@ts-ignore` — all lint errors.                            |
-| Vite 8                              | Build and dev server; route-level code splitting out of the box.                                                                                            |
-| Tailwind CSS 4                      | CSS-first: the `@theme` block in `src/index.css` _is_ the design system. Components reference tokens only.                                                  |
-| Redux Toolkit + RTK Query           | RTK Query owns server state (cache, tags, optimistic updates); one plain slice owns the cart. They never copy from each other.                              |
-| React Router 7 (data router)        | Lazy routes, `useBlocker` for the unsaved-changes guard. Language is a query parameter, not a path prefix, so every page has one canonical URL.             |
-| react-i18next                       | Typed `t()`, six namespaces, EN/RU parity enforced by a script in `lint`. Content (product names) is localized in the data instead.                         |
-| zod                                 | One schema per entity is the single source of validation truth — the mock backend and the admin form check the same one. Kept out of the storefront bundle. |
-| React Hook Form                     | The admin form, resolved by the zod schema above.                                                                                                           |
-| Mock Service Worker                 | The backend, in dev, in tests and in production. Same handlers everywhere.                                                                                  |
-| Vitest + Testing Library + axe-core | Unit, component, integration and accessibility tests in one runner.                                                                                         |
-| Playwright                          | The three user journeys, end to end, in Chromium desktop and mobile.                                                                                        |
-| Feature-Sliced Design               | `app → pages → widgets → features → entities → shared`, enforced by `eslint-plugin-boundaries` as an error. See `ARCHITECTURE.md`.                          |
+## Local setup
 
-## Setup
+Requires Node.js 22+ and npm.
 
-Node 22 and npm.
+1. Run `npm ci`.
+2. Check the single project-root `.env` file. Copy `.env.example` if it is missing. The supplied Firebase web app configuration and approved admin email are already filled in locally; `.env` is ignored by Git.
+3. In the Firebase console, confirm the `planto-react` Standard Firestore database exists and Google is enabled in Authentication. Add `localhost` to Authentication's authorized domains if needed. Sign-in happens only when you click the admin sign-in button.
+4. Run `npm run rules:generate`, then publish the generated `backend/firestore.rules` in the Firebase console. The Node.js API calls Firestore REST without a private key. Rules permit public catalog reads and allow only the verified admin email to manage products and images. They also permit narrowly validated public newsletter signups.
+5. Run `npm run dev` and open `http://localhost:5173`. The frontend dev server forwards `/api` to the Node.js API on the `PORT` set in `.env`.
+6. Manually sign in at `/admin/products` with the address in `ADMIN_EMAILS`. The first successful sign-in seeds the sample catalog once; later sign-ins do not restore deleted products.
 
-```sh
-npm ci
-npm run dev        # http://localhost:5173
-```
+No Firebase CLI or automatic Firebase login is used by this project setup.
 
-The first request waits for the mock service worker to register; after that the catalog
-is served from `localStorage` (`planto:db`). Clear site data to reset it to the seed.
+## Configuration
 
-## Scripts
+The project-root `.env` holds both sets of settings. Vite exposes only variables beginning with `VITE_` to the browser; these Firebase web app values are public client configuration. The unprefixed values configure the Node.js API: project ID, Firestore database ID (assumed `(default)`), admin email allowlist, local port, and allowed frontend origin. No private credential is needed. Admin API requests must carry a Firebase ID token for the approved email; Firestore Security Rules independently enforce the same admin check on database writes.
 
-| Command                 | What it does                                                                |
-| ----------------------- | --------------------------------------------------------------------------- |
-| `npm run dev`           | Dev server with HMR                                                         |
-| `npm run build`         | Typecheck, EN/RU key check, production build to `dist/`                     |
-| `npm run build:report`  | Build, then print every chunk's gzip size; fails above 200 KB               |
-| `npm run preview`       | Serve `dist/` locally                                                       |
-| `npm run lint`          | ESLint (type-aware, layer boundaries, a11y) + i18n key and plural parity    |
-| `npm run typecheck`     | `tsc -b --noEmit`                                                           |
-| `npm test`              | Vitest, jsdom                                                               |
-| `npm run test:coverage` | Same with coverage; 80% threshold on lines, branches, functions, statements |
-| `npm run e2e`           | Playwright against the production build (builds first)                      |
-| `npm run e2e:ui`        | Playwright's UI mode                                                        |
-| `npm run images`        | Regenerate AVIF/WebP variants from the PNG/JPG sources in `public/`         |
-| `npm run check:i18n`    | The parity check on its own                                                 |
+Uploaded product images are validated (PNG, JPEG, WebP, GIF; at most 300 KB), stored as bytes in Firestore's `images` collection under a SHA-256 hash, and served through `/api/images/:hash`. Products store that URL. Pasted external image URLs must use HTTPS. A hash is an identifier; the bytes remain necessary to show the image.
 
-## Environment variables
+The Node.js server can also serve the production frontend from `frontend/dist`. Use `npm run build` followed by `npm start` for a single-origin deployment. A static-only host cannot run this API; deploy the Node.js server and frontend together, or configure a reverse proxy that forwards `/api` to it.
 
-None. There is no backend, no API key and no analytics. The only runtime switches are in
-the browser: `?lang=ru` (or `localStorage` `planto:lang`) for the language and
-`localStorage` `planto:admin` for the admin area.
+## Commands
 
-## Admin is a mock
+| Command                  | Purpose                                                  |
+| ------------------------ | -------------------------------------------------------- |
+| `npm run dev`            | Start frontend and backend locally                       |
+| `npm run dev:backend`    | Start only the Node.js API                               |
+| `npm run dev:frontend`   | Start only Vite                                          |
+| `npm run rules:generate` | Generate the local Firestore rules from `.env`           |
+| `npm run lint`           | Lint and verify EN/RU key parity                         |
+| `npm run typecheck`      | Typecheck the frontend                                   |
+| `npm test`               | Frontend unit and integration tests with a mock HTTP API |
+| `npm run test:backend`   | Backend API and domain tests                             |
+| `npm run build`          | Typecheck and build the frontend                         |
+| `npm start`              | Serve API and built frontend using `PORT`                |
 
-`/admin/products` adds, edits and deletes products, but **there is no login and no
-server**. The "Enter demo admin" button sets a flag in `localStorage` (`planto:admin`);
-that is the whole access control, and it is deliberate. Every change made in the admin is
-local to the browser it was made in. Uploaded images are stored there too, as base64 data
-URLs, which is why the upload limit is 300 KB.
+The current catalog API loads all products and applies the existing bilingual search and filters in Node.js. This preserves the current UI behavior for the small catalog. Larger catalogs should add indexed query fields and cursor pagination. Product images stored in Firestore count toward document storage and reads; the 300 KB limit keeps each document below Firestore's 1 MiB limit.
 
-## Deploy
+Run `npm run check` for lint, architecture checks, build and both unit/integration suites. Run `npm run e2e` for desktop/mobile browser journeys. Backend and browser tests need no `.env` or Firebase credentials.
 
-The build is static. `vercel.json` and `netlify.toml` both carry the one rule a
-single-page app needs — rewrite every path to `index.html` — plus long cache headers for
-hashed assets and no cache for the service worker.
-
-- **Vercel**: import the repository; the framework preset is detected. Every pull request
-  gets a preview deployment.
-- **Netlify**: import the repository; `netlify.toml` sets the build command and publish
-  directory. Deploy previews are on by default.
-
-Nothing to configure and no secrets to add.
-
-## CI
-
-`.github/workflows/ci.yml` runs on every pull request and on `main`:
-lint → typecheck → test with coverage → build → bundle report, then Playwright in a second
-job. Dependencies and the Playwright browser are cached.
-
-## Where to read next
-
-- `ARCHITECTURE.md` — layers and import rules, where state lives, i18n and localized
-  fields, how to add a feature slice, the decisions log, the deviations from the Figma
-  comp, measured performance.
-- `CLAUDE.md` — working context and the list of gotchas already hit.
-- `docs/BUILD-PROMPTS.md` — the fourteen-step plan the project was built from.
+Browser tests use Playwright Chromium by default. If Chrome is already installed, set `PLAYWRIGHT_CHANNEL=chrome` for the test command. `E2E_PORT` optionally changes the isolated test server port (default 4173); these are test-runner overrides, not app configuration.

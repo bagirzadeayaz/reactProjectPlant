@@ -9,7 +9,8 @@ test('browse → filter → open product → add to cart', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'Catalog' })).toBeVisible();
   await expect(page.getByText('6 plants')).toBeVisible();
 
-  await page.getByLabel('Category').selectOption('top-selling');
+  await page.getByRole('combobox', { name: /^Category:/ }).click();
+  await page.getByRole('option', { name: 'Top selling', exact: true }).click();
   await expect(page.getByText('2 plants')).toBeVisible();
   await expect(page).toHaveURL(/category=top-selling/);
 

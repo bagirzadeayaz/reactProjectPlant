@@ -1,10 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * E2E against the production build served by `vite preview`, with the MSW
- * worker as the backend — the same bits a deploy ships. `npm run e2e`.
+ * Real HTTP server with isolated repositories. Never uses the live Firebase project.
  */
 const isCI = process.env.CI !== undefined;
+const backendUrl = `http://127.0.0.1:${process.env.E2E_PORT ?? '4173'}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -13,17 +13,13 @@ export default defineConfig({
   retries: isCI ? 2 : 0,
   reporter: isCI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: backendUrl,
+    ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
     trace: 'on-first-retry',
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
-  webServer: {
-    command: 'npm run build && npm run preview -- --port 4173 --strictPort',
-    url: 'http://localhost:4173',
-    reuseExistingServer: !isCI,
-    timeout: 120_000,
-  },
+  globalSetup: './backend/test/e2e-server.js',
 });

@@ -1,14 +1,8 @@
 dist
+frontend/dist
 coverage
 node_modules
 html
-
-# Pre-FSD code, kept in its original formatting so the migration diffs in
-# prompts 8-11 show real changes rather than reflow. Remove these lines as each
-# file moves into a layer.
-src/components
-src/data
-src/types
-src/store
-src/App.tsx
-
+test-results
+playwright-report
+backend/firestore.rules

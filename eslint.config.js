@@ -10,10 +10,7 @@ import boundaries from 'eslint-plugin-boundaries';
  * Feature-Sliced Design layers. Imports flow downward only:
  *   app -> pages -> widgets -> features -> entities -> shared
  *
- * `legacy` holds the pre-FSD code that shipped before this config existed.
- * It is migrated in prompts 8-11; see the deviations table in ARCHITECTURE.md.
- * Do not add new files to it, and do not relax the rules below — read
- * src/<layer>/README.md instead.
+ * Read frontend/src/<layer>/README.md before changing dependencies.
  */
 const LAYERS = ['app', 'pages', 'widgets', 'features', 'entities', 'shared'];
 
@@ -25,7 +22,15 @@ const below = (layer) => {
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'html/**', 'test-results/**', 'playwright-report/**'],
+    ignores: [
+      'dist/**',
+      'frontend/dist/**',
+      'coverage/**',
+      'node_modules/**',
+      'html/**',
+      'test-results/**',
+      'playwright-report/**',
+    ],
   },
 
   js.configs.recommended,
@@ -58,21 +63,15 @@ export default tseslint.config(
       boundaries,
     },
     settings: {
-      'boundaries/include': ['src/**/*'],
-      // Outside the layer graph:
-      //  - the entry point, and App.tsx until it moves into `app` in prompt 7;
-      //  - src/mocks, which is dev and test infrastructure (MSW). It reaches into
-      //    entities for their types, which no real layer below `app` may do.
-      'boundaries/ignore': ['src/main.tsx', 'src/App.tsx', 'src/mocks/**'],
+      'boundaries/include': ['frontend/src/**/*'],
+      'boundaries/ignore': ['frontend/src/main.tsx'],
       'boundaries/elements': [
-        { type: 'app', pattern: 'src/app/**' },
-        { type: 'pages', pattern: 'src/pages/**' },
-        { type: 'widgets', pattern: 'src/widgets/**' },
-        { type: 'features', pattern: 'src/features/**' },
-        { type: 'entities', pattern: 'src/entities/**' },
-        { type: 'shared', pattern: 'src/shared/**' },
-        // Folder patterns only — element descriptors match folders, not files.
-        { type: 'legacy', pattern: ['src/components', 'src/data', 'src/store', 'src/types'] },
+        { type: 'app', pattern: 'frontend/src/app/**' },
+        { type: 'pages', pattern: 'frontend/src/pages/**' },
+        { type: 'widgets', pattern: 'frontend/src/widgets/**' },
+        { type: 'features', pattern: 'frontend/src/features/**' },
+        { type: 'entities', pattern: 'frontend/src/entities/**' },
+        { type: 'shared', pattern: 'frontend/src/shared/**' },
       ],
       'import/resolver': {
         typescript: { alwaysTryTypes: true },
@@ -106,7 +105,7 @@ export default tseslint.config(
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
 
-      /* Default exports are banned outside src/main.tsx. */
+      /* Default exports are banned outside frontend/src/main.tsx. */
       'import/no-default-export': 'error',
 
       /* Layer boundaries. An upward import is a build failure. */
@@ -122,16 +121,6 @@ export default tseslint.config(
               from: { element: { type: layer } },
               allow: { to: { element: { types: { anyOf: below(layer) } } } },
             })),
-            // app is the composition root and may still reach the legacy tree.
-            {
-              from: { element: { type: 'app' } },
-              allow: { to: { element: { types: { anyOf: [...LAYERS, 'legacy'] } } } },
-            },
-            // Legacy code may go downward into shared/entities, or sideways within itself.
-            {
-              from: { element: { type: 'legacy' } },
-              allow: { to: { element: { types: { anyOf: ['legacy', 'shared', 'entities'] } } } },
-            },
           ],
         },
       ],
@@ -142,13 +131,13 @@ export default tseslint.config(
 
   /* The entry point is the one place a default import/export is expected. */
   {
-    files: ['src/main.tsx'],
+    files: ['frontend/src/main.tsx'],
     rules: { 'import/no-default-export': 'off' },
   },
 
   /* Config files run in Node and legitimately default-export. */
   {
-    files: ['*.config.{js,ts}', 'vitest.setup.ts'],
+    files: ['*.config.{js,ts}', 'frontend/test/setup.ts'],
     languageOptions: { globals: globals.node },
     rules: {
       'import/no-default-export': 'off',
@@ -156,28 +145,9 @@ export default tseslint.config(
     },
   },
 
-  /**
-   * Legacy pre-FSD code. Held to a lower bar only until prompts 8-11 migrate it.
-   * Every exemption here is listed in the deviations table in ARCHITECTURE.md.
-   * Do not extend this block to new files.
-   */
-  {
-    files: [
-      'src/components/**/*.{ts,tsx}',
-      'src/data/**/*.{ts,tsx}',
-      'src/store/**/*.{ts,tsx}',
-      'src/types/**/*.{ts,tsx}',
-      'src/App.tsx',
-    ],
-    rules: {
-      'import/no-default-export': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-    },
-  },
-
   /* Tests may reach for test-only ergonomics. */
   {
-    files: ['**/*.test.{ts,tsx}', 'vitest.setup.ts'],
+    files: ['**/*.test.{ts,tsx}', 'frontend/test/setup.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',

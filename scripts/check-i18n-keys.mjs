@@ -16,7 +16,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const LOCALES_DIR = fileURLToPath(new URL('../src/shared/i18n/locales', import.meta.url));
+const LOCALES_DIR = fileURLToPath(new URL('../frontend/src/shared/i18n/locales', import.meta.url));
 const REFERENCE = 'en';
 const PLURAL_SUFFIXES = ['zero', 'one', 'two', 'few', 'many', 'other'];
 

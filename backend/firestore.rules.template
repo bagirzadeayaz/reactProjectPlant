@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email in __ADMIN_EMAILS__;
+    }
+
+    function validProduct() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+        'slug', 'name', 'description', 'price', 'currency',
+        'category', 'imageUrl', 'inStock', 'createdAt'
+      ]) && data.keys().hasOnly([
+        'slug', 'name', 'description', 'price', 'currency',
+        'category', 'imageUrl', 'inStock', 'createdAt'
+      ]) &&
+        data.slug is string && data.slug.size() > 0 && data.slug.size() <= 120 &&
+        data.name is map && data.name.keys().hasAll(['en', 'ru']) &&
+        data.name.en is string && data.name.ru is string &&
+        data.description is map && data.description.keys().hasAll(['en', 'ru']) &&
+        data.description.en is string && data.description.ru is string &&
+        data.price is int && data.price >= 0 &&
+        data.currency == 'INR' &&
+        data.category is string && data.category.size() > 0 &&
+        data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() <= 2048 &&
+        data.inStock is bool && data.createdAt is string;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validProduct();
+      allow delete: if isAdmin();
+    }
+
+    match /productSlugs/{slug} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.resource.data.keys().hasAll(['productId']) &&
+        request.resource.data.keys().hasOnly(['productId']) &&
+        request.resource.data.productId is string;
+      allow delete: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /images/{imageId} {
+      allow read: if true;
+      allow create: if isAdmin() &&
+        imageId.matches('^[a-f0-9]{64}$') &&
+        request.resource.data.keys().hasAll(['contentType', 'bytes', 'createdAt']) &&
+        request.resource.data.keys().hasOnly(['contentType', 'bytes', 'createdAt']) &&
+        request.resource.data.contentType in ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] &&
+        request.resource.data.bytes is bytes &&
+        request.resource.data.bytes.size() <= 307200 &&
+        request.resource.data.createdAt is string;
+    }
+
+    match /newsletterSubscribers/{subscriberId} {
+      allow create: if subscriberId.matches('^[a-f0-9]{64}$') &&
+        request.resource.data.keys().hasAll(['email', 'subscribedAt']) &&
+        request.resource.data.keys().hasOnly(['email', 'subscribedAt']) &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 254 &&
+        request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.subscribedAt is string;
+      allow read, delete: if isAdmin();
+    }
+
+    match /metadata/{documentId} {
+      allow get, create: if isAdmin();
+    }
+  }
+}
