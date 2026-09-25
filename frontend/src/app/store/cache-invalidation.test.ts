@@ -16,7 +16,7 @@ const draft = (overrides: Partial<ProductDraft> = {}): ProductDraft => ({
   name: { en: 'ZZ plant', ru: 'Замиокулькас' },
   description: { en: 'Survives anything.', ru: 'Переживёт что угодно.' },
   price: 499,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'trendy',
   imageUrl: '/plants/zz.png',
   inStock: true,

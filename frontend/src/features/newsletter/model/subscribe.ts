@@ -18,8 +18,13 @@ export const parseEmail = (value: string): EmailResult => {
   return EMAIL_PATTERN.test(data) ? { success: true, data } : { success: false };
 };
 
-/** Sends the signup to the Node.js API, which saves it in Firestore. */
+/** Saves the signup through the Firestore Web SDK in production. */
 export const subscribe = async (email: string): Promise<void> => {
+  if (import.meta.env.MODE !== 'test') {
+    const { subscribeInFirestore } = await import('../../../shared/firestore/store');
+    await subscribeInFirestore(email);
+    return;
+  }
   const response = await fetch(new URL('/api/newsletter', globalThis.location.href), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

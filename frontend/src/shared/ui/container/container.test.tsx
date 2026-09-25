@@ -19,7 +19,7 @@ describe('Container', () => {
 
   it('carries the content max-width from the comp', () => {
     render(<Container data-testid="c">content</Container>);
-    expect(screen.getByTestId('c')).toHaveClass('max-w-(--size-content)');
+    expect(screen.getByTestId('c')).toHaveClass('max-w-(--size-frame)');
   });
 
   it('merges a caller className', () => {

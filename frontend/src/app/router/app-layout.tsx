@@ -29,7 +29,7 @@ export const AppLayout = () => {
       regionLabel={t('a11y.notifications')}
       dismissLabel={t('a11y.dismissNotification')}
     >
-      <div className="flex min-h-screen flex-col bg-surface-footer">
+      <div className={`storefront flex min-h-screen flex-col${pathname === '/' ? ' storefront--home' : ''}`}>
         {/* Visually hidden until focused — the first stop for a keyboard user. */}
         <a
           href={`#${MAIN_ID}`}

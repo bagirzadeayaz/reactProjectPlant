@@ -23,7 +23,9 @@ describe('Icon', () => {
 
   it('renders every icon the design calls for', () => {
     for (const name of Object.keys(ICONS)) {
-      expect(ICONS[name as keyof typeof ICONS]).toBeTypeOf('object');
+      const { container, unmount } = render(<Icon name={name as keyof typeof ICONS} />);
+      expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+      unmount();
     }
     expect(Object.keys(ICONS)).toEqual(
       expect.arrayContaining(['search', 'bag', 'chevron', 'arrow-right', 'play', 'hamburger']),

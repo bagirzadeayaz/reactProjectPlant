@@ -22,7 +22,7 @@ service cloud.firestore {
         data.description is map && data.description.keys().hasAll(['en', 'ru']) &&
         data.description.en is string && data.description.ru is string &&
         data.price is int && data.price >= 0 &&
-        data.currency == 'INR' &&
+        data.currency == 'AZN' &&
         data.category is string && data.category.size() > 0 &&
         data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() <= 2048 &&
         data.inStock is bool && data.createdAt is string;

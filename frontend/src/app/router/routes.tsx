@@ -12,6 +12,8 @@ const lazyNamed = <T extends Record<string, unknown>>(load: () => Promise<T>, na
     return { default: module[name] as React.ComponentType };
   });
 
+export const CarePage = lazyNamed(() => import('../../pages/care'), 'CarePage');
+export const ContactPage = lazyNamed(() => import('../../pages/contact'), 'ContactPage');
 export const CatalogPage = lazyNamed(() => import('../../pages/catalog'), 'CatalogPage');
 export const ProductPage = lazyNamed(() => import('../../pages/product'), 'ProductPage');
 export const AdminProductsPage = lazyNamed(

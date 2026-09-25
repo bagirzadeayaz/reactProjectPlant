@@ -9,6 +9,8 @@ import {
   AdminProductFormPage,
   AdminProductsPage,
   CatalogPage,
+  CarePage,
+  ContactPage,
   NotFoundPage,
   ProductPage,
   RequireAdmin,
@@ -32,6 +34,8 @@ export const appRoutes: RouteObject[] = createRoutesFromElements(
     <Route element={<AppLayout />}>
       <Route index element={<HomePage />} />
       <Route path="catalog" element={<CatalogPage />} />
+      <Route path="care" element={<CarePage />} />
+      <Route path="contact" element={<ContactPage />} />
       <Route path="catalog/:slug" element={<ProductPage />} />
       <Route path="admin" element={<RequireAdmin />}>
         <Route path="products" element={<AdminProductsPage />} />

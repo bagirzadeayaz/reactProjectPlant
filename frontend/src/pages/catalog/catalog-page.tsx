@@ -68,9 +68,9 @@ export const CatalogPage = () => {
           }
         />
       ) : products.isLoading ? (
-        <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <ul className="home-product-grid">
           {Array.from({ length: PER_PAGE }, (_, index) => (
-            <li key={index} className="pt-10">
+            <li key={index} className="h-full">
               <Skeleton className="h-[30rem] w-full rounded-card" />
             </li>
           ))}
@@ -82,9 +82,9 @@ export const CatalogPage = () => {
           action={<Button onClick={reset}>{t('catalog:clearFilters')}</Button>}
         />
       ) : (
-        <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <ul className="home-product-grid">
           {items.map((product, index) => (
-            <li key={product.id} className="pt-10">
+            <li key={product.id} className="h-full">
               <ProductCard
                 product={product}
                 priority={index < 3}

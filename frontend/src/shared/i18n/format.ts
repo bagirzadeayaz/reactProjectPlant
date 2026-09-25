@@ -4,7 +4,7 @@ import type { Locale } from '../api';
 /**
  * Formatting goes through `Intl`, never through string concatenation.
  *
- * Russian writes `1 299 ₹`, English writes `₹1,299` — separators, symbol
+ * Russian writes `1 299 ₼`, English writes `₼1,299` — separators, symbol
  * position and spacing all differ, and hand-rolling that is how a price ends up
  * looking foreign in one of the two languages.
  */
@@ -12,6 +12,7 @@ export const formatCurrency = (value: number, currency: string, locale: Locale):
   new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
+    currencyDisplay: 'narrowSymbol',
     maximumFractionDigits: 0,
   }).format(value);
 

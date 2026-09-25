@@ -5,7 +5,7 @@ test('browse → filter → open product → add to cart', async ({ page }) => {
   await gotoReady(page, '/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Breath Natural');
 
-  await page.getByRole('link', { name: 'Catalog' }).first().click();
+  await page.getByRole('link', { name: "Plant Type's" }).filter({ visible: true }).first().click();
   await expect(page.getByRole('heading', { level: 1, name: 'Catalog' })).toBeVisible();
   await expect(page.getByText('6 plants')).toBeVisible();
 

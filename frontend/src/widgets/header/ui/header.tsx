@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { CartBadge } from '../../../entities/cart';
 import { LanguageSwitcher } from '../../../features/language-switcher';
 import { CartDrawer } from '../../../features/cart-drawer';
 import { cn } from '../../../shared/lib/cn';
+import { LOGIN_LINK } from '../../../shared/config/navigation';
 import { Container, Icon } from '../../../shared/ui';
 import { HeaderSearch } from './header-search';
 import { NavLinkList } from './nav-link-list';
@@ -53,7 +54,7 @@ export const Header = () => {
   }, [isMenuOpen, pathname]);
 
   return (
-    <header className="relative z-40 border-b border-border-glass/40">
+    <header className="site-header relative z-40">
       <Container
         as="div"
         className={cn(
@@ -65,10 +66,11 @@ export const Header = () => {
         <Link
           to="/"
           className={cn(
-            'rounded-icon text-logo font-(--font-weight-wordmark) text-ink-muted transition-colors hover:text-ink',
+            'brand rounded-icon text-logo font-(--font-weight-wordmark) text-ink-muted transition-colors hover:text-ink',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink',
           )}
         >
+          <img src="/images/planto-logo.png" alt="" width={60} height={60} />
           {t('brand')}
         </Link>
 
@@ -79,11 +81,24 @@ export const Header = () => {
           <NavLinkList />
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="header-actions">
+          <NavLink
+            to={LOGIN_LINK.to}
+            className={({ isActive }) =>
+              cn(
+                'hidden rounded-icon text-lg transition-colors lg:inline-flex',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink',
+                isActive ? 'text-ink' : 'text-ink-muted hover:text-ink',
+              )
+            }
+          >
+            {t(LOGIN_LINK.labelKey)}
+          </NavLink>
+
           <motion.div
             layout={!reducedMotion}
             transition={{ layout: { duration: 0.38, ease: [0.22, 1, 0.36, 1] } }}
-            className="hidden sm:block"
+            className="hidden xl:block"
           >
             <LanguageSwitcher />
           </motion.div>
@@ -109,7 +124,7 @@ export const Header = () => {
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
             }}
-            className="rounded-icon p-1 text-ink-muted hover:text-ink lg:hidden"
+            className="rounded-icon p-2 text-ink-muted hover:text-ink"
           >
             <Icon
               name={isMenuOpen ? 'close' : 'hamburger'}
@@ -126,17 +141,18 @@ export const Header = () => {
         }}
       />
 
-      <div id="header-menu" hidden={!isMenuOpen} className="lg:hidden">
+      <div id="header-menu" hidden={!isMenuOpen} className="header-menu">
         <Container as="div" className="pb-8">
           <nav aria-label={t('a11y.menuNavigation')}>
             <NavLinkList
               orientation="vertical"
+              includeLogin
               onNavigate={() => {
                 setIsMenuOpen(false);
               }}
             />
           </nav>
-          <LanguageSwitcher className="mt-6 sm:hidden" />
+          <LanguageSwitcher className="mt-6 xl:hidden" />
         </Container>
       </div>
     </header>

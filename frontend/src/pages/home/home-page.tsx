@@ -47,14 +47,34 @@ export const HomePage = () => {
     );
   }
 
-  const trendy = byCategory('trendy');
-  const topSelling = products;
-  const bestO2 = byCategory('best-o2');
+  const trendy = byCategory('trendy').toSorted((a, b) => a.createdAt.localeCompare(b.createdAt));
+  const designOrder = [
+    'calathea-plant',
+    'desk-plant',
+    'calathea-ai-plant',
+    'cal-874-plant',
+    'show-plant',
+    'calat-o2-plant',
+  ];
+  const rank = (slug: string) => {
+    const index = designOrder.indexOf(slug);
+    return index < 0 ? designOrder.length : index;
+  };
+  const topSelling = [...products].sort((a, b) => rank(a.slug) - rank(b.slug));
+  const selectedO2 = products.filter((p) => ['show-plant', 'calathea-plant'].includes(p.slug));
+  const bestO2 =
+    selectedO2.length > 0
+      ? selectedO2.sort((a, b) => Number(b.slug === 'show-plant') - Number(a.slug === 'show-plant'))
+      : byCategory('best-o2');
+  const banners = [
+    products.find((p) => p.slug === 'desk-plant') ?? trendy[0],
+    products.find((p) => p.slug === 'calathea-ai-plant') ?? trendy[1],
+  ].filter((p) => p !== undefined);
   const featured = trendy[featuredIndex % Math.max(1, trendy.length)];
   const heroReview = reviews[0];
 
   return (
-    <>
+    <div className="home-page">
       <DocumentMeta
         title={t('common:meta.siteName')}
         description={t('common:meta.homeDescription')}
@@ -64,6 +84,9 @@ export const HomePage = () => {
           featured ? (
             <FeaturedProductCard
               product={featured}
+              index={featuredIndex % Math.max(1, trendy.length)}
+              count={trendy.length}
+              onSelect={setFeaturedIndex}
               onNext={() => {
                 setFeaturedIndex((current) => current + 1);
               }}
@@ -81,12 +104,16 @@ export const HomePage = () => {
         }
       />
 
-      <Section title={undefined} className="pt-16">
+      <Section className="trendy-section" aria-labelledby="trendy-heading">
         <SectionHeading id="trendy-heading">{t('home:sections.trendy')}</SectionHeading>
-        <div className="mt-14 flex flex-col gap-14 lg:mt-16 lg:gap-16">
-          {trendy.slice(0, 2).map((product, index) => (
+        <div className="trendy-list">
+          {banners.map((product, index) => (
             <Reveal key={product.id}>
-              <ProductBanner product={product} align={index === 0 ? 'left' : 'right'} />
+              <ProductBanner
+                product={product}
+                align={index === 0 ? 'left' : 'right'}
+                {...(index === 1 ? { artwork: '/plants/trendy-succulent.png' } : {})}
+              />
             </Reveal>
           ))}
         </div>
@@ -94,9 +121,7 @@ export const HomePage = () => {
 
       <Section>
         <SectionHeading id="top-selling-heading">{t('home:sections.topSelling')}</SectionHeading>
-        <Reveal>
-          <ProductGrid products={topSelling} isLoading={isLoading} />
-        </Reveal>
+        <ProductGrid products={topSelling} isLoading={isLoading} />
       </Section>
 
       <Section>
@@ -124,6 +149,6 @@ export const HomePage = () => {
           <Skeleton className="mt-16 h-(--size-feature-h) w-full rounded-control lg:rounded-panel" />
         )}
       </Section>
-    </>
+    </div>
   );
 };

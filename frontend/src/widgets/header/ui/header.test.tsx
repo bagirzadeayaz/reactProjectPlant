@@ -52,7 +52,7 @@ describe('Header', () => {
 
   it('marks the current route as the current page', () => {
     renderHeader('/catalog');
-    const [link] = screen.getAllByRole('link', { name: 'Catalog' });
+    const [link] = screen.getAllByRole('link', { name: "Plant Type's" });
     expect(link).toHaveAttribute('aria-current', 'page');
   });
 
@@ -112,9 +112,9 @@ describe('Header', () => {
 
   it('translates its links', async () => {
     renderHeader();
-    expect(screen.getAllByRole('link', { name: 'Catalog' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: "Plant Type's" }).length).toBeGreaterThan(0);
 
     await i18n.changeLanguage('ru');
-    expect(screen.getAllByRole('link', { name: 'Каталог' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: 'Виды растений' }).length).toBeGreaterThan(0);
   });
 });

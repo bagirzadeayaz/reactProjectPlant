@@ -34,7 +34,7 @@ const Screen = () => {
       <h1>{t('catalog:title')}</h1>
       <p data-testid="nav-home">{t('common:nav.home')}</p>
       <p data-testid="product-name">{localized({ en: 'Calathea plant', ru: 'Калатея' })}</p>
-      <p data-testid="price">{format.currency(1299, 'INR')}</p>
+      <p data-testid="price">{format.currency(1299, 'AZN')}</p>
       <p data-testid="count">{t('catalog:results', { count: 2 })}</p>
       <p data-testid="slug">{slug}</p>
       <LanguageSwitcher />

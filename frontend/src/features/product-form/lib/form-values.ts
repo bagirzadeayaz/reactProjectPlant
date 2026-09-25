@@ -8,7 +8,7 @@ export const EMPTY_PRODUCT: ProductFormValues = {
   name: { en: '', ru: '' },
   description: { en: '', ru: '' },
   price: 0,
-  currency: 'INR',
+  currency: 'AZN',
   category: '',
   imageUrl: '',
   inStock: true,

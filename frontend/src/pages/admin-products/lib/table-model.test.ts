@@ -8,7 +8,7 @@ const product = (over: Partial<Product>): Product => ({
   name: { en: 'Plant', ru: 'Растение' },
   description: { en: '', ru: '' },
   price: 100,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'trendy',
   imageUrl: '/x.png',
   inStock: true,

@@ -2,13 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { cn } from '../../../shared/lib/cn';
 import { NewsletterForm } from '../../../features/newsletter';
-import { Container } from '../../../shared/ui';
+import { Container, Icon } from '../../../shared/ui';
 import { NAV_LINKS } from '../../../shared/config/navigation';
 
 const SOCIALS = [
-  { label: 'FB', href: 'https://facebook.com' },
-  { label: 'TW', href: 'https://twitter.com' },
-  { label: 'LI', href: 'https://linkedin.com' },
+  { label: 'Facebook', icon: 'facebook', href: 'https://facebook.com' },
+  { label: 'Twitter', icon: 'twitter', href: 'https://twitter.com' },
+  { label: 'LinkedIn', icon: 'linkedin', href: 'https://linkedin.com' },
 ] as const;
 
 const linkClass = cn(
@@ -29,29 +29,31 @@ export const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-16 border-t border-border-glass/30 bg-surface-footer py-12 lg:py-16">
-      <Container as="div" className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
+    <footer className="site-footer bg-surface-footer">
+      <Container as="div" className="footer-grid grid">
         <div>
           <Link
             to="/"
-            className="rounded-icon text-logo font-(--font-weight-wordmark) text-ink-muted hover:text-ink"
+            className="brand footer-brand rounded-icon font-(--font-weight-wordmark) text-ink-muted hover:text-ink"
           >
+            <img src="/images/planto-logo.png" alt="" width={88} height={88} />
             {t('brand')}
           </Link>
           <p className="mt-4 max-w-prose text-base leading-relaxed text-ink-muted">
             {t('footer.about')}
           </p>
 
-          <ul className="mt-6 flex gap-6">
+          <ul className="footer-socials flex gap-8">
             {SOCIALS.map((social) => (
               <li key={social.label}>
                 <a
                   href={social.href}
                   rel="noreferrer noopener"
                   target="_blank"
-                  className={linkClass}
+                  aria-label={social.label}
+                  className={cn(linkClass, 'inline-flex size-11 items-center justify-center')}
                 >
-                  {social.label}
+                  <Icon name={social.icon} />
                 </a>
               </li>
             ))}
@@ -79,7 +81,7 @@ export const Footer = () => {
         </div>
       </Container>
 
-      <Container as="div" className="mt-10 border-t border-border-glass/20 pt-6">
+      <Container as="div" className="footer-rights">
         <p className="text-sm text-ink-muted">{t('footer.rights')}</p>
       </Container>
     </footer>

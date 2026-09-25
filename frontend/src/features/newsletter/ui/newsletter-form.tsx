@@ -49,7 +49,7 @@ export const NewsletterForm = ({ className }: NewsletterFormProps) => {
       onSubmit={(event) => {
         void onSubmit(event);
       }}
-      className={cn('flex flex-col gap-4 sm:flex-row sm:items-start', className)}
+      className={cn('newsletter-form flex flex-col sm:flex-row', className)}
     >
       <Input
         type="email"

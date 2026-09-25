@@ -16,7 +16,7 @@ export interface ContainerProps extends ComponentPropsWithRef<'div'> {
  */
 export const Container = ({ as: Component = 'div', className, ...props }: ContainerProps) => (
   <Component
-    className={cn('mx-auto w-full max-w-(--size-content) px-gutter lg:px-page-margin', className)}
+    className={cn('site-container mx-auto w-full max-w-(--size-frame)', className)}
     {...props}
   />
 );

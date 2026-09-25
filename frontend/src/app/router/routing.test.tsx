@@ -86,10 +86,10 @@ describe('navigation', () => {
       expect(screen.getByRole('banner')).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getAllByRole('link', { name: 'Catalog' })[0]!);
+    await userEvent.click(screen.getAllByRole('link', { name: "Plant Type's" })[0]!);
     expect(await heading('Catalog')).toBeInTheDocument();
 
-    await userEvent.click(screen.getAllByRole('link', { name: 'Manage' })[0]!);
+    await userEvent.click(screen.getAllByRole('link', { name: 'Login' })[0]!);
     expect(await heading('Admin area')).toBeInTheDocument();
   });
 
@@ -97,7 +97,7 @@ describe('navigation', () => {
     renderAt('/catalog');
     await heading('Catalog');
 
-    const active = screen.getAllByRole('link', { name: 'Catalog' })[0];
+    const active = screen.getAllByRole('link', { name: "Plant Type's" })[0];
     expect(active).toHaveAttribute('aria-current', 'page');
   });
 
@@ -107,7 +107,7 @@ describe('navigation', () => {
       expect(screen.getByRole('banner')).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getAllByRole('link', { name: 'Catalog' })[0]!);
+    await userEvent.click(screen.getAllByRole('link', { name: "Plant Type's" })[0]!);
     await heading('Catalog');
 
     await waitFor(() => {
@@ -121,7 +121,7 @@ describe('navigation', () => {
       expect(screen.getByRole('banner')).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getAllByRole('link', { name: 'Catalog' })[0]!);
+    await userEvent.click(screen.getAllByRole('link', { name: "Plant Type's" })[0]!);
     const h1 = await heading('Catalog');
     await waitFor(() => {
       expect(h1).toHaveFocus();

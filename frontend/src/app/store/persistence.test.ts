@@ -7,7 +7,7 @@ const draft: ProductDraft = {
   name: { en: 'Snake plant', ru: 'Сансевиерия' },
   description: { en: 'Nearly unkillable.', ru: 'Почти неубиваемое.' },
   price: 349,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'best-o2',
   imageUrl: '/plants/snake.png',
   inStock: true,

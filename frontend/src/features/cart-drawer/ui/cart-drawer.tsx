@@ -54,7 +54,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     const product = products.get(line.productId);
     return product ? total + product.price * line.quantity : total;
   }, 0);
-  const currency = data?.items[0]?.currency ?? 'INR';
+  const currency = data?.items[0]?.currency ?? 'AZN';
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">

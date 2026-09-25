@@ -59,10 +59,9 @@ export const AddToCartButton = ({
 
   return (
     <Button
-      variant="primary-with-icon"
+      variant="primary"
       onClick={add}
       disabled={!product.inStock}
-      icon={<Icon name="bag" />}
       {...(className === undefined ? {} : { className })}
     >
       {t('common:actions.buyNow')}

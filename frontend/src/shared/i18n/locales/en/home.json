@@ -4,7 +4,7 @@
     "lead": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive.",
     "liveDemo": "Live Demo...",
     "eyebrow": "Trendy House Plant",
-    "playLabel": "Play the demo video",
+    "playLabel": "Play the plant preview",
     "backgroundAlt": "Dense green foliage in soft light"
   },
   "sections": {
@@ -24,7 +24,9 @@
   },
   "featured": {
     "eyebrow": "Trendy House Plant",
-    "next": "Next featured plant"
+    "next": "Next featured plant",
+    "slides": "Featured plants",
+    "goTo": "Show featured plant {{number}}"
   },
   "review": {
     "ratingOf": "Rated {{rating}} out of 5",
@@ -33,11 +35,42 @@
     "next": "Next review"
   },
   "banner": {
-    "lead": "Chosen for the space you actually have — sized for a desk, a shelf, a windowsill."
+    "lead": "Chosen for the space you actually have — sized for a desk, a shelf, a windowsill.",
+    "title": "For Small Desk Ai Plant"
   },
   "newsletter": {
     "success": "Thanks — you are on the list.",
     "error": "Could not subscribe. Try again.",
     "invalid": "Enter a valid email address"
+  },
+  "demo": {
+    "title": "A little green, a little calm.",
+    "body": "Discover the plants in our collection. Explore each one for its light, space and care needs, then find a place for it at home."
+  },
+  "care": {
+    "eyebrow": "Living with plants",
+    "title": "A little care. A lot of green.",
+    "lead": "Find a sunny corner, slow down, and let something grow. A few simple habits make your plants feel at home.",
+    "lightTitle": "Find the right light",
+    "lightBody": "Most indoor plants enjoy bright, indirect light. Keep delicate leaves away from harsh afternoon sun and turn the pot occasionally for even growth.",
+    "waterTitle": "Water with intention",
+    "waterBody": "Check the soil before reaching for the watering can. Let the top layer dry between drinks, and always let excess water drain away.",
+    "spaceTitle": "Give it room to grow",
+    "spaceBody": "Choose a pot with drainage, wipe dusty leaves gently, and look for roots crowding the pot. Repot when your plant needs a little more space."
+  },
+  "contact": {
+    "eyebrow": "Here to help",
+    "title": "Let's keep it growing.",
+    "lead": "Looking for your first plant or caring for a growing collection? Start with the answers below, explore our care guide, or join our plant updates.",
+    "faqTitle": "A few useful answers",
+    "q1": "How do I choose my first plant?",
+    "a1": "Start with the light and space in your room. Browse the collection, open a plant's details and choose one whose care needs fit your routine.",
+    "q2": "Where can I find plant care advice?",
+    "a2": "Our care guide covers light, watering and room to grow. Each product page also includes its own description to help you choose.",
+    "q3": "How do I keep track of plants I like?",
+    "a3": "Add available plants to your bag. Your selection stays in this browser, and you can change quantities or remove plants at any time.",
+    "updatesTitle": "Something good is growing.",
+    "updatesBody": "Leave your email for plant news and collection updates.",
+    "careLink": "Read the care guide"
   }
 }

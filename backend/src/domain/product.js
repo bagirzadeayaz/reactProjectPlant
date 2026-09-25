@@ -11,7 +11,7 @@ const fields = {
   name: localized,
   description: localized,
   price: z.number().int().nonnegative(),
-  currency: z.literal('INR'),
+  currency: z.literal('AZN'),
   category: z.string().min(1).max(100),
   imageUrl,
   inStock: z.boolean(),

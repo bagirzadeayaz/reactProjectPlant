@@ -6,15 +6,15 @@ const productText = localizedString.extend({
   ru: z.string().trim().min(1).max(500),
 });
 
-/** ISO 4217. The comp prices in rupees ("Rs. 309/-", node 22:99). */
-export const currencySchema = z.enum(['INR']);
+/** ISO 4217 currency used throughout the Azerbaijani storefront. */
+export const currencySchema = z.enum(['AZN']);
 
 export const productSchema = z.object({
   id: z.string().min(1),
   slug: z.string().min(1),
   name: productText,
   description: productText,
-  /** Minor units are not used — the comp shows whole rupees. */
+  /** Minor units are not used — storefront prices are whole manats. */
   price: z.number().int().nonnegative(),
   currency: currencySchema,
   category: z.string().min(1).max(100),

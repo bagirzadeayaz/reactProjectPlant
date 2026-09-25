@@ -1,4 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryFn,
+  type FetchArgs,
+} from '@reduxjs/toolkit/query/react';
 import { getAccessToken } from './access-token';
 
 /**
@@ -30,9 +35,29 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
+interface FirestoreError {
+  status: 'CUSTOM_ERROR';
+  error: string;
+}
+const firestoreBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FirestoreError> = async (
+  args,
+) => {
+  try {
+    const { runFirestoreRequest } = await import('../firestore/store');
+    return { data: await runFirestoreRequest(args) };
+  } catch (error) {
+    return {
+      error: {
+        status: 'CUSTOM_ERROR',
+        error: error instanceof Error ? error.message : 'Request failed',
+      },
+    };
+  }
+};
+
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: rawBaseQuery,
+  baseQuery: import.meta.env.MODE === 'test' ? rawBaseQuery : firestoreBaseQuery,
   tagTypes: ['Product', 'Review', 'Category'],
   endpoints: () => ({}),
 });

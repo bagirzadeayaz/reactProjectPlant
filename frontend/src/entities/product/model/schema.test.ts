@@ -7,7 +7,7 @@ const valid = {
   name: { en: 'Calathea plant', ru: 'Калатея' },
   description: { en: 'Patterned leaves.', ru: 'Узорчатые листья.' },
   price: 309,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'trendy',
   imageUrl: '/plants/calathea.png',
   inStock: true,

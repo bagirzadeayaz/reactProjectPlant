@@ -40,21 +40,23 @@ export const BestO2 = ({ products }: BestO2Props) => {
       role="region"
       aria-label={t('home:bestO2.carouselLabel')}
       className={cn(
-        'mt-10 grid items-center gap-8 rounded-card border-(length:--border-width-control) border-border-glass',
-        'bg-surface-glass px-6 py-8 backdrop-blur-panel sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:px-12 lg:py-10',
+        'best-o2 grid items-center border-(length:--border-width-control) border-border-glass',
+        'bg-surface-glass backdrop-blur-panel',
       )}
     >
-      <ResponsiveImage
-        src={product.imageUrl}
-        sources={productImageSources(product)}
-        width={PRODUCT_IMAGE_SIZE}
-        height={PRODUCT_IMAGE_SIZE}
-        sizes="(min-width: 1024px) 700px, 70vw"
-        alt={localized(product.name)}
-        className="mx-auto h-72 w-[75%] object-contain drop-shadow-media sm:h-96 lg:h-[32rem] lg:w-full"
-      />
+      <div key={product.id} className="best-o2__image page-enter">
+        <ResponsiveImage
+          src={product.imageUrl}
+          sources={productImageSources(product)}
+          width={PRODUCT_IMAGE_SIZE}
+          height={PRODUCT_IMAGE_SIZE}
+          sizes="(min-width: 1024px) 700px, 70vw"
+          alt={localized(product.name)}
+          className="mx-auto object-contain drop-shadow-media"
+        />
+      </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="best-o2__copy flex flex-col">
         <h3 className="text-h2 font-(--font-weight-heading) text-ink-muted sm:text-h1">
           {t('home:bestO2.title')}
         </h3>

@@ -11,7 +11,7 @@ const draft = {
   name: { en: 'Fern', ru: 'Папоротник' },
   description: { en: 'Green', ru: 'Зеленый' },
   price: 309,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'trendy',
   imageUrl: '/plants/fern.png',
   inStock: true,

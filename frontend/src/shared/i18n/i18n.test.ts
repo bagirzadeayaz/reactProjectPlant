@@ -37,10 +37,12 @@ describe('pickLocalized', () => {
 
 describe('Intl formatting', () => {
   it('formats currency per locale rather than by hand', () => {
-    const en = formatCurrency(1299, 'INR', 'en');
-    const ru = formatCurrency(1299, 'INR', 'ru');
+    const en = formatCurrency(1299, 'AZN', 'en');
+    const ru = formatCurrency(1299, 'AZN', 'ru');
 
     expect(en).toContain('1,299');
+    expect(en).toContain('₼');
+    expect(ru).toContain('₼');
     expect(ru).toContain('1');
     expect(ru).not.toBe(en);
   });
@@ -55,8 +57,8 @@ describe('Intl formatting', () => {
     expect(formatDate(iso, 'en')).not.toBe(formatDate(iso, 'ru'));
   });
 
-  it('shows whole rupees, since the comp prices in whole rupees', () => {
-    expect(formatCurrency(309, 'INR', 'en')).not.toContain('.00');
+  it('shows whole manats without decimal places', () => {
+    expect(formatCurrency(309, 'AZN', 'en')).not.toContain('.00');
   });
 });
 

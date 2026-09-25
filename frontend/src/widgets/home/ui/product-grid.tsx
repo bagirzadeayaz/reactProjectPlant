@@ -1,6 +1,6 @@
 import { AddToCartButton } from '../../../features/add-to-cart';
 import { ProductCard, type Product } from '../../../entities/product';
-import { Skeleton } from '../../../shared/ui';
+import { Reveal, Skeleton } from '../../../shared/ui';
 
 export interface ProductGridProps {
   products: readonly Product[];
@@ -22,7 +22,7 @@ export const ProductGrid = ({
   isLoading = false,
   placeholders = 6,
 }: ProductGridProps) => (
-  <ul className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+  <ul className="home-product-grid">
     {isLoading
       ? Array.from({ length: placeholders }, (_, index) => (
           <li key={index} className="pt-10">
@@ -30,12 +30,14 @@ export const ProductGrid = ({
           </li>
         ))
       : products.map((product, index) => (
-          <li key={product.id} className="pt-10">
-            <ProductCard
-              product={product}
-              priority={index < 3}
-              action={<AddToCartButton product={product} />}
-            />
+          <li key={product.id}>
+            <Reveal className="h-full">
+              <ProductCard
+                product={product}
+                priority={index < 3}
+                action={<AddToCartButton product={product} />}
+              />
+            </Reveal>
           </li>
         ))}
   </ul>

@@ -49,11 +49,7 @@ export const ProductCard = ({
     <motion.article
       whileHover={reducedMotion ? {} : { y: -8 }}
       transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-      className={cn(
-        'flex h-full min-h-[30rem] flex-col rounded-card border-(length:--border-width-control) border-border-glass',
-        'bg-surface-glass p-6 backdrop-blur-panel sm:p-7',
-        className,
-      )}
+      className={cn('product-card flex h-full flex-col', 'backdrop-blur-panel', className)}
     >
       {/* The picture is a second link to the same place; hiding it from the tab
           order and assistive tech keeps one announced link per card. */}
@@ -61,7 +57,7 @@ export const ProductCard = ({
         to={`/catalog/${product.slug}`}
         tabIndex={-1}
         aria-hidden="true"
-        className="group -mx-2 -mt-10 block"
+        className="product-card__image group"
       >
         <ResponsiveImage
           src={product.imageUrl}
@@ -71,11 +67,11 @@ export const ProductCard = ({
           sizes="(min-width: 1024px) 512px, (min-width: 640px) 50vw, 100vw"
           priority={priority}
           alt=""
-          className="mx-auto h-56 w-full object-contain drop-shadow-media transition-transform group-hover:-translate-y-1 sm:h-60"
+          className="mx-auto object-contain drop-shadow-media"
         />
       </Link>
 
-      <div className="mt-4 flex flex-1 flex-col gap-3">
+      <div className="product-card__copy flex flex-1 flex-col gap-3">
         <Heading className="text-h2 text-ink-muted">
           <Link to={`/catalog/${product.slug}`} className="hover:text-ink">
             {name}
@@ -85,7 +81,7 @@ export const ProductCard = ({
         {!product.inStock && <p className="text-sm text-ink-muted">{t('outOfStock')}</p>}
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-4">
+      <div className="product-card__price flex items-center justify-between gap-4">
         <p className="text-h2 text-ink-muted">{format.currency(product.price, product.currency)}</p>
         {action}
       </div>

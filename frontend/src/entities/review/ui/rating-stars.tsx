@@ -21,7 +21,7 @@ export const RatingStars = ({ rating, max = 5, className }: RatingStarsProps) =>
     <div
       role="img"
       aria-label={t('ratingOf', { rating })}
-      className={cn('flex gap-1 text-ink', className)}
+      className={cn('rating-stars flex gap-1', className)}
     >
       {Array.from({ length: max }, (_, index) => (
         <Icon

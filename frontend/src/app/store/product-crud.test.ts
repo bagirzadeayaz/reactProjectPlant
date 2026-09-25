@@ -14,7 +14,7 @@ const draft = (overrides: Partial<ProductDraft> = {}): ProductDraft => ({
   name: { en: 'Monstera Deliciosa', ru: 'Монстера' },
   description: { en: 'Split leaves, fast grower.', ru: 'Резные листья, быстро растёт.' },
   price: 1299,
-  currency: 'INR',
+  currency: 'AZN',
   category: 'trendy',
   imageUrl: '/plants/monstera.png',
   inStock: true,

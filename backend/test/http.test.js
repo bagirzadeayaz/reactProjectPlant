@@ -78,7 +78,7 @@ test('admin CRUD validates fields, reserves unique slugs, updates lookup and del
     name: { en: 'Fern', ru: 'Папоротник' },
     description: { en: 'Green', ru: 'Зеленый' },
     price: 309,
-    currency: 'INR',
+    currency: 'AZN',
     category: 'trendy',
     imageUrl: '/plants/fern.png',
     inStock: true,

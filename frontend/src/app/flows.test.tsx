@@ -29,7 +29,7 @@ describe('flows', () => {
     const { router } = renderApp('/');
     await heading(/Breath Natural/);
 
-    await userEvent.click(screen.getAllByRole('link', { name: 'Catalog' })[0]!);
+    await userEvent.click(screen.getAllByRole('link', { name: "Plant Type's" })[0]!);
     await heading('Catalog');
     expect(await screen.findByText('6 plants')).toBeInTheDocument();
 

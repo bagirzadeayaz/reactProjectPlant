@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react';
 import { cn } from '../../lib/cn';
-import { Leaf } from '../leaf';
 
 export interface SectionHeadingProps {
   /** Rendered as the <h2>. Caller-supplied so it can be translated. */
@@ -15,14 +14,12 @@ export interface SectionHeadingProps {
  * shadow that lifts it off the photograph.
  */
 export const SectionHeading = ({ children, id, className }: SectionHeadingProps) => (
-  <div className={cn('flex items-end justify-center gap-3 text-ink sm:gap-6', className)}>
-    <Leaf direction="left" className="mb-1 shrink-0 self-start" />
+  <div className={cn('section-heading text-ink', className)}>
     <h2
       {...(id === undefined ? {} : { id })}
       className="min-w-0 text-balance text-center text-h2 font-(--font-weight-heading) [text-shadow:var(--shadow-heading)] sm:text-h1"
     >
       {children}
     </h2>
-    <Leaf direction="right" className="mb-1 shrink-0 self-end" />
   </div>
 );

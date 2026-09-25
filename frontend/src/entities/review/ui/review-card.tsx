@@ -23,9 +23,9 @@ export const ReviewCard = ({ review, variant = 'default', className }: ReviewCar
   return (
     <figure
       className={cn(
-        'flex flex-col rounded-control border-(length:--border-width-panel) border-border-glass',
+        'review-card flex flex-col',
         'bg-surface-glass backdrop-blur-panel',
-        isCompact ? 'gap-4 p-6 sm:p-8' : 'gap-5 p-7 sm:p-8',
+        isCompact && 'review-card--compact',
         className,
       )}
     >

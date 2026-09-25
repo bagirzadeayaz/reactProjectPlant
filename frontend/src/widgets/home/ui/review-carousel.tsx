@@ -34,7 +34,7 @@ export const ReviewCarousel = ({ reviews }: ReviewCarouselProps) => {
   };
 
   return (
-    <div role="region" aria-label={t('review.carouselLabel')} className="pt-16">
+    <div role="region" aria-label={t('review.carouselLabel')} className="review-track">
       <ul
         ref={trackRef}
         className={cn(
