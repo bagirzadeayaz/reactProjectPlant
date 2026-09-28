@@ -9,7 +9,16 @@ import {
   AdminProductFormPage,
   AdminProductsPage,
   CatalogPage,
+  DiscoverPage,
+  FinderPage,
+  WishlistPage,
+  ComparePage,
+  StudioPage,
+  TrackingPage,
   CarePage,
+  BasketPage,
+  CheckoutPage,
+  ConfirmationPage,
   ContactPage,
   NotFoundPage,
   ProductPage,
@@ -33,8 +42,17 @@ export const appRoutes: RouteObject[] = createRoutesFromElements(
   <Route element={<RootRoute />}>
     <Route element={<AppLayout />}>
       <Route index element={<HomePage />} />
+      <Route path="discover" element={<DiscoverPage />} />
+      <Route path="finder" element={<FinderPage />} />
+      <Route path="wishlist" element={<WishlistPage />} />
+      <Route path="compare" element={<ComparePage />} />
+      <Route path="studio" element={<StudioPage />} />
+      <Route path="tracking" element={<TrackingPage />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="care" element={<CarePage />} />
+      <Route path="cart" element={<BasketPage />} />
+      <Route path="checkout" element={<CheckoutPage />} />
+      <Route path="checkout/confirmation" element={<ConfirmationPage />} />
       <Route path="contact" element={<ContactPage />} />
       <Route path="catalog/:slug" element={<ProductPage />} />
       <Route path="admin" element={<RequireAdmin />}>

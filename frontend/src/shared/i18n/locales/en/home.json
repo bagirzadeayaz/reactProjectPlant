@@ -2,7 +2,7 @@
   "hero": {
     "title": "Breath Natural",
     "lead": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive.",
-    "liveDemo": "Live Demo...",
+    "liveDemo": "Live Demo",
     "eyebrow": "Trendy House Plant",
     "playLabel": "Play the plant preview",
     "backgroundAlt": "Dense green foliage in soft light"
@@ -72,5 +72,26 @@
     "updatesTitle": "Something good is growing.",
     "updatesBody": "Leave your email for plant news and collection updates.",
     "careLink": "Read the care guide"
+  },
+  "studio": {
+    "loading": "Opening the plant studio…",
+    "error": "The collection could not be loaded.",
+    "retry": "Try again",
+    "empty": "New plants are coming soon.",
+    "dayScene": "THE SUNLIT CORNER",
+    "eveningScene": "THE QUIET EVENING",
+    "sceneHint": "A little inspiration for your space",
+    "eyebrow": "Your room. Your green.",
+    "intro": "Try a new plant, change the mood, and find your favourite corner.",
+    "choosePlant": "01 — Pick your plant",
+    "light": "02 — Set the mood",
+    "day": "Daylight",
+    "evening": "Evening",
+    "zoom": "Visual zoom",
+    "water": "Water & learn",
+    "waterTip": "Check the soil first. Water when your plant needs it, then let excess water drain away.",
+    "careHint": "A small care ritual goes a long way.",
+    "viewPlant": "Meet this plant",
+    "triggerHint": "Style your own green corner"
   }
 }

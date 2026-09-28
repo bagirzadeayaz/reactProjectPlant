@@ -1,3 +1,4 @@
+import { ProductTools, GardenNav } from '../../features/garden-tools';
 import { useState } from 'react';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
@@ -79,11 +80,13 @@ export const ProductPage = () => {
         description={t('product:metaDescription', { name, description })}
       />
 
+      <GardenNav />
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <ProductGallery product={item} name={name} />
 
         <div className="flex flex-col gap-6">
           {category && <p className="text-md text-ink-muted">{localized(category.label)}</p>}
+          <ProductTools product={item} />
           <h1 className="text-h1 font-(--font-weight-heading) text-ink">{name}</h1>
           <p className="text-h2 text-ink-muted">{format.currency(item.price, item.currency)}</p>
           <p className={item.inStock ? 'text-md text-ink' : 'text-md text-ink-muted'}>
@@ -100,6 +103,7 @@ export const ProductPage = () => {
           <div className="mt-4 flex flex-wrap items-center gap-6">
             <QuantityStepper value={quantity} onChange={setQuantity} disabled={!item.inStock} />
             <AddToCartButton product={item} quantity={quantity} variant="label" />
+            <Button as="a" href="/cart" variant="ghost">{t('common:checkout.reviewBasket')}</Button>
           </div>
         </div>
       </div>
@@ -112,7 +116,7 @@ export const ProductPage = () => {
           <ul className="home-product-grid">
             {others.map((entry) => (
               <li key={entry.id} className="h-full">
-                <ProductCard product={entry} action={<AddToCartButton product={entry} />} />
+                <ProductCard product={entry} tools={<ProductTools product={entry} />} action={<AddToCartButton product={entry} />} />
               </li>
             ))}
           </ul>

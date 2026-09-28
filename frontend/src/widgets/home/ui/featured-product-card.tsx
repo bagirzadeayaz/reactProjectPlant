@@ -1,3 +1,4 @@
+import { useSwipe } from '../../../shared/lib/use-swipe';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -24,8 +25,17 @@ export const FeaturedProductCard = ({
   const { localized } = useLocale();
   const reducedMotion = useReducedMotion();
   const name = localized(product.name);
+  const swipe = useSwipe((direction) => {
+    onSelect?.((index + direction + count) % Math.max(1, count));
+  });
   return (
-    <article className="featured-plant glass-surface">
+    <article {...swipe} className="featured-plant glass-surface linked-product swipe-carousel">
+      <Link
+        to={`/catalog/${product.slug}`}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="product-card-hitarea"
+      />
       <motion.div
         key={product.id}
         initial={reducedMotion ? false : { opacity: 0, x: 22 }}
@@ -33,16 +43,18 @@ export const FeaturedProductCard = ({
         transition={{ duration: 0.55 }}
         className="featured-plant__image"
       >
-        <ResponsiveImage
-          src={product.imageUrl}
-          sources={productImageSources(product)}
-          width={PRODUCT_IMAGE_SIZE}
-          height={PRODUCT_IMAGE_SIZE}
-          sizes="(min-width: 1728px) 459px, (min-width: 900px) 27vw, 320px"
-          priority
-          alt={name}
-          className="plant-float"
-        />
+        <Link to={`/catalog/${product.slug}`} tabIndex={-1} className="product-media-link">
+          <ResponsiveImage
+            src={product.imageUrl}
+            sources={productImageSources(product)}
+            width={PRODUCT_IMAGE_SIZE}
+            height={PRODUCT_IMAGE_SIZE}
+            sizes="(min-width: 1728px) 459px, (min-width: 900px) 27vw, 320px"
+            priority
+            alt={name}
+            className="plant-float"
+          />
+        </Link>
       </motion.div>
       <div className="featured-plant__copy">
         <p className="text-md text-ink-muted">{t('featured.eyebrow')}</p>

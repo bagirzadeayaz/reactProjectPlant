@@ -69,7 +69,7 @@ export const ToastProvider = ({ children, regionLabel, dismissLabel }: ToastProv
             });
           }
         }}
-        className="pointer-events-none fixed bottom-6 right-6 z-50 flex w-full max-w-sm flex-col gap-3"
+        className="toast-viewport pointer-events-none fixed bottom-6 right-6 z-50 flex w-full max-w-sm flex-col gap-3"
       >
         {toasts.map((toast) => (
           <ToastItem key={toast.id} toast={toast} onDismiss={dismiss} dismissLabel={dismissLabel} />

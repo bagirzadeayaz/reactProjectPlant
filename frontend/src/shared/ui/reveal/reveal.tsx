@@ -11,7 +11,7 @@ export interface RevealProps extends ComponentPropsWithoutRef<'div'> {
  * No React state: the effect marks the element `data-reveal="out"`, an
  * IntersectionObserver flips it to `"in"`, and CSS does the rest — only under
  * `prefers-reduced-motion: no-preference`, so a reader who asked for less
- * motion gets plain content. Without JS, or in jsdom, nothing is ever hidden:
+ * motion gets plain content. Without an IntersectionObserver, nothing is hidden:
  * the `out` state exists only once an observer is there to undo it.
  *
  * Use it on content below the fold. Above the fold the observer fires on

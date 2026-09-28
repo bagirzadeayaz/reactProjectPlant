@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Button, Container, Icon, Modal } from '../../../shared/ui';
+import { PlantStudio } from './plant-studio';
 
 export interface HeroProps {
   aside?: ReactNode;
@@ -42,7 +43,10 @@ export const Hero = ({ aside, review }: HeroProps) => {
               <span className="demo-trigger__play">
                 <Icon name="play" />
               </span>
-              <span>{t('home:hero.liveDemo')}</span>
+              <span className="demo-trigger__label">
+                {t('home:hero.liveDemo')}
+                <small>{t('home:studio.triggerHint')}</small>
+              </span>
             </button>
           </motion.div>
           {review !== undefined && (
@@ -66,13 +70,7 @@ export const Hero = ({ aside, review }: HeroProps) => {
         closeLabel={t('common:actions.close')}
         className="plant-demo"
       >
-        <div className="plant-demo__scene">
-          <img src="/plants/calathea-plant.png" alt="" width={391} height={391} />
-        </div>
-        <p className="text-md text-ink-muted">{t('home:demo.body')}</p>
-        <Button as="a" href="/catalog">
-          {t('common:actions.explore')}
-        </Button>
+        <PlantStudio />
       </Modal>
     </section>
   );

@@ -12,13 +12,12 @@ and deployment; frontend and backend source never import each other.
 frontend/
   src/
     main.tsx                 Browser entry point
-    app/                     Providers, routing, store composition, integration tests
+    app/                     Providers, routing and store composition
     pages/                   Route screens
     widgets/                 Header, footer, home sections, reusable not-found view
     features/                Admin access, cart drawer, product form, filters, newsletter
     entities/                Product, category, review, cart types/state/UI
     shared/                  UI primitives, HTTP client, Firebase configuration, i18n
-  test/                      Test setup, MSW handlers, in-memory fixtures and auth doubles
   public/                    Static images, icons and robots.txt
 backend/
   src/
@@ -29,13 +28,11 @@ backend/
     application/             Use cases with injected repository/auth dependencies
     infrastructure/          Firebase token verifier and Firestore REST adapters
     http/                    Routing, request parsing, CORS, error mapping, static files
-  test/                      Domain, service, repository, HTTP and configuration tests
   seed.json                  Initial catalog data
   firestore.rules.template   Versioned Firestore rules without account values
   firestore.rules            Generated local rules; ignored by Git
 scripts/                     Development, architecture checks and maintenance tools
-e2e/                         Browser journeys against an isolated test server
-docs/history/                Earlier design decisions and migration notes
+docs/                        Design reference and CI workflow template
 ```
 
 ## Backend dependencies
@@ -81,6 +78,11 @@ can retry, and create-if-absent writes permit safe continuation after a partial 
 
 ## Frontend dependencies and state
 
+The header's full navigation uses the shared modal primitive as a side panel on
+desktop and mobile. Its link list scrolls independently; the close control and
+account/language footer stay visible. The shared modal owns scroll locking,
+focus trapping, Escape/backdrop dismissal and focus restoration.
+
 ```text
 app -> pages -> widgets -> features -> entities -> shared
 ```
@@ -98,12 +100,12 @@ browser storage. Frontend validation gives immediate form feedback; the backend 
 all writes independently.
 
 Firebase authentication and analytics load on demand. Authentication uses in-memory
-persistence and a user-initiated Google popup. Test implementations are injected through
-Vitest mocks, with no test-mode branches or mock server startup in production code.
+persistence and a user-initiated Google popup. Production code has no test-mode branches
+or mock server startup.
 
 EN/RU translations live in `frontend/src/shared/i18n/locales`. All visible UI text uses
 translation keys, and reusable UI components receive their labels as props. Design tokens
-remain in `frontend/src/index.css`; visual design history is in `docs/history`.
+remain in `frontend/src/index.css`; the design reference is in `docs/design-reference.md`.
 
 ## Configuration and deployment
 
@@ -125,16 +127,11 @@ requires a separately deployed API and reverse proxy.
 - `npm run check:architecture`: rejects upward/cross-slice frontend imports, forbidden
   backend layer imports, cross-runtime imports and production imports of test helpers.
 - `npm run build`: strict TypeScript checks and production bundling.
-- `npm test`: frontend unit/integration tests with isolated MSW HTTP fixtures.
-- `npm run test:backend`: isolated tests without `.env`, a frontend build, network or Firebase.
-- `npm run e2e`: desktop and mobile browser journeys against a real Node HTTP server
-  with fresh in-memory repositories. Test bundles stay in `node_modules/.cache` and
-  never replace `frontend/dist`. The test server cannot reuse a production server.
-- `npm run check`: lint, build, backend tests and frontend tests together.
+- `npm run check`: lint and build together, including translation and type checks.
 
-Browser fixtures test rendering and HTTP integration; Firestore adapter tests validate
-encoding, token forwarding and atomic writes. These do not replace verification of
-manually published Firebase rules or a real Google popup in the deployed environment.
+Automated test suites, fixtures, runners and reports were removed at the user's request.
+Changed browser flows require manual verification. Build checks do not verify published
+Firebase rules or a real Google popup in the deployed environment.
 
 ## Current tradeoffs
 
@@ -154,13 +151,43 @@ be introduced if the runtimes gain independent release cycles.
 ## Decisions from this review
 
 1. Replace global backend clients with factory-based services and repositories to isolate
-   business logic and make tests independent of Firebase and environment values.
+   business logic from Firebase and environment values.
 2. Keep error codes in the domain and HTTP statuses in the HTTP adapter.
 3. Remove the unused pre-migration UI, duplicate Redux filter state and mock worker assets.
-4. Keep frontend mocks outside production source and enforce both runtime boundaries.
+4. Enforce both runtime boundaries and keep mock implementations out of production.
 5. Move seed side effects to an authenticated POST while retaining manual sign-in behavior.
-6. Run browser tests against isolated repositories instead of the live Firebase project.
+6. Keep runtime code separate from development tooling; use lint and build as the current checks.
 
-Historical decisions, Figma references and measurements are preserved in
-`docs/history/architecture-before-cleanup.md`; they are historical evidence, not current
-setup instructions.
+## Demo checkout
+
+`/cart` reviews quantities and current availability; `/checkout` collects sample details and presents an editable review; `/checkout/confirmation` shows a clearly labeled demo receipt. No payment or real order is submitted. Names, email and addresses stay in component state and are never persisted or transmitted. A validated session receipt contains only a demo reference, item count, total and delivery choice; it survives refresh in the current tab.
+
+Basket products are fetched by their IDs through the product API rather than a paginated catalog subset. Checkout rechecks prices and availability before confirming. Missing or unavailable products block confirmation. Confirmation clears the basket only after the demo receipt is saved.
+
+### September 2026 storefront prices
+
+The six original catalog prices are now 15–70 AZN. Both seeds use these prices.
+The Firestore reader normalizes only the six exact legacy slug/price pairs before
+filtering, sorting and checkout. Other products and subsequent merchant price
+edits are preserved. This provides consistent storefront pricing without a
+privileged database migration; the existing raw legacy records are unchanged.
+
+Reference comparables: Gullerim cactus listings (https://www.gullerim.az/product-categories/kaktus),
+Gullerim houseplants (https://gullerim.az/product-categories/bitkiler),
+and a Baku Calathea listing (https://prayk.com/az/elan/benjamim-kalathea-difenbaxiya-bitkileri-1766177).
+Prices are chosen retail prices based on comparables, not identical-size valuations.
+Checkout remains a local basket confirmation; it does not submit an order or payment.
+
+## Browser-only garden experiences
+
+The `garden` entity stores only saved/compared product IDs and care checkmark keys.
+The app composes its Redux reducer and persistence lifecycle; product details still
+come from RTK Query. `garden-tools` supplies actions through ProductCard's tools slot,
+keeping entities independent. Comparison is bounded to three products.
+
+The lazy `/discover`, `/finder`, `/wishlist`, `/compare` and `/studio` pages compose
+these features. Quiz/compare profiles are explicitly illustrative catalog metadata.
+The care calendar records soil-check dates locally and makes no real watering promises.
+The checkout slice also owns `/tracking`: a labelled simulation using a session receipt,
+with manual stages or a cancellable timer. No order, payment, address, or delivery is
+submitted. Room/pot styling is cosmetic and leaves product prices unchanged.

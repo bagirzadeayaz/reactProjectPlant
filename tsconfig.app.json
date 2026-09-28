@@ -4,7 +4,7 @@
     "target": "es2023",
     "module": "esnext",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "vitest/globals"],
+    "types": ["vite/client"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -34,5 +34,5 @@
       "@/*": ["./frontend/src/*"]
     }
   },
-  "include": ["frontend/src", "frontend/test"]
+  "include": ["frontend/src"]
 }

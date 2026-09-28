@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AddToCartButton } from '../../../features/add-to-cart';
 import { PRODUCT_IMAGE_SIZE, productImageSources, type Product } from '../../../entities/product';
@@ -16,17 +17,32 @@ export const ProductBanner = ({ product, align = 'left', artwork }: ProductBanne
   const format = useFormatters(locale);
   return (
     <article
-      className={cn('product-banner glass-surface', align === 'right' && 'product-banner--reverse')}
+      className={cn(
+        'product-banner glass-surface linked-product',
+        align === 'right' && 'product-banner--reverse',
+      )}
     >
+      <Link
+        to={`/catalog/${product.slug}`}
+        aria-label={localized(product.name)}
+        className="product-card-hitarea"
+      />
       <div className="product-banner__image">
-        <ResponsiveImage
-          src={artwork ?? product.imageUrl}
-          sources={productImageSources({ imageUrl: artwork ?? product.imageUrl })}
-          width={PRODUCT_IMAGE_SIZE}
-          height={PRODUCT_IMAGE_SIZE}
-          sizes="(min-width: 1728px) 601px, (min-width: 900px) 35vw, 80vw"
-          alt={artwork ? '' : localized(product.name)}
-        />
+        <Link
+          to={`/catalog/${product.slug}`}
+          tabIndex={-1}
+          aria-label={localized(product.name)}
+          className="product-media-link"
+        >
+          <ResponsiveImage
+            src={artwork ?? product.imageUrl}
+            sources={productImageSources({ imageUrl: artwork ?? product.imageUrl })}
+            width={PRODUCT_IMAGE_SIZE}
+            height={PRODUCT_IMAGE_SIZE}
+            sizes="(min-width: 1728px) 601px, (min-width: 900px) 35vw, 80vw"
+            alt={artwork ? '' : localized(product.name)}
+          />
+        </Link>
       </div>
       <div className="product-banner__copy">
         <h3>{t('banner.title')}</h3>

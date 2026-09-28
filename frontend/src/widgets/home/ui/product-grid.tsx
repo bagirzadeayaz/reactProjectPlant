@@ -1,3 +1,4 @@
+import { ProductTools } from '../../../features/garden-tools';
 import { AddToCartButton } from '../../../features/add-to-cart';
 import { ProductCard, type Product } from '../../../entities/product';
 import { Reveal, Skeleton } from '../../../shared/ui';
@@ -34,6 +35,7 @@ export const ProductGrid = ({
             <Reveal className="h-full">
               <ProductCard
                 product={product}
+                tools={<ProductTools product={product} />}
                 priority={index < 3}
                 action={<AddToCartButton product={product} />}
               />

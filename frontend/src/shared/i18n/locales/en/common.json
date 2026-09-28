@@ -7,7 +7,12 @@
     "contact": "Contact",
     "privacy": "Privacy",
     "catalog": "Catalog",
-    "admin": "Login"
+    "admin": "Login",
+    "discover": "Discover",
+    "wishlist": "Wishlist",
+    "compare": "Compare",
+    "shopAndCare": "Shop & care",
+    "plantCare": "Plant care"
   },
   "actions": {
     "explore": "Explore",
@@ -91,5 +96,39 @@
   "meta": {
     "siteName": "Planto.",
     "homeDescription": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive."
+  },
+  "checkout": {
+    "progress": "Checkout progress",
+    "basket": "Basket",
+    "details": "Delivery details",
+    "confirmation": "Confirmation",
+    "reviewBasket": "Review basket",
+    "continueShopping": "Continue shopping",
+    "summary": "Order summary",
+    "deliveryNote": "Plant subtotal only. Delivery costs are not included.",
+    "unavailable": "Remove unavailable or out-of-stock plants from your basket before continuing.",
+    "proceed": "Continue to checkout",
+    "reviewOrder": "Review your order",
+    "checkDetails": "Check your details",
+    "name": "Full name",
+    "email": "Email address",
+    "method": "Delivery method",
+    "delivery": "Home delivery",
+    "pickup": "Pickup",
+    "address": "Delivery address",
+    "editDetails": "Edit details",
+    "changed": "The basket changed or could not be checked. Review the updated prices and availability, then try again.",
+    "yourDetails": "Your details",
+    "total": "Total",
+    "editBasket": "Edit basket",
+    "confirmed": "Basket confirmed",
+    "noConfirmation": "No basket confirmed yet",
+    "startBasket": "Start with a plant you love.",
+    "reference": "Basket reference",
+    "eyebrow": "Your next green companion",
+    "notice": "Your basket is saved in this browser. No order is sent or payment taken.",
+    "confirmBasket": "Confirm basket",
+    "detailsHint": "These details stay on this page and are not saved or sent.",
+    "complete": "Your selection is saved for this visit."
   }
 }

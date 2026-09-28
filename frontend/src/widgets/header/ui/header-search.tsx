@@ -53,6 +53,7 @@ export const HeaderSearch = ({ isSearchOpen, onOpenChange }: HeaderSearchProps) 
               const lang = new URLSearchParams(search).get('lang');
               if (lang) params.set('lang', lang);
               if (query) params.set('search', query);
+              onOpenChange(false);
               void navigate({ pathname: '/catalog', search: params.toString() });
             }}
           >

@@ -11,6 +11,7 @@ export interface CartLineProps {
   line: CartLineModel;
   /** Undefined when the product has since been deleted from the catalog. */
   product: Product | undefined;
+  onNavigate?: () => void;
 }
 
 const stepClass = cn(
@@ -23,7 +24,7 @@ const stepClass = cn(
  * One row of the cart. Quantity is a labelled spinbutton pair; the product's
  * name and price come from the catalog cache, never from the cart itself.
  */
-export const CartLine = ({ line, product }: CartLineProps) => {
+export const CartLine = ({ line, product, onNavigate }: CartLineProps) => {
   const { t } = useTranslation(['common', 'product']);
   const { locale, localized } = useLocale();
   const format = useFormatters(locale);
@@ -35,7 +36,7 @@ export const CartLine = ({ line, product }: CartLineProps) => {
   };
 
   return (
-    <li className="flex items-center gap-4 py-4">
+    <li className="cart-line flex items-center gap-4 py-4">
       {product && (
         <img
           src={product.imageUrl}
@@ -51,7 +52,8 @@ export const CartLine = ({ line, product }: CartLineProps) => {
         {product ? (
           <Link
             to={`/catalog/${product.slug}`}
-            className="truncate text-md text-ink hover:underline"
+            onClick={onNavigate}
+            className="text-md text-ink hover:underline"
           >
             {name}
           </Link>
@@ -62,6 +64,9 @@ export const CartLine = ({ line, product }: CartLineProps) => {
           <span className="text-sm text-ink-muted">
             {format.currency(product.price * line.quantity, product.currency)}
           </span>
+        )}
+        {product && !product.inStock && (
+          <span className="text-sm text-ink-muted">{t('product:outOfStock')}</span>
         )}
       </div>
 

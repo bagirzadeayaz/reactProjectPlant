@@ -1,3 +1,4 @@
+import { catalogPrice } from './catalog-prices';
 import type { FetchArgs } from '@reduxjs/toolkit/query';
 import {
   Bytes,
@@ -102,6 +103,7 @@ const productFrom = async (id: string, data: Omit<Product, 'id'>): Promise<Produ
   id,
   // Older records predate the storefront's switch to Azerbaijani manat.
   currency: 'AZN',
+  price: catalogPrice(data.slug, data.price),
   imageUrl: await resolveStoredImage(data.imageUrl),
 });
 

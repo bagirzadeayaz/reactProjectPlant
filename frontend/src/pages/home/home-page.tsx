@@ -30,7 +30,7 @@ import { useHomeData } from './use-home-data';
  * and the Best-O₂ section are separate, each with its own button.
  */
 export const HomePage = () => {
-  const { t } = useTranslation(['home', 'common']);
+  const { t } = useTranslation(['home', 'common', 'garden']);
   const { products, reviews, byCategory, isLoading, isError, refetch } = useHomeData();
   const [featuredIndex, setFeaturedIndex] = useState(0);
 
@@ -104,6 +104,7 @@ export const HomePage = () => {
         }
       />
 
+      <Container className="discovery-callout"><div><p>{t('garden:featureLabel')}</p><h2>{t('garden:allFeatures')}</h2></div><Button as="a" href="/discover">{t('garden:nav')} ↗</Button></Container>
       <Section className="trendy-section" aria-labelledby="trendy-heading">
         <SectionHeading id="trendy-heading">{t('home:sections.trendy')}</SectionHeading>
         <div className="trendy-list">

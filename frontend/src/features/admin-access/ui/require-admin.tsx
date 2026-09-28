@@ -15,17 +15,9 @@ type Status = 'checking' | 'signedOut' | 'authorized' | 'forbidden' | 'error';
 
 const checkAccess = async (user: User): Promise<Status> => {
   try {
-    if (import.meta.env.MODE !== 'test') {
-      const { ensureAdminSession } = await import('../../../shared/firestore/store');
-      await ensureAdminSession(user.email, user.emailVerified);
-      return 'authorized';
-    }
-    const token = await user.getIdToken();
-    const response = await fetch('/api/admin/session', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.ok ? 'authorized' : response.status === 403 ? 'forbidden' : 'error';
+    const { ensureAdminSession } = await import('../../../shared/firestore/store');
+    await ensureAdminSession(user.email, user.emailVerified);
+    return 'authorized';
   } catch {
     return 'error';
   }

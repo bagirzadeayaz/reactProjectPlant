@@ -1,5 +1,6 @@
 export {
   productApi,
+  useGetBasketProductsQuery,
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductBySlugQuery,
@@ -14,3 +15,5 @@ export {
 export type { Currency, Product, ProductDraft, ProductPatch } from './model/schema';
 export { PRODUCT_IMAGE_SIZE, PRODUCT_IMAGE_WIDTHS, productImageSources } from './lib/product-image';
 export { ProductCard, type ProductCardProps } from './ui/product-card';
+
+export { plantProfile, matchProfile, type PlantProfile } from './lib/plant-profile';

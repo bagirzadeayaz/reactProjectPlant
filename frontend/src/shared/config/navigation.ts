@@ -10,6 +10,6 @@ export const PRIMARY_NAV_LINKS = [
 export const LOGIN_LINK = { to: '/admin/products', labelKey: 'nav.admin' } as const;
 
 /** All public routes used by the footer and compact navigation. */
-export const NAV_LINKS = [...PRIMARY_NAV_LINKS, LOGIN_LINK] as const;
+export const NAV_LINKS = [...PRIMARY_NAV_LINKS, {to:'/discover',labelKey:'nav.discover'}, {to:'/wishlist',labelKey:'nav.wishlist'}, {to:'/compare',labelKey:'nav.compare'}, LOGIN_LINK] as const;
 
 export type NavLink = (typeof NAV_LINKS)[number];

@@ -1,3 +1,4 @@
+import { ProductTools, GardenNav } from '../../features/garden-tools';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
 import { useGetCategoriesQuery } from '../../entities/category';
@@ -32,7 +33,7 @@ export const CatalogPage = () => {
   const total = products.data?.total ?? 0;
 
   return (
-    <Container as="section" className="py-12 sm:py-16">
+    <Container as="section" className="catalog-page py-12 sm:py-16">
       <DocumentMeta
         title={`${t('catalog:title')} · ${t('common:meta.siteName')}`}
         description={t('catalog:metaDescription')}
@@ -40,7 +41,8 @@ export const CatalogPage = () => {
 
       <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('catalog:title')}</h1>
 
-      <div className="mt-8 lg:mt-10">
+      <GardenNav />
+      <div className="catalog-controls mt-8 lg:mt-10">
         <CatalogFilters
           params={params}
           categories={categories.data ?? []}
@@ -49,7 +51,7 @@ export const CatalogPage = () => {
         />
       </div>
 
-      <p aria-live="polite" className="mt-8 text-md text-ink-muted">
+      <p aria-live="polite" className="catalog-result-count mt-8 text-md text-ink-muted">
         {products.isFetching ? t('common:state.loading') : t('catalog:results', { count: total })}
       </p>
 
@@ -87,6 +89,7 @@ export const CatalogPage = () => {
             <li key={product.id} className="h-full">
               <ProductCard
                 product={product}
+                tools={<ProductTools product={product} />}
                 priority={index < 3}
                 headingLevel={2}
                 action={<AddToCartButton product={product} />}

@@ -4,12 +4,10 @@ React storefront with a Node.js API backed by Cloud Firestore. Product managemen
 
 ## Folders
 
-- `frontend/`: React, Vite, styles, assets, and frontend tests.
+- `frontend/`: React, Vite, styles, and assets.
 - `backend/src/`: domain rules, application services, HTTP adapters and Firebase/Firestore infrastructure, connected by `bootstrap.js`.
 - `backend/src/application/seed.js`: one-time, non-destructive seed for the six sample plants, categories, and reviews after your first admin sign-in.
 - `backend/firestore.rules.template`: source for Firestore rules. `npm run rules:generate` fills in the admin email from `.env` and writes ignored `backend/firestore.rules` for manual publishing.
-- `frontend/test/`: isolated test setup, HTTP mocks and fixtures.
-- `e2e/`: browser tests against an isolated Node.js server; no Firebase login or live database access.
 - `ARCHITECTURE.md`: current dependency rules, data flow, tradeoffs and extension points.
 
 ## Local setup
@@ -43,13 +41,9 @@ The Node.js server can also serve the production frontend from `frontend/dist`. 
 | `npm run rules:generate` | Generate the local Firestore rules from `.env`           |
 | `npm run lint`           | Lint and verify EN/RU key parity                         |
 | `npm run typecheck`      | Typecheck the frontend                                   |
-| `npm test`               | Frontend unit and integration tests with a mock HTTP API |
-| `npm run test:backend`   | Backend API and domain tests                             |
 | `npm run build`          | Typecheck and build the frontend                         |
 | `npm start`              | Serve API and built frontend using `PORT`                |
 
 The current catalog API loads all products and applies the existing bilingual search and filters in Node.js. This preserves the current UI behavior for the small catalog. Larger catalogs should add indexed query fields and cursor pagination. Product images stored in Firestore count toward document storage and reads; the 300 KB limit keeps each document below Firestore's 1 MiB limit.
 
-Run `npm run check` for lint, architecture checks, build and both unit/integration suites. Run `npm run e2e` for desktop/mobile browser journeys. Backend and browser tests need no `.env` or Firebase credentials.
-
-Browser tests use Playwright Chromium by default. If Chrome is already installed, set `PLAYWRIGHT_CHANNEL=chrome` for the test command. `E2E_PORT` optionally changes the isolated test server port (default 4173); these are test-runner overrides, not app configuration.
+Run `npm run check` for lint, architecture checks, translation checks, strict TypeScript validation and a production build. Automated test suites and their dependencies have been removed. Check changed interactions manually in the browser.

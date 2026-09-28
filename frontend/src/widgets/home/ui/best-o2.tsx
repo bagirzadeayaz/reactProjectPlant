@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import { useSwipe } from '../../../shared/lib/use-swipe';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PRODUCT_IMAGE_SIZE, productImageSources, type Product } from '../../../entities/product';
@@ -32,18 +34,28 @@ export const BestO2 = ({ products }: BestO2Props) => {
   const [index, setIndex] = useState(0);
   const product = products[index];
   const total = products.length;
+  const swipe = useSwipe((direction) => {
+    setIndex((current) => Math.max(0, Math.min(total - 1, current + direction)));
+  });
 
   if (!product) return null;
 
   return (
     <div
+      {...swipe}
       role="region"
       aria-label={t('home:bestO2.carouselLabel')}
       className={cn(
-        'best-o2 grid items-center border-(length:--border-width-control) border-border-glass',
+        'best-o2 linked-product swipe-carousel grid items-center border-(length:--border-width-control) border-border-glass',
         'bg-surface-glass backdrop-blur-panel',
       )}
     >
+      <Link
+        to={`/catalog/${product.slug}`}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="product-card-hitarea"
+      />
       <div key={product.id} className="best-o2__image page-enter">
         <ResponsiveImage
           src={product.imageUrl}

@@ -27,13 +27,9 @@ backend/firestore.rules
 *.sln
 *.sw?
 
-# Test and build output
-coverage
+# Build output
 html
 *.tsbuildinfo
 
-# Playwright
-test-results
-playwright-report
 .vercel
 .firebase/

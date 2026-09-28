@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { cartActions } from '../../../entities/cart';
 import type { Product } from '../../../entities/product';
 import { useLocale } from '../../../shared/i18n';
@@ -29,6 +30,7 @@ export const AddToCartButton = ({
   const { t } = useTranslation(['common', 'product']);
   const { localized } = useLocale();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { show } = useToast();
 
   const add = (): void => {
@@ -60,7 +62,10 @@ export const AddToCartButton = ({
   return (
     <Button
       variant="primary"
-      onClick={add}
+      onClick={() => {
+        add();
+        void navigate('/cart');
+      }}
       disabled={!product.inStock}
       {...(className === undefined ? {} : { className })}
     >

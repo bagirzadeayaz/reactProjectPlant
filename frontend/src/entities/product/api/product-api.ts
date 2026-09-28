@@ -43,6 +43,19 @@ const context = (lifecycle: {
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    getBasketProducts: build.query<Product[], string[]>({
+      async queryFn(ids, _api, _options, query) {
+        const results = await Promise.all(
+          ids.map(async (id) => query(`/products/${encodeURIComponent(id)}`)),
+        );
+        const failed = results.find(
+          (result) => result.error && result.error.error !== 'Product not found',
+        );
+        if (failed?.error) return { error: failed.error };
+        return { data: results.flatMap((result) => (result.data ? [result.data as Product] : [])) };
+      },
+      providesTags: ['Product'],
+    }),
     getProducts: build.query<ProductPage, ProductListParams | undefined>({
       query: (params) => ({ url: '/products', params: { ...params } }),
       providesTags: (result) => [
@@ -100,6 +113,7 @@ export const productApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetBasketProductsQuery,
   useGetProductsQuery,
   useGetProductBySlugQuery,
   useCreateProductMutation,

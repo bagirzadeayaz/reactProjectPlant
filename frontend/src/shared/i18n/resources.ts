@@ -1,3 +1,5 @@
+import enGarden from './locales/en/garden.json';
+import ruGarden from './locales/ru/garden.json';
 import enAdmin from './locales/en/admin.json';
 import enCatalog from './locales/en/catalog.json';
 import enCommon from './locales/en/common.json';
@@ -20,6 +22,7 @@ import ruValidation from './locales/ru/validation.json';
 export const resources = {
   en: {
     common: enCommon,
+    garden: enGarden,
     home: enHome,
     catalog: enCatalog,
     product: enProduct,
@@ -28,6 +31,7 @@ export const resources = {
   },
   ru: {
     common: ruCommon,
+    garden: ruGarden,
     home: ruHome,
     catalog: ruCatalog,
     product: ruProduct,
@@ -36,7 +40,7 @@ export const resources = {
   },
 } as const;
 
-export const NAMESPACES = ['common', 'home', 'catalog', 'product', 'admin', 'validation'] as const;
+export const NAMESPACES = ['common', 'home', 'catalog', 'product', 'admin', 'validation', 'garden'] as const;
 
 export type Namespace = (typeof NAMESPACES)[number];
 export const DEFAULT_NAMESPACE = 'common' satisfies Namespace;

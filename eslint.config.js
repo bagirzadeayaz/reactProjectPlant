@@ -22,15 +22,7 @@ const below = (layer) => {
 
 export default tseslint.config(
   {
-    ignores: [
-      'dist/**',
-      'frontend/dist/**',
-      'coverage/**',
-      'node_modules/**',
-      'html/**',
-      'test-results/**',
-      'playwright-report/**',
-    ],
+    ignores: ['dist/**', 'frontend/dist/**', 'node_modules/**', 'html/**'],
   },
 
   js.configs.recommended,
@@ -137,22 +129,11 @@ export default tseslint.config(
 
   /* Config files run in Node and legitimately default-export. */
   {
-    files: ['*.config.{js,ts}', 'frontend/test/setup.ts'],
+    files: ['*.config.{js,ts}'],
     languageOptions: { globals: globals.node },
     rules: {
       'import/no-default-export': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-    },
-  },
-
-  /* Tests may reach for test-only ergonomics. */
-  {
-    files: ['**/*.test.{ts,tsx}', 'frontend/test/setup.ts'],
-    rules: {
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
     },
   },
 );

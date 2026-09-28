@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import { cartActions, cartSelectors, type CartState } from '../../../entities/cart';
-import { useGetProductsQuery } from '../../../entities/product';
+import { useGetBasketProductsQuery } from '../../../entities/product';
 import { useFormatters, useLocale } from '../../../shared/i18n';
 import { cn } from '../../../shared/lib/cn';
 import { Button, EmptyState, Icon, useFocusTrap } from '../../../shared/ui';
@@ -27,24 +28,31 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const { locale } = useLocale();
   const format = useFormatters(locale);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
   const lines = useSelector((state: { cart: CartState }) => cartSelectors.selectLines(state));
   const count = useSelector((state: { cart: CartState }) => cartSelectors.selectCount(state));
-  const { data } = useGetProductsQuery({ perPage: 50 }, { skip: !isOpen });
-  const products = new Map((data?.items ?? []).map((product) => [product.id, product]));
+  const { data, isFetching, isError, refetch } = useGetBasketProductsQuery(
+    lines.map((line) => line.productId),
+    { skip: !isOpen },
+  );
+  const products = new Map((data ?? []).map((product) => [product.id, product]));
 
   useFocusTrap(panelRef, isOpen);
 
   useEffect(() => {
     if (!isOpen) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = overflow;
     };
   }, [isOpen, onClose]);
 
@@ -54,7 +62,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     const product = products.get(line.productId);
     return product ? total + product.price * line.quantity : total;
   }, 0);
-  const currency = data?.items[0]?.currency ?? 'AZN';
+  const currency = data?.[0]?.currency ?? 'AZN';
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -66,7 +74,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
         aria-labelledby={titleId}
         tabIndex={-1}
         className={cn(
-          'relative z-10 flex h-full w-full max-w-md flex-col bg-surface-footer p-6 shadow-float',
+          'cart-panel relative z-10 flex h-full w-full max-w-md flex-col bg-surface-footer p-6 shadow-float',
           'border-l-(length:--border-width-panel) border-border-glass focus-visible:outline-none',
         )}
       >
@@ -98,14 +106,47 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
         ) : (
           <>
             <ul className="mt-4 flex-1 divide-y divide-border-glass overflow-y-auto">
-              {lines.map((line) => (
-                <CartLine key={line.productId} line={line} product={products.get(line.productId)} />
-              ))}
+              {isFetching ? (
+                <li role="status" className="py-6">
+                  {t('state.loading')}
+                </li>
+              ) : isError ? (
+                <li className="py-6">
+                  <p role="alert">{t('state.errorDetail')}</p>
+                  <Button
+                    onClick={() => {
+                      void refetch();
+                    }}
+                  >
+                    {t('actions.retry')}
+                  </Button>
+                </li>
+              ) : (
+                lines.map((line) => (
+                  <CartLine
+                    key={line.productId}
+                    line={line}
+                    product={products.get(line.productId)}
+                    onNavigate={onClose}
+                  />
+                ))
+              )}
             </ul>
             <div className="mt-4 flex items-center justify-between border-t border-border-glass pt-4 text-md text-ink">
               <span>{t('cart.subtotal')}</span>
-              <span className="tabular-nums">{format.currency(subtotal, currency)}</span>
+              <span className="tabular-nums">
+                {isFetching || isError ? '—' : format.currency(subtotal, currency)}
+              </span>
             </div>
+            <Button
+              className="mt-4 shrink-0"
+              onClick={() => {
+                onClose();
+                void navigate('/cart');
+              }}
+            >
+              {t('checkout.reviewBasket')}
+            </Button>
             <Button
               variant="ghost"
               size="sm"

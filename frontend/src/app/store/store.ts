@@ -1,3 +1,4 @@
+import { gardenSlice, loadGarden } from '../../entities/garden';
 import { configureStore } from '@reduxjs/toolkit';
 import { cartSlice, loadCart } from '../../entities/cart';
 import { baseApi } from '../../shared/api';
@@ -16,8 +17,12 @@ export const makeStore = () => {
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
       [cartSlice.reducerPath]: cartSlice.reducer,
+      garden: gardenSlice.reducer,
     },
-    ...(persistedCart === undefined ? {} : { preloadedState: { cart: persistedCart } }),
+    preloadedState: {
+      garden: loadGarden(),
+      cart: persistedCart ?? {lines: []},
+    },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
   });
 

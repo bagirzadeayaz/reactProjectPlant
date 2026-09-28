@@ -20,6 +20,7 @@
   "previous": "Previous",
   "next": "Next",
   "filtersLabel": "Filters",
+  "showPlants": "Show plants",
   "priceMin": "Min price",
   "priceMax": "Max price",
   "inStockOnly": "In stock only",

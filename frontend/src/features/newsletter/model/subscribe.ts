@@ -4,8 +4,7 @@
  *
  * Not a zod schema on purpose: the footer is on every page, and this one
  * check is not worth carrying zod's core in the entry bundle. Entity schemas
- * stay on zod; they load with the admin form and the mock backend only
- * (ARCHITECTURE.md, decision 56).
+ * stay on zod and load with the features that need runtime validation.
  */
 const EMAIL_PATTERN =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -20,15 +19,6 @@ export const parseEmail = (value: string): EmailResult => {
 
 /** Saves the signup through the Firestore Web SDK in production. */
 export const subscribe = async (email: string): Promise<void> => {
-  if (import.meta.env.MODE !== 'test') {
-    const { subscribeInFirestore } = await import('../../../shared/firestore/store');
-    await subscribeInFirestore(email);
-    return;
-  }
-  const response = await fetch(new URL('/api/newsletter', globalThis.location.href), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  });
-  if (!response.ok) throw new Error('subscription failed');
+  const { subscribeInFirestore } = await import('../../../shared/firestore/store');
+  await subscribeInFirestore(email);
 };

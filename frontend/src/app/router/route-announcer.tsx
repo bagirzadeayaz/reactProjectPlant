@@ -10,15 +10,6 @@ export interface RouteAnnouncerProps {
 /** Longest we wait for a lazy route's heading before announcing the path instead. */
 const HEADING_TIMEOUT_MS = 2000;
 
-/** jsdom has no layout engine and logs a "not implemented" error for scrollTo. */
-const scrollToTop = (): void => {
-  try {
-    globalThis.scrollTo({ top: 0, behavior: 'auto' });
-  } catch {
-    // No scrollable window (tests, SSR). Nothing to restore.
-  }
-};
-
 /**
  * Makes a client-side navigation behave like a real one.
  *
@@ -47,7 +38,7 @@ export const RouteAnnouncer = ({ contentRef }: RouteAnnouncerProps) => {
     }
 
     const content = contentRef.current;
-    scrollToTop();
+    globalThis.scrollTo({ top: 0, behavior: 'auto' });
 
     let isCancelled = false;
     let observer: MutationObserver | null = null;

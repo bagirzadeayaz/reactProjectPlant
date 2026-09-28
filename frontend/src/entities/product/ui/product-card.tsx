@@ -12,6 +12,7 @@ export interface ProductCardProps {
   product: Product;
   /** The action slot — an add-to-cart button from `features`. Cards know no verbs. */
   action?: ReactNode;
+  tools?: ReactNode;
   /** Hero-position cards load eagerly; grid cards wait. */
   priority?: boolean;
   /**
@@ -34,6 +35,7 @@ export interface ProductCardProps {
 export const ProductCard = ({
   product,
   action,
+  tools,
   priority = false,
   headingLevel = 3,
   className,
@@ -49,8 +51,19 @@ export const ProductCard = ({
     <motion.article
       whileHover={reducedMotion ? {} : { y: -8 }}
       transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-      className={cn('product-card flex h-full flex-col', 'backdrop-blur-panel', className)}
+      className={cn(
+        'product-card linked-product flex h-full flex-col',
+        'backdrop-blur-panel',
+        className,
+      )}
     >
+      <Link
+        to={`/catalog/${product.slug}`}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="product-card-hitarea"
+      />
+      {tools && <div className="product-card__tools">{tools}</div>}
       {/* The picture is a second link to the same place; hiding it from the tab
           order and assistive tech keeps one announced link per card. */}
       <Link

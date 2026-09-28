@@ -1,8 +1,5 @@
 dist
 frontend/dist
-coverage
 node_modules
 html
-test-results
-playwright-report
 backend/firestore.rules

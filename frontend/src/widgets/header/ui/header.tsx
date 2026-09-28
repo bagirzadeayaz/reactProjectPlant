@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -10,20 +10,18 @@ import { LOGIN_LINK } from '../../../shared/config/navigation';
 import { Container, Icon } from '../../../shared/ui';
 import { HeaderSearch } from './header-search';
 import { NavLinkList } from './nav-link-list';
+import { NavigationPanel } from './navigation-panel';
 
 /**
  * The site header, from node 22:23 — wordmark left, nav centred, actions right.
  *
- * The comp has no mobile design, so below `lg` the nav collapses behind a
- * hamburger. The panel is a disclosure, not a dialog: it does not trap focus,
- * because it sits in the document flow directly after its button and pushes the
- * page down rather than covering it.
+ * The compact menu opens a modal side panel at every viewport, keeping the
+ * page in place and the full navigation within reach.
  */
 export const Header = () => {
   const { t } = useTranslation(['common', 'catalog']);
   const { pathname } = useLocation();
   const reducedMotion = useReducedMotion();
-  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // The menu belongs to the page it was opened on. Deriving that from the
   // pathname closes it on *any* navigation — a link inside it, the logo, the
@@ -38,23 +36,8 @@ export const Header = () => {
     setMenu({ isOpen, pathname });
   };
 
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const onKeyDown = (event: KeyboardEvent): void => {
-      if (event.key !== 'Escape') return;
-      // Escape returns focus to the control that opened the panel, so the
-      // keyboard user is not dropped back at the top of the document.
-      setMenu({ isOpen: false, pathname });
-      toggleRef.current?.focus();
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [isMenuOpen, pathname]);
-
   return (
-    <header className="site-header relative z-40">
+    <header className={cn('site-header relative z-40', isSearchOpen && 'site-header--search')}>
       <Container
         as="div"
         className={cn(
@@ -117,19 +100,17 @@ export const Header = () => {
           />
 
           <button
-            ref={toggleRef}
             type="button"
             aria-expanded={isMenuOpen}
-            aria-controls="header-menu"
+            aria-controls={isMenuOpen ? 'header-menu' : undefined}
+            aria-haspopup="dialog"
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
+              setIsSearchOpen(false);
             }}
             className="rounded-icon p-2 text-ink-muted hover:text-ink"
           >
-            <Icon
-              name={isMenuOpen ? 'close' : 'hamburger'}
-              label={isMenuOpen ? t('a11y.closeMenu') : t('a11y.openMenu')}
-            />
+            <Icon name="hamburger" label={t('a11y.openMenu')} />
           </button>
         </div>
       </Container>
@@ -141,20 +122,12 @@ export const Header = () => {
         }}
       />
 
-      <div id="header-menu" hidden={!isMenuOpen} className="header-menu">
-        <Container as="div" className="pb-8">
-          <nav aria-label={t('a11y.menuNavigation')}>
-            <NavLinkList
-              orientation="vertical"
-              includeLogin
-              onNavigate={() => {
-                setIsMenuOpen(false);
-              }}
-            />
-          </nav>
-          <LanguageSwitcher className="mt-6 xl:hidden" />
-        </Container>
-      </div>
+      <NavigationPanel
+        isOpen={isMenuOpen}
+        onClose={() => {
+          setIsMenuOpen(false);
+        }}
+      />
     </header>
   );
 };

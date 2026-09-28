@@ -10,4 +10,4 @@ Product descriptions, prices, stock and reviews remain live store content rather
 
 Motion includes staged hero entrances, section reveals, floating featured artwork, carousel changes and hover responses. Continuous motion and hover transforms respect reduced-motion preferences.
 
-Verification: desktop and mobile browser review, English and Russian layouts down to 320px, lint, production build, 300 frontend tests, 21 backend tests and 12 desktop/mobile browser tests. The browser suite uses installed Chrome (`PLAYWRIGHT_CHANNEL=chrome`).
+Verification: desktop and mobile browser review, English and Russian layouts down to 320px, lint and production build. Automated test tooling has since been removed; use `npm run check` and manual browser review for future changes.
