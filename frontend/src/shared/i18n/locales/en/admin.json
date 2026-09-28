@@ -1,5 +1,7 @@
 {
   "title": "Manage products",
+  "subtitle": "Keep your collection fresh and ready to grow.",
+  "viewCatalog": "View catalog",
   "metaDescription": "Add, edit and remove the plants in the catalog.",
   "new": "New product",
   "edit": "Edit product",
@@ -66,6 +68,12 @@
     "leave": "Discard and leave"
   },
   "table": {
+    "editShort": "Edit",
+    "clearSelection": "Clear selection",
+    "clearSearch": "Clear search",
+    "sortProducts": "Sort products",
+    "sortAscending": "Sort ascending",
+    "sortDescending": "Sort descending",
     "caption": "All products",
     "search": "Search products",
     "searchPlaceholder": "Name or slug",

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { ArrowUpRight, Plus, Search, Trash2, X } from 'lucide-react';
+import { useGetCategoriesQuery } from '../../entities/category';
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
@@ -40,6 +42,7 @@ export const AdminProductsPage = () => {
   const { locale, localized } = useLocale();
   const toast = useToast();
   const products = useGetProductsQuery(ALL);
+  const categories = useGetCategoriesQuery(undefined);
   const [deleteProduct, deletion] = useDeleteProductMutation();
   const [sort, setSort] = useState<TableSort>(DEFAULT_SORT);
   const [query, setQuery] = useState('');
@@ -80,88 +83,126 @@ export const AdminProductsPage = () => {
   };
 
   return (
-    <Container as="section" className="flex flex-col gap-8 py-12 sm:py-16">
+    <Container as="section" className="admin-products-page">
       <DocumentMeta
         title={`${t('admin:title')} · ${t('common:meta.siteName')}`}
         description={t('admin:metaDescription')}
         robots="noindex"
       />
 
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('admin:title')}</h1>
-        <Link
-          to="/admin/products/new"
-          className="text-lg text-ink underline-offset-4 hover:underline"
-        >
-          {t('admin:new')}
-        </Link>
+      <div className="admin-page-heading">
+        <div>
+          <h1>{t('admin:title')}</h1>
+          <p>{t('admin:subtitle')}</p>
+        </div>
+        <div className="admin-heading-actions">
+          <Link to="/catalog" className="admin-catalog-link">
+            {t('admin:viewCatalog')}
+            <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
+          <Link to="/admin/products/new" className="admin-new-product">
+            <Plus size={20} aria-hidden="true" />
+            {t('admin:new')}
+          </Link>
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-end gap-4">
-        <Input
-          type="search"
-          label={t('admin:table.search')}
-          placeholder={t('admin:table.searchPlaceholder')}
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-          }}
-          containerClassName="min-w-64"
-        />
-        <p role="status" data-testid="admin-count" className="text-md text-ink-muted">
-          {selection.selected.size > 0
-            ? t('admin:table.selected', { count: selection.selected.size })
-            : t('admin:table.count', { count: visible.length })}
-        </p>
-        {selection.selected.size > 0 && (
-          <Button size="sm" onClick={askDeleteSelected}>
-            {t('admin:table.deleteSelected')}
-          </Button>
+      <div className="admin-inventory">
+        <div className="admin-inventory-toolbar">
+          <div className="admin-search">
+            <Search size={20} aria-hidden="true" />
+            <Input
+              type="search"
+              label={t('admin:table.search')}
+              placeholder={t('admin:table.search')}
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+              }}
+              containerClassName="admin-search-field"
+            />
+          </div>
+          <p role="status" className="admin-count">
+            {products.isFetching
+              ? t('admin:table.loading')
+              : selection.selected.size > 0
+                ? t('admin:table.selected', { count: selection.selected.size })
+                : t('admin:table.count', { count: visible.length })}
+          </p>
+          {selection.selected.size > 0 && (
+            <div className="admin-selection-actions">
+              <button type="button" className="admin-delete-selection" onClick={askDeleteSelected}>
+                <Trash2 size={17} aria-hidden="true" />
+                {t('admin:table.deleteSelected')}
+              </button>
+              <button
+                type="button"
+                className="admin-icon-action"
+                onClick={selection.clear}
+                aria-label={t('admin:table.clearSelection')}
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {products.isLoading && (
+          <div aria-busy="true" aria-label={t('admin:table.loading')}>
+            <Skeleton className="h-64 w-full rounded-control" />
+          </div>
+        )}
+        {products.isError && (
+          <ErrorState
+            title={t('admin:loadFailed')}
+            action={
+              <Button size="sm" onClick={() => void products.refetch()}>
+                {t('common:actions.retry')}
+              </Button>
+            }
+          />
+        )}
+        {products.isSuccess && all.length === 0 && (
+          <EmptyState
+            title={t('admin:table.empty')}
+            description={t('admin:table.emptyHint')}
+            action={
+              <Button as="a" href="/admin/products/new" size="sm">
+                {t('admin:new')}
+              </Button>
+            }
+          />
+        )}
+        {products.isSuccess && all.length > 0 && visible.length === 0 && (
+          <EmptyState
+            title={t('admin:table.noMatches')}
+            action={
+              <Button
+                size="sm"
+                onClick={() => {
+                  setQuery('');
+                }}
+              >
+                {t('admin:table.clearSearch')}
+              </Button>
+            }
+          />
+        )}
+        {visible.length > 0 && (
+          <ProductsTable
+            items={visible}
+            categories={categories.data ?? []}
+            sort={sort}
+            onSort={(key) => {
+              setSort((current) => nextSort(current, key));
+            }}
+            selected={selection.selected}
+            onToggle={selection.toggle}
+            onToggleAll={selection.toggleAll}
+            onDelete={askDeleteOne}
+          />
         )}
       </div>
-
-      {products.isLoading && (
-        <div aria-busy="true" aria-label={t('admin:table.loading')}>
-          <Skeleton className="h-64 w-full rounded-control" />
-        </div>
-      )}
-      {products.isError && (
-        <ErrorState
-          title={t('admin:loadFailed')}
-          action={
-            <Button size="sm" onClick={() => void products.refetch()}>
-              {t('common:actions.retry')}
-            </Button>
-          }
-        />
-      )}
-      {products.isSuccess && all.length === 0 && (
-        <EmptyState
-          title={t('admin:table.empty')}
-          description={t('admin:table.emptyHint')}
-          action={
-            <Button as="a" href="/admin/products/new" size="sm">
-              {t('admin:new')}
-            </Button>
-          }
-        />
-      )}
-      {products.isSuccess && all.length > 0 && visible.length === 0 && (
-        <EmptyState title={t('admin:table.noMatches')} />
-      )}
-      {visible.length > 0 && (
-        <ProductsTable
-          items={visible}
-          sort={sort}
-          onSort={(key) => {
-            setSort((current) => nextSort(current, key));
-          }}
-          selected={selection.selected}
-          onToggle={selection.toggle}
-          onToggleAll={selection.toggleAll}
-          onDelete={askDeleteOne}
-        />
-      )}
 
       <DeleteDialog
         target={target}
