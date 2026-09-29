@@ -4,6 +4,10 @@ import { ToastItem } from './toast-item';
 import { DEFAULT_TOAST_DURATION, type Toast, type ToastInput } from './types';
 
 export interface ToastProviderProps {
+  /** Let an application presenter deliver the queued messages. */
+  headless?: boolean;
+  /** Replace older messages and always expire the latest message. */
+  latestOnly?: boolean;
   children: ReactNode;
   /** Accessible name for the toast region. Caller-supplied so it can be translated. */
   regionLabel: string;
@@ -18,10 +22,17 @@ export interface ToastProviderProps {
  * reachable and Escape dismisses everything in it, so a keyboard user is never
  * stuck waiting out a timer.
  */
-export const ToastProvider = ({ children, regionLabel, dismissLabel }: ToastProviderProps) => {
+export const ToastProvider = ({
+  children,
+  regionLabel,
+  dismissLabel,
+  headless = false,
+  latestOnly = false,
+}: ToastProviderProps) => {
   const [toasts, setToasts] = useState<readonly Toast[]>([]);
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   const nextId = useRef(0);
+  const messages = useRef(new Map<string, string>());
 
   const dismiss = useCallback((id: string): void => {
     const timer = timers.current.get(id);
@@ -30,25 +41,41 @@ export const ToastProvider = ({ children, regionLabel, dismissLabel }: ToastProv
       timers.current.delete(id);
     }
     setToasts((current) => current.filter((toast) => toast.id !== id));
+    for (const [message, messageId] of messages.current) {
+      if (messageId === id) messages.current.delete(message);
+    }
   }, []);
 
   const show = useCallback(
     ({ message, tone = 'info', duration = DEFAULT_TOAST_DURATION }: ToastInput): string => {
-      nextId.current += 1;
-      const id = `toast-${String(nextId.current)}`;
-      setToasts((current) => [...current, { id, message, tone, duration }]);
+      if (latestOnly) {
+        timers.current.forEach(clearTimeout);
+        timers.current.clear();
+        messages.current.clear();
+      }
+      const lifetime = latestOnly && duration <= 0 ? DEFAULT_TOAST_DURATION : duration;
+      const messageKey = JSON.stringify([tone, message]);
+      const existingId = messages.current.get(messageKey);
+      const id = existingId ?? `toast-${String(++nextId.current)}`;
+      messages.current.set(messageKey, id);
+      const previousTimer = timers.current.get(id);
+      if (previousTimer !== undefined) clearTimeout(previousTimer);
+      setToasts((current) => [
+        ...(latestOnly ? [] : current.filter((toast) => toast.id !== id)),
+        { id, message, tone, duration: lifetime },
+      ]);
 
-      if (duration > 0) {
+      if (lifetime > 0) {
         timers.current.set(
           id,
           setTimeout(() => {
             dismiss(id);
-          }, duration),
+          }, lifetime),
         );
       }
       return id;
     },
-    [dismiss],
+    [dismiss, latestOnly],
   );
 
   const value = useMemo(() => ({ toasts, show, dismiss }), [toasts, show, dismiss]);
@@ -56,25 +83,32 @@ export const ToastProvider = ({ children, regionLabel, dismissLabel }: ToastProv
   return (
     <ToastContext value={value}>
       {children}
-      <div
-        // A region is a container, not a control; tabIndex={-1} only makes it
-        // programmatically focusable so Escape has somewhere to land.
-        role="region"
-        aria-label={regionLabel}
-        tabIndex={-1}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            toasts.forEach((toast) => {
-              dismiss(toast.id);
-            });
-          }
-        }}
-        className="toast-viewport pointer-events-none fixed bottom-6 right-6 z-50 flex w-full max-w-sm flex-col gap-3"
-      >
-        {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onDismiss={dismiss} dismissLabel={dismissLabel} />
-        ))}
-      </div>
+      {!headless && (
+        <div
+          // A region is a container, not a control; tabIndex={-1} only makes it
+          // programmatically focusable so Escape has somewhere to land.
+          role="region"
+          aria-label={regionLabel}
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              toasts.forEach((toast) => {
+                dismiss(toast.id);
+              });
+            }
+          }}
+          className="toast-viewport pointer-events-none fixed bottom-6 right-6 z-50 flex w-full max-w-sm flex-col gap-3"
+        >
+          {toasts.map((toast) => (
+            <ToastItem
+              key={toast.id}
+              toast={toast}
+              onDismiss={dismiss}
+              dismissLabel={dismissLabel}
+            />
+          ))}
+        </div>
+      )}
     </ToastContext>
   );
 };

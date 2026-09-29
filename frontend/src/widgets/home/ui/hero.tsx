@@ -1,8 +1,7 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Button, Container, Icon, Modal } from '../../../shared/ui';
-import { PlantStudio } from './plant-studio';
+import { Button, Container, Icon } from '../../../shared/ui';
 
 export interface HeroProps {
   aside?: ReactNode;
@@ -10,9 +9,9 @@ export interface HeroProps {
 }
 
 export const Hero = ({ aside, review }: HeroProps) => {
-  const { t } = useTranslation(['home', 'common']);
+  const { t, i18n } = useTranslation(['home', 'common']);
   const reducedMotion = useReducedMotion();
-  const [demoOpen, setDemoOpen] = useState(false);
+
   const entrance = (delay: number) => ({
     initial: reducedMotion ? (false as const) : { opacity: 0, y: 24 },
     animate: { opacity: 1, y: 0 },
@@ -30,24 +29,21 @@ export const Hero = ({ aside, review }: HeroProps) => {
           </motion.p>
           <motion.div {...entrance(0.16)} className="hero__actions">
             <Button as="a" href="/catalog">
-              {t('common:actions.explore')}
+              {t('common:nav.catalog')}
             </Button>
-            <button
-              type="button"
+            <a
+              href={`/promo.html?lang=${i18n.resolvedLanguage === 'ru' ? 'ru' : 'en'}`}
               className="demo-trigger"
-              onClick={() => {
-                setDemoOpen(true);
-              }}
               aria-label={t('home:hero.playLabel')}
             >
               <span className="demo-trigger__play">
                 <Icon name="play" />
               </span>
               <span className="demo-trigger__label">
-                {t('home:hero.liveDemo')}
-                <small>{t('home:studio.triggerHint')}</small>
+                {t('home:hero.watchFilm')}
+                <small>{t('home:hero.filmHint')}</small>
               </span>
-            </button>
+            </a>
           </motion.div>
           {review !== undefined && (
             <motion.div {...entrance(0.3)} className="hero__review">
@@ -61,17 +57,6 @@ export const Hero = ({ aside, review }: HeroProps) => {
           </motion.div>
         )}
       </Container>
-      <Modal
-        isOpen={demoOpen}
-        onClose={() => {
-          setDemoOpen(false);
-        }}
-        title={t('home:demo.title')}
-        closeLabel={t('common:actions.close')}
-        className="plant-demo"
-      >
-        <PlantStudio />
-      </Modal>
     </section>
   );
 };

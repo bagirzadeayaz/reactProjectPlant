@@ -34,6 +34,7 @@ export const AddToCartButton = ({
   const { show } = useToast();
 
   const add = (): void => {
+    if (!product.inStock) return;
     dispatch(cartActions.added({ productId: product.id, quantity }));
     show({ message: t('product:addedToCart', { name: localized(product.name) }), tone: 'success' });
   };
@@ -69,7 +70,7 @@ export const AddToCartButton = ({
       disabled={!product.inStock}
       {...(className === undefined ? {} : { className })}
     >
-      {t('common:actions.buyNow')}
+      {product.inStock ? t('common:actions.buyNow') : t('product:outOfStock')}
     </Button>
   );
 };

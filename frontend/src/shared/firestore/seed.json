@@ -133,6 +133,120 @@
       "imageUrl": "/plants/calat-o2-plant.png",
       "inStock": true,
       "createdAt": "2026-01-22T09:00:00.000Z"
+    },
+    {
+      "id": "p-snake-plant",
+      "slug": "snake-plant",
+      "name": {
+        "en": "Snake plant",
+        "ru": "Сансевиерия"
+      },
+      "description": {
+        "en": "Upright, patterned leaves in an ivory ceramic pot. A sculptural accent for a desk or a quiet corner.",
+        "ru": "Вертикальные узорчатые листья в керамическом горшке цвета слоновой кости. Выразительный акцент для стола или уютного уголка."
+      },
+      "price": 25,
+      "currency": "AZN",
+      "category": "top-selling",
+      "imageUrl": "/plants/snake-plant.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
+    },
+    {
+      "id": "p-zz-plant",
+      "slug": "zz-plant",
+      "name": {
+        "en": "ZZ plant",
+        "ru": "Замиокулькас"
+      },
+      "description": {
+        "en": "Glossy green leaves on gently arching stems, paired with a warm taupe pot. An understated addition to your room.",
+        "ru": "Глянцевые зелёные листья на изящных стеблях и горшок тёплого серо-бежевого оттенка. Сдержанный акцент для вашей комнаты."
+      },
+      "price": 35,
+      "currency": "AZN",
+      "category": "top-selling",
+      "imageUrl": "/plants/zz-plant.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
+    },
+    {
+      "id": "p-peace-lily",
+      "slug": "peace-lily",
+      "name": {
+        "en": "Peace lily",
+        "ru": "Спатифиллум"
+      },
+      "description": {
+        "en": "White blooms above a generous crown of deep green leaves. Presented in a rounded ivory pot.",
+        "ru": "Белые соцветия над пышной кроной тёмно-зелёных листьев. В округлом горшке цвета слоновой кости."
+      },
+      "price": 30,
+      "currency": "AZN",
+      "category": "best-o2",
+      "imageUrl": "/plants/peace-lily.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
+    },
+    {
+      "id": "p-monstera-deliciosa",
+      "slug": "monstera-deliciosa",
+      "name": {
+        "en": "Monstera deliciosa",
+        "ru": "Монстера деликатесная"
+      },
+      "description": {
+        "en": "Distinctive split leaves and a speckled ceramic pot. A bold, tropical shape for your favourite corner.",
+        "ru": "Выразительные резные листья и керамический горшок в крапинку. Тропический акцент для любимого уголка."
+      },
+      "price": 45,
+      "currency": "AZN",
+      "category": "trendy",
+      "imageUrl": "/plants/monstera-deliciosa.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
+    },
+    {
+      "id": "p-rubber-plant",
+      "slug": "rubber-plant",
+      "name": {
+        "en": "Rubber plant",
+        "ru": "Фикус эластика"
+      },
+      "description": {
+        "en": "Rich, glossy foliage with a hint of burgundy on new growth. A charcoal pot gives this upright plant a clean finish.",
+        "ru": "Насыщенная глянцевая листва с бордовым оттенком молодых листьев. Графитовый горшок дополняет строгий силуэт."
+      },
+      "price": 40,
+      "currency": "AZN",
+      "category": "trendy",
+      "imageUrl": "/plants/rubber-plant.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
+    },
+    {
+      "id": "p-golden-pothos",
+      "slug": "golden-pothos",
+      "name": {
+        "en": "Golden pothos",
+        "ru": "Эпипремнум золотистый"
+      },
+      "description": {
+        "en": "Golden-flecked, heart-shaped leaves spill softly over a sand-colored pot. Made for a shelf or a side table.",
+        "ru": "Сердцевидные листья с золотистыми вкраплениями мягко ниспадают из горшка песочного цвета. Для полки или небольшого столика."
+      },
+      "price": 18,
+      "currency": "AZN",
+      "category": "top-selling",
+      "imageUrl": "/plants/golden-pothos.png",
+      "status": "published",
+      "inStock": true,
+      "createdAt": "2026-09-29T08:00:00.000Z"
     }
   ],
   "reviews": [

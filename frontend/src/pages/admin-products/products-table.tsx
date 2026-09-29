@@ -16,6 +16,8 @@ export interface ProductsTableProps {
   onToggle: (id: string) => void;
   onToggleAll: () => void;
   onDelete: (product: Product) => void;
+  onManage: (product: Product, action: 'quick' | 'archive' | 'restore') => void;
+  busy?: boolean;
 }
 
 /**
@@ -33,6 +35,8 @@ export const ProductsTable = ({
   onToggle,
   onToggleAll,
   onDelete,
+  onManage,
+  busy = false,
 }: ProductsTableProps) => {
   const { t } = useTranslation('admin');
   const { locale, localized } = useLocale();
@@ -153,13 +157,25 @@ export const ProductsTable = ({
                     />
                   </td>
                   <th scope="row" className="admin-product-cell">
-                    <Link to={`/catalog/${product.slug}`} className="admin-product-identity">
+                    <Link
+                      to={
+                        product.status && product.status !== 'published'
+                          ? `/admin/products/${product.id}`
+                          : `/catalog/${product.slug}`
+                      }
+                      className="admin-product-identity"
+                    >
                       <span className="admin-product-thumbnail">
                         <img src={product.imageUrl} width={64} height={64} alt="" loading="lazy" />
                       </span>
                       <span className="admin-product-name">
                         <strong>{name}</strong>
                         <span>{product.slug}</span>
+                        <small
+                          className={`admin-publication admin-publication--${product.status ?? 'published'}`}
+                        >
+                          {t(`inventory.${product.status ?? 'published'}`)}
+                        </small>
                       </span>
                     </Link>
                   </th>
@@ -185,25 +201,70 @@ export const ProductsTable = ({
                   </td>
                   <td className="admin-actions-cell">
                     <div className="admin-row-actions">
-                      <Link
-                        to={`/admin/products/${product.id}`}
-                        className="admin-edit-action"
-                        aria-label={t('table.editOne', { name })}
-                      >
-                        <Pencil size={16} aria-hidden="true" />
-                        {t('table.editShort')}
-                      </Link>
                       <button
                         type="button"
-                        className="admin-icon-action admin-delete-action"
-                        title={t('table.deleteOne', { name })}
-                        aria-label={t('table.deleteOne', { name })}
+                        className="admin-edit-action"
+                        disabled={busy}
                         onClick={() => {
-                          onDelete(product);
+                          onManage(product, 'quick');
                         }}
                       >
-                        <Trash2 size={17} aria-hidden="true" />
+                        {t('inventory.quickEdit')}
                       </button>
+                      <details
+                        className="admin-row-menu"
+                        onBlur={(event) => {
+                          if (!event.currentTarget.contains(event.relatedTarget))
+                            event.currentTarget.open = false;
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Escape') {
+                            event.currentTarget.open = false;
+                            event.currentTarget.querySelector('summary')?.focus();
+                          }
+                        }}
+                      >
+                        <summary aria-label={t('inventory.actionsFor', { name })}>•••</summary>
+                        <div>
+                          <Link to={`/admin/products/${product.id}`}>
+                            <Pencil size={16} aria-hidden="true" />
+                            {t('table.editShort')}
+                          </Link>
+                          <Link
+                            to={`/admin/products/new?duplicate=${encodeURIComponent(product.id)}`}
+                          >
+                            {t('inventory.duplicate')}
+                          </Link>
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => {
+                              onManage(
+                                product,
+                                product.status === 'archived' ? 'restore' : 'archive',
+                              );
+                            }}
+                          >
+                            {t(
+                              product.status === 'archived'
+                                ? 'inventory.restore'
+                                : 'inventory.archive',
+                            )}
+                          </button>
+                          {product.status === 'archived' && (
+                            <button
+                              type="button"
+                              disabled={busy}
+                              onClick={() => {
+                                onDelete(product);
+                              }}
+                            >
+                              <Trash2 size={16} aria-hidden="true" />
+                              {t('delete')}
+                            </button>
+                          )}
+                        </div>
+                      </details>
                     </div>
                   </td>
                 </tr>

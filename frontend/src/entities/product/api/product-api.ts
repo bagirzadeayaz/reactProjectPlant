@@ -43,6 +43,14 @@ const context = (lifecycle: {
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    getAdminProducts: build.query<Product[], undefined>({
+      query: () => '/admin/products',
+      providesTags: [{ type: 'Product', id: 'LIST' }],
+    }),
+    getAdminProduct: build.query<Product, string>({
+      query: (id) => `/admin/products/${encodeURIComponent(id)}`,
+      providesTags: (result) => (result ? [{ type: 'Product', id: result.id }] : []),
+    }),
     getBasketProducts: build.query<Product[], string[]>({
       async queryFn(ids, _api, _options, query) {
         const results = await Promise.all(
@@ -113,6 +121,8 @@ export const productApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetAdminProductsQuery,
+  useGetAdminProductQuery,
   useGetBasketProductsQuery,
   useGetProductsQuery,
   useGetProductBySlugQuery,

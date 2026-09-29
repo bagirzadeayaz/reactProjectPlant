@@ -33,3 +33,20 @@ html
 
 .vercel
 .firebase/
+
+# Local tests and verification artifacts (not part of this repository)
+__tests__/
+tests/
+test/
+e2e/
+*.test.*
+*.spec.*
+playwright.config.*
+vitest.config.*
+jest.config.*
+playwright-report/
+test-results/
+coverage/
+.nyc_output/
+blob-report/
+screenshots/

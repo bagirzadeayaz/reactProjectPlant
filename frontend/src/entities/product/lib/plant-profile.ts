@@ -5,6 +5,12 @@ export interface PlantProfile {
   care: 'easy' | 'regular';
 }
 const profiles: Record<string, PlantProfile> = {
+  'snake-plant': { light: 'low', size: 'medium', care: 'easy' },
+  'zz-plant': { light: 'low', size: 'medium', care: 'easy' },
+  'peace-lily': { light: 'bright', size: 'medium', care: 'regular' },
+  'monstera-deliciosa': { light: 'bright', size: 'large', care: 'regular' },
+  'rubber-plant': { light: 'bright', size: 'large', care: 'regular' },
+  'golden-pothos': { light: 'bright', size: 'compact', care: 'easy' },
   'calathea-plant': { light: 'bright', size: 'medium', care: 'regular' },
   'desk-plant': { light: 'low', size: 'compact', care: 'easy' },
   'calathea-ai-plant': { light: 'direct', size: 'compact', care: 'easy' },

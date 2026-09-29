@@ -14,6 +14,8 @@ import {
   BestO2,
   FeaturedProductCard,
   Hero,
+  DiscoveryCallout,
+  BotanicalWorld,
   ProductBanner,
   ProductGrid,
   ReviewCarousel,
@@ -74,7 +76,7 @@ export const HomePage = () => {
   const heroReview = reviews[0];
 
   return (
-    <div className="home-page">
+    <div className="home-page" aria-busy={isLoading}>
       <DocumentMeta
         title={t('common:meta.siteName')}
         description={t('common:meta.homeDescription')}
@@ -104,7 +106,6 @@ export const HomePage = () => {
         }
       />
 
-      <Container className="discovery-callout"><div><p>{t('garden:featureLabel')}</p><h2>{t('garden:allFeatures')}</h2></div><Button as="a" href="/discover">{t('garden:nav')} ↗</Button></Container>
       <Section className="trendy-section" aria-labelledby="trendy-heading">
         <SectionHeading id="trendy-heading">{t('home:sections.trendy')}</SectionHeading>
         <div className="trendy-list">
@@ -124,6 +125,9 @@ export const HomePage = () => {
         <SectionHeading id="top-selling-heading">{t('home:sections.topSelling')}</SectionHeading>
         <ProductGrid products={topSelling} isLoading={isLoading} />
       </Section>
+
+      <DiscoveryCallout />
+      <BotanicalWorld />
 
       <Section>
         <SectionHeading id="reviews-heading">{t('home:sections.reviews')}</SectionHeading>

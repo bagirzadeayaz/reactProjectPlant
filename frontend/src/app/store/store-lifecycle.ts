@@ -1,4 +1,5 @@
 import { saveGarden } from '../../entities/garden';
+import { saveCompanion } from '../../entities/companion';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { saveCart } from '../../entities/cart';
 import type { AppStore } from './store';
@@ -7,8 +8,14 @@ import type { AppStore } from './store';
 export const connectStore = (store: AppStore): (() => void) => {
   let lastGarden = store.getState().garden;
   let lastCart = store.getState().cart;
+  let lastCompanion = store.getState().companion.preferences;
   const unsubscribe = store.subscribe(() => {
     const { cart, garden } = store.getState();
+    const companion = store.getState().companion.preferences;
+    if (companion !== lastCompanion) {
+      lastCompanion = companion;
+      saveCompanion(companion);
+    }
     if (garden !== lastGarden) {
       lastGarden = garden;
       saveGarden(garden);

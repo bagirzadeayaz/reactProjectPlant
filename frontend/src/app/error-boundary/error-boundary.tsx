@@ -17,9 +17,8 @@ interface ErrorBoundaryState {
  * Catches a render error and shows a recoverable UI instead of a blank page.
  *
  * React only offers this as a class component. There is one at the app root and
- * one per route: the route-level boundary keeps the header, footer and
- * navigation alive when a single page throws, so the user can navigate away
- * rather than reaching for the back button.
+ * one around the route layout: fatal errors replace the complete storefront
+ * with a standalone status screen.
  */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   override state: ErrorBoundaryState = { error: null };

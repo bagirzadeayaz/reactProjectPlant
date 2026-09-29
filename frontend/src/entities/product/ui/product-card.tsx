@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useFormatters, useLocale } from '../../../shared/i18n';
 import { cn } from '../../../shared/lib/cn';
 import { ResponsiveImage } from '../../../shared/ui';
@@ -46,6 +46,8 @@ export const ProductCard = ({
   const { locale, localized } = useLocale();
   const format = useFormatters(locale);
   const name = localized(product.name);
+  const { pathname, search } = useLocation();
+  const returnState = pathname === '/catalog' ? { catalogReturnTo: pathname + search } : undefined;
 
   return (
     <motion.article
@@ -59,6 +61,7 @@ export const ProductCard = ({
     >
       <Link
         to={`/catalog/${product.slug}`}
+        state={returnState}
         aria-hidden="true"
         tabIndex={-1}
         className="product-card-hitarea"
@@ -68,6 +71,7 @@ export const ProductCard = ({
           order and assistive tech keeps one announced link per card. */}
       <Link
         to={`/catalog/${product.slug}`}
+        state={returnState}
         tabIndex={-1}
         aria-hidden="true"
         className="product-card__image group"
@@ -86,7 +90,7 @@ export const ProductCard = ({
 
       <div className="product-card__copy flex flex-1 flex-col gap-3">
         <Heading className="text-h2 text-ink-muted">
-          <Link to={`/catalog/${product.slug}`} className="hover:text-ink">
+          <Link to={`/catalog/${product.slug}`} state={returnState} className="hover:text-ink">
             {name}
           </Link>
         </Heading>

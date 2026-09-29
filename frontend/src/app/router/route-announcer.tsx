@@ -25,7 +25,7 @@ const HEADING_TIMEOUT_MS = 2000;
  */
 export const RouteAnnouncer = ({ contentRef }: RouteAnnouncerProps) => {
   const { t } = useTranslation();
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const [message, setMessage] = useState('');
   const isFirstRender = useRef(true);
 
@@ -36,9 +36,10 @@ export const RouteAnnouncer = ({ contentRef }: RouteAnnouncerProps) => {
       isFirstRender.current = false;
       return;
     }
+    if (hash) return;
 
     const content = contentRef.current;
-    globalThis.scrollTo({ top: 0, behavior: 'auto' });
+    globalThis.scrollTo({ top: 0, behavior: 'instant' });
 
     let isCancelled = false;
     let observer: MutationObserver | null = null;
@@ -90,7 +91,7 @@ export const RouteAnnouncer = ({ contentRef }: RouteAnnouncerProps) => {
       isCancelled = true;
       stopWatching();
     };
-  }, [pathname, contentRef, t]);
+  }, [pathname, hash, contentRef, t]);
 
   return (
     <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">

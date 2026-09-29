@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { CartBadge } from '../../../entities/cart';
-import { LanguageSwitcher } from '../../../features/language-switcher';
 import { CartDrawer } from '../../../features/cart-drawer';
 import { cn } from '../../../shared/lib/cn';
-import { LOGIN_LINK } from '../../../shared/config/navigation';
 import { Container, Icon } from '../../../shared/ui';
 import { HeaderSearch } from './header-search';
 import { NavLinkList } from './nav-link-list';
@@ -20,20 +17,20 @@ import { NavigationPanel } from './navigation-panel';
  */
 export const Header = () => {
   const { t } = useTranslation(['common', 'catalog']);
-  const { pathname } = useLocation();
-  const reducedMotion = useReducedMotion();
+  const { pathname, hash } = useLocation();
+  const locationKey = pathname + hash;
 
   // The menu belongs to the page it was opened on. Deriving that from the
-  // pathname closes it on *any* navigation — a link inside it, the logo, the
+  // page location closes it on navigation — a link inside it, the logo, the
   // back button — without an effect that fires a second render every time the
   // route changes.
-  const [menu, setMenu] = useState({ isOpen: false, pathname });
+  const [menu, setMenu] = useState({ isOpen: false, locationKey });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const isMenuOpen = menu.isOpen && menu.pathname === pathname;
+  const isMenuOpen = menu.isOpen && menu.locationKey === locationKey;
 
   const setIsMenuOpen = (isOpen: boolean): void => {
-    setMenu({ isOpen, pathname });
+    setMenu({ isOpen, locationKey });
   };
 
   return (
@@ -59,33 +56,12 @@ export const Header = () => {
 
         <nav
           aria-label={t('a11y.mainNavigation')}
-          className={isSearchOpen ? 'hidden' : 'hidden lg:block'}
+          className={isSearchOpen ? 'hidden' : 'desktop-navigation'}
         >
           <NavLinkList />
         </nav>
 
         <div className="header-actions">
-          <NavLink
-            to={LOGIN_LINK.to}
-            className={({ isActive }) =>
-              cn(
-                'hidden rounded-icon text-lg transition-colors lg:inline-flex',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink',
-                isActive ? 'text-ink' : 'text-ink-muted hover:text-ink',
-              )
-            }
-          >
-            {t(LOGIN_LINK.labelKey)}
-          </NavLink>
-
-          <motion.div
-            layout={!reducedMotion}
-            transition={{ layout: { duration: 0.38, ease: [0.22, 1, 0.36, 1] } }}
-            className="hidden xl:block"
-          >
-            <LanguageSwitcher />
-          </motion.div>
-
           <HeaderSearch
             isSearchOpen={isSearchOpen}
             onOpenChange={(open) => {
@@ -94,6 +70,8 @@ export const Header = () => {
             }}
           />
           <CartBadge
+            className="header-cart"
+            label={t('checkout.basket')}
             onClick={() => {
               setIsCartOpen(true);
             }}
@@ -108,9 +86,10 @@ export const Header = () => {
               setIsMenuOpen(!isMenuOpen);
               setIsSearchOpen(false);
             }}
-            className="rounded-icon p-2 text-ink-muted hover:text-ink"
+            className="header-menu-toggle rounded-icon p-2 text-ink-muted hover:text-ink"
           >
             <Icon name="hamburger" label={t('a11y.openMenu')} />
+            <span aria-hidden="true">{t('a11y.menuNavigation')}</span>
           </button>
         </div>
       </Container>

@@ -2,7 +2,16 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Heart, Sprout, Columns3, CalendarDays, Armchair, Package } from 'lucide-react';
+import {
+  Heart,
+  Sprout,
+  CalendarDays,
+  Armchair,
+  Package,
+  Box,
+  Play,
+  ArrowUpRight,
+} from 'lucide-react';
 import {
   useGetProductsQuery,
   useGetBasketProductsQuery,
@@ -12,52 +21,83 @@ import {
   type PlantProfile,
 } from '../../entities/product';
 import { gardenActions, selectGarden } from '../../entities/garden';
-import { ProductTools, GardenNav } from '../../features/garden-tools';
+import { ProductTools } from '../../features/garden-tools';
 import { AddToCartButton } from '../../features/add-to-cart';
 import { PlantStudio } from '../../widgets/home';
 import { Button, Container } from '../../shared/ui';
 import { DocumentMeta } from '../../shared/lib/document-meta';
-import { useLocale, useFormatters } from '../../shared/i18n';
 
 const destinations = [
   ['finder', 'finderIntro', '/finder', Sprout],
-  ['wishlist', 'wishIntro', '/wishlist', Heart],
-  ['compare', 'compareIntro', '/compare', Columns3],
-  ['studio', 'studioIntro', '/studio', Armchair],
   ['care', 'careIntro', '/care#calendar', CalendarDays],
   ['tracking', 'trackIntro', '/tracking', Package],
 ] as const;
 const Heading = ({ title, lead }: { title: string; lead: string }) => {
-  const { t } = useTranslation(['garden', 'common']);
   return (
     <>
       <DocumentMeta title={title + ' · Planto.'} description={lead} />
-      <p className="editorial-eyebrow">Planto. / {t('nav')}</p>
       <h1 className="editorial-title">{title}</h1>
       <p className="editorial-lead">{lead}</p>
-      <GardenNav />
     </>
   );
 };
 export const DiscoverPage = () => {
-  const { t } = useTranslation(['garden', 'common']);
+  const { t, i18n } = useTranslation(['garden', 'common']);
   return (
-    <Container as="section" className="garden-page">
-      <Heading title={t('title')} lead={t('lead')} />
-      <div className="discovery-grid">
-        {destinations.map(([title, body, to, Icon], i) => (
-          <Link to={to} key={to} className="discovery-card">
-            <div className="discovery-icon">
-              <Icon size={30} aria-hidden="true" />
-              <span>0{i + 1}</span>
-            </div>
-            <h2>{t(title)}</h2>
-            <p>{t(body)}</p>
-            <span className="discovery-link">{t('start')} ↗</span>
+    <Container as="section" className="garden-page explore-hub">
+      <Heading title={t('exploreTitle')} lead={t('exploreLead')} />
+      <div className="experience-grid">
+        <Link to="/#little-world" className="experience-card experience-card--world">
+          <img src="/plants/calat-o2-plant-800.webp" alt="" width={800} height={800} />
+          <div>
+            <Box size={24} aria-hidden="true" />
+            <h2>{t('common:nav.world')}</h2>
+            <p>{t('worldIntro')}</p>
+            <span>
+              {t('enterWorld')}
+              <ArrowUpRight size={20} aria-hidden="true" />
+            </span>
+          </div>
+        </Link>
+        <Link to="/studio" className="experience-card experience-card--room">
+          <img src="/rooms/minimal.webp" alt="" width={1200} height={800} />
+          <div>
+            <Armchair size={24} aria-hidden="true" />
+            <h2>{t('studio')}</h2>
+            <p>{t('common:nav.studioHint')}</p>
+            <span>
+              {t('openStudio')}
+              <ArrowUpRight size={20} aria-hidden="true" />
+            </span>
+          </div>
+        </Link>
+      </div>
+      <a
+        className="experience-film"
+        href={`/promo.html?lang=${i18n.resolvedLanguage === 'ru' ? 'ru' : 'en'}`}
+      >
+        <span className="experience-film__play">
+          <Play size={22} aria-hidden="true" />
+        </span>
+        <span>
+          <strong>{t('common:nav.film')}</strong>
+          <small>{t('common:nav.filmHint')}</small>
+        </span>
+        <ArrowUpRight size={24} aria-hidden="true" />
+      </a>
+      <h2 className="experience-help-title">{t('helpChoosing')}</h2>
+      <div className="experience-help">
+        {destinations.map(([title, body, to, ItemIcon]) => (
+          <Link to={to} key={to}>
+            <ItemIcon size={23} aria-hidden="true" />
+            <span>
+              <strong>{t(title)}</strong>
+              <small>{t(body)}</small>
+            </span>
+            <ArrowUpRight size={19} aria-hidden="true" />
           </Link>
         ))}
       </div>
-      <p className="garden-note">{t('local')}</p>
     </Container>
   );
 };
@@ -261,118 +301,17 @@ export const WishlistPage = () => {
     </Container>
   );
 };
-export const ComparePage = () => {
-  const { t } = useTranslation(['garden', 'common']);
-  const { locale, localized } = useLocale();
-  const format = useFormatters(locale);
-  const garden = useSelector(selectGarden);
-  const dispatch = useDispatch();
-  const query = useGetBasketProductsQuery(garden.compare);
-  const products = query.data ?? [];
-  return (
-    <Container as="section" className="garden-page">
-      <Heading title={t('compare')} lead={t('compareIntro')} />
-      <p>{t('limit')}</p>
-      {query.isError ? (
-        <Button
-          onClick={() => {
-            void query.refetch();
-          }}
-        >
-          {t('common:actions.retry')}
-        </Button>
-      ) : query.isFetching ? (
-        <p role="status">{t('common:state.loading')}</p>
-      ) : products.length ? (
-        <>
-          <div className="comparison-scroll" role="region" aria-label={t('compare')} tabIndex={0}>
-            <table className="comparison-table">
-              <caption className="sr-only">{t('compareIntro')}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">{t('compare')}</th>
-                  {products.map((p) => (
-                    <th key={p.id} scope="col">
-                      <img src={p.imageUrl} width={120} height={120} alt="" />
-                      <Link to={'/catalog/' + p.slug}>{localized(p.name)}</Link>
-                      <button
-                        className="text-action"
-                        onClick={() => {
-                          dispatch(gardenActions.toggled({ list: 'compare', id: p.id }));
-                        }}
-                        aria-label={t('removeCompare', { name: localized(p.name) })}
-                      >
-                        ×
-                      </button>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {(['price', 'light', 'size', 'effort', 'stock'] as const).map((row) => (
-                  <tr key={row}>
-                    <th scope="row">{t(row)}</th>
-                    {products.map((p) => {
-                      const profile = plantProfile(p.slug);
-                      const key = row === 'effort' ? 'care' : row;
-                      return (
-                        <td key={p.id}>
-                          {row === 'price'
-                            ? format.currency(p.price, p.currency)
-                            : row === 'stock'
-                              ? t(p.inStock ? 'yes' : 'no')
-                              : t(profile?.[key as keyof PlantProfile] ?? 'unknown')}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              dispatch(gardenActions.cleared('compare'));
-            }}
-          >
-            {t('clear')}
-          </Button>
-        </>
-      ) : (
-        <div className="garden-empty">
-          <Columns3 size={40} aria-hidden="true" />
-          <h2>{t('empty')}</h2>
-          <p>{t('emptyBody')}</p>
-        </div>
-      )}
-      <div className="garden-actions">
-        <Button as="a" href="/catalog">
-          {t('chooseProducts')}
-        </Button>
-      </div>
-      {!!garden.compare.length && !products.length && (
-        <Button
-          variant="ghost"
-          onClick={() => {
-            dispatch(gardenActions.cleared('compare'));
-          }}
-        >
-          {t('clear')}
-        </Button>
-      )}
-      <p className="garden-note">{t('profileNote')}</p>
-    </Container>
-  );
-};
+export { ComparePage } from './compare-page';
 export const StudioPage = () => {
-  const { t } = useTranslation(['garden', 'common']);
+  const { t } = useTranslation(['garden', 'home']);
   return (
-    <Container as="section" className="garden-page">
-      <Heading title={t('studio')} lead={t('studioIntro')} />
-      <div className="studio-page-panel">
-        <PlantStudio headingLevel={2} />
-      </div>
+    <Container as="section" className="room-studio-page">
+      <DocumentMeta title={`${t('studio')} · Planto.`} description={t('studioIntro')} />
+      <header className="rs-page-heading">
+        <h1>{t('studio')}</h1>
+        <p>{t('studioIntro')}</p>
+      </header>
+      <PlantStudio headingLevel={2} />
     </Container>
   );
 };

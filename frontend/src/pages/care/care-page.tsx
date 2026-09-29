@@ -1,6 +1,5 @@
 import { Sun, Droplets, Sprout } from 'lucide-react';
 import { CarePlanner } from '../../features/care-planner';
-import { GardenNav } from '../../features/garden-tools';
 import { useTranslation } from 'react-i18next';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { Button, Container, Reveal } from '../../shared/ui';
@@ -27,7 +26,6 @@ export const CarePage = () => {
         </div>
         <img src="/plants/desk-plant.png" width={391} height={391} alt="" className="plant-float" />
       </div>
-      <GardenNav />
       <div className="care-grid">
         {TIPS.map((tip, index) => (
           <Reveal key={tip.title} className="care-card glass-surface">

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '../../../shared/lib/cn';
 import { NewsletterForm } from '../../../features/newsletter';
 import { Container, Icon } from '../../../shared/ui';
-import { NAV_LINKS } from '../../../shared/config/navigation';
+import { SHOP_LINKS, EXPERIENCE_LINKS, HELP_LINKS } from '../../../shared/config/navigation';
 
 const SOCIALS = [
   { label: 'Facebook', icon: 'facebook', href: 'https://facebook.com' },
@@ -26,7 +26,7 @@ const linkClass = cn(
  * like one.
  */
 export const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <footer className="site-footer bg-surface-footer">
@@ -60,19 +60,32 @@ export const Footer = () => {
           </ul>
         </div>
 
-        <nav aria-labelledby="footer-links-heading">
-          <h2 id="footer-links-heading" className="text-lg text-ink">
-            {t('footer.quickLinks')}
-          </h2>
-          <ul className="mt-5 flex flex-col gap-3">
-            {NAV_LINKS.map((link) => (
-              <li key={link.to}>
-                <Link to={link.to} className={linkClass}>
-                  {t(link.labelKey)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <nav className="footer-navigation" aria-label={t('a11y.footerNavigation')}>
+          {(
+            [
+              { label: 'nav.catalog', links: SHOP_LINKS },
+              { label: 'nav.discover', links: EXPERIENCE_LINKS },
+              { label: 'nav.help', links: HELP_LINKS },
+            ] as const
+          ).map((group) => (
+            <div key={group.label}>
+              <h2>{t(group.label)}</h2>
+              <ul>
+                {group.links.map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to}>{t(link.labelKey)}</Link>
+                  </li>
+                ))}
+                {group.label === 'nav.discover' && (
+                  <li>
+                    <a href={`/promo.html?lang=${i18n.resolvedLanguage === 'ru' ? 'ru' : 'en'}`}>
+                      {t('nav.film')}
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))}
         </nav>
 
         <div>

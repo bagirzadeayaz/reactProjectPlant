@@ -22,7 +22,7 @@ export const DeleteDialog = ({ target, isDeleting, onConfirm, onClose }: DeleteD
   return (
     <Modal
       isOpen={target !== null}
-      onClose={onClose}
+      onClose={() => { if (!isDeleting) onClose(); }}
       title={title}
       closeLabel={t('dialog.close')}
       footer={

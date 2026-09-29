@@ -1,4 +1,4 @@
-import { ProductTools, GardenNav } from '../../features/garden-tools';
+import { ProductTools } from '../../features/garden-tools';
 import { useState } from 'react';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
@@ -7,13 +7,16 @@ import { useGetCategoriesQuery } from '../../entities/category';
 import { ProductCard, useGetProductBySlugQuery, useGetProductsQuery } from '../../entities/product';
 import { AddToCartButton } from '../../features/add-to-cart';
 import { useFormatters, useLocale } from '../../shared/i18n';
-import { Button, Container, ErrorState, Skeleton } from '../../shared/ui';
+import { Button, Container, StatusPage, Skeleton } from '../../shared/ui';
 import { NotFound } from '../../widgets/not-found';
 import { ProductGallery } from './product-gallery';
 import { QuantityStepper } from './quantity-stepper';
 
 const isNotFound = (error: unknown): boolean =>
-  typeof error === 'object' && error !== null && (error as { status?: unknown }).status === 404;
+  typeof error === 'object' &&
+  error !== null &&
+  ((error as { status?: unknown }).status === 404 ||
+    (error as { error?: unknown }).error === 'Product not found');
 
 /** The dynamic route: `/catalog/:slug`. */
 export const ProductPage = () => {
@@ -34,22 +37,18 @@ export const ProductPage = () => {
 
   if (product.isError) {
     return (
-      <Container className="py-24">
-        <h1 className="sr-only">{t('common:pages.product')}</h1>
-        <ErrorState
+      <>
+        <DocumentMeta
+          title={`${t('common:state.error')} · ${t('common:meta.siteName')}`}
+          robots="noindex"
+        />
+        <StatusPage
+          code="500"
+          role="alert"
           title={t('common:state.error')}
           description={t('common:state.errorDetail')}
-          action={
-            <Button
-              onClick={() => {
-                void product.refetch();
-              }}
-            >
-              {t('common:actions.retry')}
-            </Button>
-          }
         />
-      </Container>
+      </>
     );
   }
 
@@ -79,8 +78,6 @@ export const ProductPage = () => {
         title={`${name} · ${t('common:meta.siteName')}`}
         description={t('product:metaDescription', { name, description })}
       />
-
-      <GardenNav />
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <ProductGallery product={item} name={name} />
 
@@ -89,9 +86,15 @@ export const ProductPage = () => {
           <ProductTools product={item} />
           <h1 className="text-h1 font-(--font-weight-heading) text-ink">{name}</h1>
           <p className="text-h2 text-ink-muted">{format.currency(item.price, item.currency)}</p>
-          <p className={item.inStock ? 'text-md text-ink' : 'text-md text-ink-muted'}>
-            {item.inStock ? t('product:inStock') : t('product:outOfStock')}
-          </p>
+          <div className="product-availability" data-available={item.inStock} role="status">
+            <p className="product-availability__label">
+              <span className="product-availability__dot" aria-hidden="true" />
+              {item.inStock ? t('product:inStock') : t('product:outOfStock')}
+            </p>
+            {!item.inStock && (
+              <p className="mt-2 text-sm text-ink-muted">{t('product:outOfStockHint')}</p>
+            )}
+          </div>
 
           <section aria-labelledby="product-description">
             <h2 id="product-description" className="text-lg text-ink">
@@ -103,7 +106,9 @@ export const ProductPage = () => {
           <div className="mt-4 flex flex-wrap items-center gap-6">
             <QuantityStepper value={quantity} onChange={setQuantity} disabled={!item.inStock} />
             <AddToCartButton product={item} quantity={quantity} variant="label" />
-            <Button as="a" href="/cart" variant="ghost">{t('common:checkout.reviewBasket')}</Button>
+            <Button as="a" href="/cart" variant="ghost">
+              {t('common:checkout.reviewBasket')}
+            </Button>
           </div>
         </div>
       </div>
@@ -116,7 +121,11 @@ export const ProductPage = () => {
           <ul className="home-product-grid">
             {others.map((entry) => (
               <li key={entry.id} className="h-full">
-                <ProductCard product={entry} tools={<ProductTools product={entry} />} action={<AddToCartButton product={entry} />} />
+                <ProductCard
+                  product={entry}
+                  tools={<ProductTools product={entry} />}
+                  action={<AddToCartButton product={entry} />}
+                />
               </li>
             ))}
           </ul>

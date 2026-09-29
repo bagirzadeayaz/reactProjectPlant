@@ -7,6 +7,7 @@ import { cartSelectors, type CartState } from '../model/cart-slice';
 export interface CartBadgeProps {
   onClick: () => void;
   className?: string;
+  label?: string;
 }
 
 /**
@@ -15,7 +16,7 @@ export interface CartBadgeProps {
  * The count is part of the accessible name — "Cart, 3 items" — rather than a
  * separate badge a screen reader would read as a bare number.
  */
-export const CartBadge = ({ onClick, className }: CartBadgeProps) => {
+export const CartBadge = ({ onClick, className, label }: CartBadgeProps) => {
   const { t } = useTranslation();
   const count = useSelector((state: { cart: CartState }) => cartSelectors.selectCount(state));
 
@@ -31,6 +32,7 @@ export const CartBadge = ({ onClick, className }: CartBadgeProps) => {
       )}
     >
       <Icon name="bag" />
+      {label && <span className="header-action-label" aria-hidden="true">{label}</span>}
       {count > 0 && (
         <span
           aria-hidden="true"

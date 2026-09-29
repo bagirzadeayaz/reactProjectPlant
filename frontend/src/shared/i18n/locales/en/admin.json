@@ -10,12 +10,16 @@
   "deleteWarning": "This cannot be undone.",
   "gate": {
     "title": "Admin area",
-    "description": "Sign in with your approved Google account to manage products.",
+    "description": "Sign in with your approved Google account to manage plants, stock and photos.",
     "enter": "Sign in with Google",
     "checking": "Checking admin access…",
     "forbidden": "This Google account does not have admin access.",
     "error": "Could not verify access. Please try again.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "headline": "Your collection, cared for.",
+    "accessNote": "Access is limited to approved administrators.",
+    "backToShop": "Back to shop",
+    "scope": "Products · Stock · Photos"
   },
   "fields": {
     "nameEn": "Name (English)",
@@ -27,11 +31,12 @@
     "slug": "URL slug",
     "slugHint": "Leave empty to generate it from the English name.",
     "price": "Price",
-    "priceHint": "Whole rupees.",
+    "priceHint": "Whole Azerbaijani manat.",
     "category": "Category",
     "categoryPlaceholder": "Choose a category",
     "imageUrl": "Image URL",
-    "inStock": "In stock"
+    "inStock": "In stock",
+    "stockHint": "Available to add to the basket."
   },
   "languages": {
     "en": "English",
@@ -50,7 +55,9 @@
     "tooLarge": "The image must be under {{max}} KB.",
     "badType": "Only PNG, JPEG, WebP or GIF images can be uploaded.",
     "unreadable": "That file could not be read.",
-    "hint": "Paste an HTTPS URL or upload a file under {{max}} KB. Uploads are saved to the database."
+    "hint": "PNG, JPEG, WebP or GIF · up to {{max}} KB",
+    "urlHint": "Paste an HTTPS image link.",
+    "loadFailed": "Image could not be loaded. Check the link or choose a file."
   },
   "form": {
     "save": "Save changes",
@@ -59,7 +66,11 @@
     "cancel": "Cancel",
     "loading": "Loading product",
     "notFound": "That product no longer exists.",
-    "backToList": "Back to products"
+    "backToList": "Back to products",
+    "details": "Product details",
+    "pricing": "Pricing & availability",
+    "editHint": "Fine-tune the details of your plant.",
+    "createHint": "Give a new plant a place in your collection."
   },
   "unsaved": {
     "title": "Discard changes?",
@@ -84,7 +95,7 @@
     "created": "Created",
     "actions": "Actions",
     "sortBy": "Sort by {{column}}",
-    "selectAll": "Select all products",
+    "selectAll": "Select all on this page",
     "selectOne": "Select {{name}}",
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected",
@@ -95,7 +106,7 @@
     "outOfStock": "Out of stock",
     "loading": "Loading products",
     "empty": "No products yet",
-    "emptyHint": "Create the first one and it will appear in the catalog straight away.",
+    "emptyHint": "Create a draft, review it, then publish it to your catalog.",
     "noMatches": "No products match that search",
     "count_one": "{{count}} product",
     "count_other": "{{count}} products"
@@ -117,5 +128,50 @@
   "deleted": "Product deleted",
   "saveFailed": "Could not save the product",
   "deleteFailed": "Could not delete — the change was rolled back",
-  "loadFailed": "Could not load products"
+  "loadFailed": "Could not load products",
+  "inventory": {
+    "all": "All products",
+    "published": "Published",
+    "draft": "Draft",
+    "archived": "Archived",
+    "quickEdit": "Quick edit",
+    "duplicate": "Duplicate product",
+    "archive": "Archive",
+    "restore": "Restore to drafts",
+    "bulk": "Edit selected",
+    "actionsFor": "Actions for {{name}}",
+    "publication": "Visibility",
+    "publicationHint": "Drafts and archived products are visible only to administrators. Published products appear in the catalog.",
+    "affects": "Products affected: {{count}}",
+    "archiveHint": "These products will be removed from the storefront. You can restore them later.",
+    "restoreHint": "These products will return to drafts. Review them before publishing.",
+    "keepBlank": "Leave blank to keep the current price. Whole manats only.",
+    "invalidPrice": "Enter a whole number of zero or more.",
+    "unchanged": "Keep unchanged",
+    "apply": "Apply changes",
+    "updatedCount": "Products updated: {{count}}",
+    "failedCount": "Could not update {{count}} product(s). Only failed items remain here; you can retry.",
+    "filters": "Filters",
+    "allCategories": "All categories",
+    "anyStock": "Any availability",
+    "minPrice": "Minimum price (₼)",
+    "maxPrice": "Maximum price (₼)",
+    "reset": "Reset filters",
+    "pagination": "Product pages",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "{{page}} / {{pages}}",
+    "gallery": "Additional photos",
+    "galleryHint": "Add up to five extra photos. Reorder them or choose one as the cover.",
+    "galleryLimit": "A product can have up to five additional photos.",
+    "galleryImage": "Product photo {{number}}",
+    "makeCover": "Make cover",
+    "moveEarlier": "Move photo {{number}} earlier",
+    "moveLater": "Move photo {{number}} later",
+    "galleryUpload": "Upload additional photos",
+    "galleryUrl": "Additional photo URL",
+    "addImage": "Add photo",
+    "preview": "Preview product",
+    "previewHint": "Preview of your current edits. Nothing is published until you save with Published visibility."
+  }
 }

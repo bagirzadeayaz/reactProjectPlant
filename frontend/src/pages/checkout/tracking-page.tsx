@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Package, Truck, Leaf } from 'lucide-react';
 import { Button, Container } from '../../shared/ui';
-import { GardenNav } from '../../features/garden-tools';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { readReceipt, saveReceipt } from './receipt';
 const STAGES = ['received', 'packed', 'transit', 'delivered'] as const;
@@ -37,7 +36,6 @@ export const TrackingPage = () => {
       <p className="editorial-eyebrow">{t('simulation')}</p>
       <h1 className="editorial-title">{t('journeyTitle')}</h1>
       <p className="editorial-lead">{t('simulationNote')}</p>
-      <GardenNav />
       {!receipt ? (
         <div className="garden-empty">
           <Package size={48} aria-hidden="true" />

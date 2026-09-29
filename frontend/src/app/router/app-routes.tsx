@@ -5,6 +5,7 @@ import { createRoutesFromElements, Route, type RouteObject } from 'react-router-
 import { HomePage } from '../../pages/home';
 import { AppLayout } from './app-layout';
 import { RootRoute } from './root-route';
+import { RouterErrorPage } from './router-error-page';
 import {
   AdminProductFormPage,
   AdminProductsPage,
@@ -39,7 +40,7 @@ import {
  * `createMemoryRouter(appRoutes, …)` in tests.
  */
 export const appRoutes: RouteObject[] = createRoutesFromElements(
-  <Route element={<RootRoute />}>
+  <Route element={<RootRoute />} errorElement={<RouterErrorPage />}>
     <Route element={<AppLayout />}>
       <Route index element={<HomePage />} />
       <Route path="discover" element={<DiscoverPage />} />
@@ -62,7 +63,7 @@ export const appRoutes: RouteObject[] = createRoutesFromElements(
       </Route>
       {/* Dev-only gallery of the shared UI kit. Stripped from production builds. */}
       {import.meta.env.DEV && <Route path="ui-kit" element={<UiKitPage />} />}
-      <Route path="*" element={<NotFoundPage />} />
     </Route>
+    <Route path="*" element={<NotFoundPage />} />
   </Route>,
 );

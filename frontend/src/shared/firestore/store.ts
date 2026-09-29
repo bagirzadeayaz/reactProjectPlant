@@ -23,6 +23,8 @@ interface Product {
   currency: 'AZN';
   category: string;
   imageUrl: string;
+  gallery?: string[];
+  status?: 'published' | 'draft' | 'archived';
   inStock: boolean;
   createdAt: string;
 }
@@ -103,19 +105,19 @@ const productFrom = async (id: string, data: Omit<Product, 'id'>): Promise<Produ
   id,
   // Older records predate the storefront's switch to Azerbaijani manat.
   currency: 'AZN',
-  price: catalogPrice(data.slug, data.price),
+  price: data.status ? data.price : catalogPrice(data.slug, data.price),
   imageUrl: await resolveStoredImage(data.imageUrl),
+  gallery: await Promise.all((data.gallery ?? []).map(resolveStoredImage)),
+  status: data.status ?? 'published',
 });
 
 const listProducts = async (params: URLSearchParams) => {
   const snapshots = await getDocs(collection(database, 'products'));
-  const products = snapshots.empty
-    ? (seed.products as Product[])
-    : await Promise.all(
-        snapshots.docs.map((snapshot) =>
-          productFrom(snapshot.id, snapshot.data() as Omit<Product, 'id'>),
-        ),
-      );
+  const products = await Promise.all(
+    snapshots.docs.map((snapshot) =>
+      productFrom(snapshot.id, snapshot.data() as Omit<Product, 'id'>),
+    ),
+  );
   const search = (params.get('search') ?? '').trim().toLowerCase();
   const category = params.get('category');
   const minPrice = nonNegative(params.get('minPrice'));
@@ -154,109 +156,134 @@ const findProduct = async (key: string): Promise<Product> => {
       snapshot = await getDoc(doc(database, 'products', String(mapping.data().productId)));
   }
   if (!snapshot.exists()) {
-    const fallback = (seed.products as Product[]).find(
-      (product) => product.id === key || product.slug === key,
-    );
-    if (fallback) return fallback;
     throw new Error('Product not found');
   }
   return productFrom(snapshot.id, snapshot.data() as Omit<Product, 'id'>);
 };
 
-const createProduct = async (draft: ProductDraft): Promise<Product> => {
-  const id = doc(collection(database, 'products')).id;
-  const base = toSlug(draft.slug || draft.name.en);
-  if (!base) throw new Error('Invalid product slug');
-  const image = await prepareImage(draft.imageUrl);
-  return runTransaction(database, async (transaction) => {
-    if (!(await transaction.get(doc(database, 'categories', draft.category))).exists())
-      throw new Error('Unknown category');
-    let slug = base;
-    for (let suffix = 1; suffix < 1000; suffix += 1) {
-      slug = suffix === 1 ? base : `${base}-${String(suffix)}`;
-      if (!(await transaction.get(doc(database, 'productSlugs', slug))).exists()) break;
-      if (suffix === 999) throw new Error('No available product slug');
-    }
-    const imageReference = image.hash ? doc(database, 'images', image.hash) : null;
-    const existingImage = imageReference ? await transaction.get(imageReference) : null;
-    const product: Product = {
-      ...draft,
-      id,
-      slug,
-      imageUrl: image.url,
-      createdAt: new Date().toISOString(),
-    };
-    const { id: productId, ...stored } = product;
-    if (imageReference && !existingImage?.exists())
-      transaction.set(imageReference, {
-        bytes: image.bytes,
-        contentType: image.contentType,
-        createdAt: new Date().toISOString(),
-      });
-    transaction.set(doc(database, 'products', productId), stored);
-    transaction.set(doc(database, 'productSlugs', slug), { productId });
-    return product;
-  });
+/** Published products stay public; drafts and archives are admin-only documents. */
+const listAdminProducts = async (): Promise<Product[]> => {
+  const [published, workspace] = await Promise.all([
+    getDocs(collection(database, 'products')),
+    getDocs(collection(database, 'productWorkspace')),
+  ]);
+  return Promise.all(
+    [...published.docs, ...workspace.docs].map((item) =>
+      productFrom(item.id, item.data() as Omit<Product, 'id'>),
+    ),
+  );
 };
 
-const updateProduct = async (id: string, patch: ProductPatch): Promise<Product> =>
-  prepareImage(patch.imageUrl ?? '').then((image) =>
-    runTransaction(database, async (transaction) => {
-      const reference = doc(database, 'products', id);
-      const snapshot = await transaction.get(reference);
-      if (!snapshot.exists()) throw new Error('Product not found');
-      const current = { ...snapshot.data(), id } as Product;
-      if (
-        patch.category &&
-        !(await transaction.get(doc(database, 'categories', patch.category))).exists()
-      )
-        throw new Error('Unknown category');
-      const changes = Object.fromEntries(
-        Object.entries(patch).filter(([key, value]) => !(key === 'slug' && value === '')),
-      ) as ProductPatch;
-      const slug = changes.slug ? toSlug(changes.slug) : current.slug;
-      if (!slug) throw new Error('Invalid product slug');
-      if (
-        slug !== current.slug &&
-        (await transaction.get(doc(database, 'productSlugs', slug))).exists()
-      )
-        throw new Error('Product slug already exists');
-      const imageReference = image.hash ? doc(database, 'images', image.hash) : null;
-      const existingImage = imageReference ? await transaction.get(imageReference) : null;
-      const product: Product = {
-        ...current,
-        ...changes,
-        slug,
-        ...(patch.imageUrl === undefined ? {} : { imageUrl: image.url }),
-      };
-      const { id: productId, ...stored } = product;
-      if (imageReference && !existingImage?.exists())
-        transaction.set(imageReference, {
+const findAdminProduct = async (id: string): Promise<Product> => {
+  const publicDoc = await getDoc(doc(database, 'products', id));
+  const snapshot = publicDoc.exists()
+    ? publicDoc
+    : await getDoc(doc(database, 'productWorkspace', id));
+  if (!snapshot.exists()) throw new Error('Product not found');
+  return productFrom(snapshot.id, snapshot.data() as Omit<Product, 'id'>);
+};
+
+const saveProduct = async (
+  id: string,
+  patch: ProductPatch,
+  creating: boolean,
+): Promise<Product> => {
+  const prepared = patch.imageUrl === undefined ? null : await prepareImage(patch.imageUrl);
+  const gallery =
+    patch.gallery === undefined ? null : await Promise.all(patch.gallery.map(prepareImage));
+  const images = [...(prepared ? [prepared] : []), ...(gallery ?? [])];
+  const result = await runTransaction(database, async (transaction) => {
+    const publicRef = doc(database, 'products', id);
+    const privateRef = doc(database, 'productWorkspace', id);
+    const [publicDoc, privateDoc] = await Promise.all([
+      transaction.get(publicRef),
+      transaction.get(privateRef),
+    ]);
+    if (creating && (publicDoc.exists() || privateDoc.exists()))
+      throw new Error('Product already exists');
+    if (!creating && !publicDoc.exists() && !privateDoc.exists())
+      throw new Error('Product not found');
+    const current = (publicDoc.exists() ? publicDoc.data() : privateDoc.data()) as
+      Omit<Product, 'id'> | undefined;
+    const changes = Object.fromEntries(
+      Object.entries(patch).filter(([key, value]) => !(key === 'slug' && value === '')),
+    ) as ProductPatch;
+    const data = {
+      ...current,
+      ...(current ? { price: current.status ? current.price : catalogPrice(current.slug, current.price) } : {}),
+      ...changes,
+      id,
+      createdAt: current?.createdAt ?? new Date().toISOString(),
+      status: patch.status ?? current?.status ?? (creating ? 'draft' : 'published'),
+      ...(prepared ? { imageUrl: prepared.url } : {}),
+      ...(gallery ? { gallery: gallery.map((image) => image.url) } : {}),
+    } as Product;
+    if (!(await transaction.get(doc(database, 'categories', data.category))).exists())
+      throw new Error('Unknown category');
+    const base = toSlug(data.slug || data.name.en);
+    if (!base) throw new Error('Invalid product slug');
+    let slug = base;
+    if (data.status === 'published') {
+      for (let suffix = 1; suffix < 1000; suffix += 1) {
+        slug = suffix === 1 ? base : `${base}-${String(suffix)}`;
+        const mapping = await transaction.get(doc(database, 'productSlugs', slug));
+        if (!mapping.exists() || mapping.data().productId === id) break;
+        if (!creating || suffix === 999) throw new Error('Product slug already exists');
+      }
+    }
+    data.slug = slug;
+    const storedImages = await Promise.all(
+      images.map(async (image) => {
+        const ref = image.hash ? doc(database, 'images', image.hash) : null;
+        return { image, ref, exists: ref ? (await transaction.get(ref)).exists() : true };
+      }),
+    );
+    for (const { image, ref, exists } of storedImages) {
+      if (ref && !exists)
+        transaction.set(ref, {
           bytes: image.bytes,
           contentType: image.contentType,
           createdAt: new Date().toISOString(),
         });
-      transaction.set(reference, stored);
-      if (slug !== current.slug) {
-        transaction.delete(doc(database, 'productSlugs', current.slug));
-        transaction.set(doc(database, 'productSlugs', slug), { productId });
-      }
-      return product;
-    }),
-  );
+    }
+    const { id: productId, ...stored } = data;
+    if (publicDoc.exists() && (data.status !== 'published' || current?.slug !== slug)) {
+      transaction.delete(doc(database, 'productSlugs', String(current?.slug)));
+    }
+    if (data.status === 'published') {
+      transaction.set(publicRef, stored);
+      if (privateDoc.exists()) transaction.delete(privateRef);
+      transaction.set(doc(database, 'productSlugs', slug), { productId });
+    } else {
+      transaction.set(privateRef, stored);
+      if (publicDoc.exists()) transaction.delete(publicRef);
+    }
+    return data;
+  });
+  return productFrom(result.id, result);
+};
+
+const createProduct = (draft: ProductDraft): Promise<Product> =>
+  saveProduct(doc(collection(database, 'products')).id, draft, true);
+const updateProduct = (id: string, patch: ProductPatch): Promise<Product> =>
+  saveProduct(id, patch, false);
 
 const deleteProduct = async (id: string): Promise<void> =>
   runTransaction(database, async (transaction) => {
-    const reference = doc(database, 'products', id);
+    const reference = doc(database, 'productWorkspace', id);
     const snapshot = await transaction.get(reference);
-    if (!snapshot.exists()) throw new Error('Product not found');
+    if (!snapshot.exists() || snapshot.data().status !== 'archived')
+      throw new Error('Archive before deleting');
     transaction.delete(reference);
-    transaction.delete(doc(database, 'productSlugs', String(snapshot.data().slug)));
   });
 
 export const runFirestoreRequest = async (input: string | FetchArgs): Promise<unknown> => {
   const args = typeof input === 'string' ? { url: input, method: 'GET' } : input;
   const method = args.method ?? 'GET';
+  const adminMatch = /^\/admin\/products\/([^/]+)$/.exec(args.url);
+  if (method === 'GET' && args.url === '/admin/products') return listAdminProducts();
+  if (method === 'GET' && adminMatch?.[1])
+    return findAdminProduct(decodeURIComponent(adminMatch[1]));
   const productMatch = /^\/products\/([^/]+)$/.exec(args.url);
   if (method === 'GET' && args.url === '/products') return listProducts(asParams(args.params));
   if (method === 'GET' && productMatch?.[1])

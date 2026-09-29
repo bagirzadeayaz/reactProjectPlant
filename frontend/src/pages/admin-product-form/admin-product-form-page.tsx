@@ -1,9 +1,10 @@
 import { DocumentMeta } from '../../shared/lib/document-meta';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   useCreateProductMutation,
-  useGetProductBySlugQuery,
+  useGetAdminProductQuery,
   useUpdateProductMutation,
 } from '../../entities/product';
 import { toFormValues, type ProductFormValues } from '../../features/product-form';
@@ -22,12 +23,28 @@ export const AdminProductFormPage = () => {
   const { t } = useTranslation(['admin', 'common']);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const duplicateId = id === undefined ? params.get('duplicate') : null;
   const isEdit = id !== undefined;
-  const product = useGetProductBySlugQuery(id ?? '', { skip: !isEdit });
+  const sourceId = id ?? duplicateId;
+  const product = useGetAdminProductQuery(sourceId ?? '', { skip: !sourceId });
+  const initialValues = product.data ? toFormValues(product.data) : undefined;
+  if (initialValues && duplicateId) {
+    initialValues.slug = '';
+    initialValues.status = 'draft';
+    initialValues.name = {
+      en: `${initialValues.name.en} (copy)`.slice(0, 500),
+      ru: `${initialValues.name.ru} (копия)`.slice(0, 500),
+    };
+  }
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
 
-  const title = isEdit ? t('admin:edit') : t('admin:new');
+  const title = duplicateId
+    ? t('admin:inventory.duplicate')
+    : isEdit
+      ? t('admin:edit')
+      : t('admin:new');
   const goToList = (): void => void navigate(LIST_PATH);
 
   const save = async (values: ProductFormValues): Promise<void> => {
@@ -36,26 +53,28 @@ export const AdminProductFormPage = () => {
   };
 
   return (
-    <Container as="section" className="flex max-w-6xl flex-col gap-8 py-12 sm:py-16">
+    <Container as="section" className="product-editor-page">
       <DocumentMeta title={`${title} · ${t('common:meta.siteName')}`} robots="noindex" />
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-h1 font-(--font-weight-heading) text-ink">{title}</h1>
-        <Link to={LIST_PATH} className="text-lg text-ink underline-offset-4 hover:underline">
+      <header className="product-editor-heading">
+        <Link to={LIST_PATH} className="product-editor-back">
+          <ArrowLeft size={18} aria-hidden="true" />
           {t('admin:form.backToList')}
         </Link>
-      </div>
+        <h1>{title}</h1>
+        <p>{t(isEdit ? 'admin:form.editHint' : 'admin:form.createHint')}</p>
+      </header>
 
-      {isEdit && product.isLoading && (
+      {sourceId && product.isLoading && (
         <div aria-busy="true" aria-label={t('admin:form.loading')}>
           <Skeleton className="h-96 w-full rounded-control" />
         </div>
       )}
-      {isEdit && product.isError && <EmptyState title={t('admin:form.notFound')} />}
-      {(!isEdit || product.isSuccess) && (
+      {sourceId && product.isError && <EmptyState title={t('admin:form.notFound')} />}
+      {(!sourceId || product.isSuccess) && (
         <ProductEditor
           key={product.data?.id ?? 'new'}
           mode={isEdit ? 'edit' : 'create'}
-          {...(product.data === undefined ? {} : { initialValues: toFormValues(product.data) })}
+          {...(initialValues === undefined ? {} : { initialValues })}
           onSave={save}
           onDone={goToList}
         />

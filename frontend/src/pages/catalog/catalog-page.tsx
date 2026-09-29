@@ -1,4 +1,6 @@
-import { ProductTools, GardenNav } from '../../features/garden-tools';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { ProductTools, ShoppingLinks } from '../../features/garden-tools';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
 import { useGetCategoriesQuery } from '../../entities/category';
@@ -39,9 +41,17 @@ export const CatalogPage = () => {
         description={t('catalog:metaDescription')}
       />
 
-      <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('catalog:title')}</h1>
+      <div className="catalog-heading">
+        <div>
+          <h1 className="text-h1 font-(--font-weight-heading) text-ink">{t('catalog:title')}</h1>
+          <Link to="/finder" className="catalog-finder-link">
+            {t('common:nav.finderPrompt')}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+        <ShoppingLinks />
+      </div>
 
-      <GardenNav />
       <div className="catalog-controls mt-8 lg:mt-10">
         <CatalogFilters
           params={params}

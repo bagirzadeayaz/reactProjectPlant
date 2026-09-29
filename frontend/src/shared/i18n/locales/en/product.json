@@ -1,6 +1,7 @@
 {
   "inStock": "In stock",
   "outOfStock": "Out of stock",
+  "outOfStockHint": "This plant is currently unavailable to purchase. Explore other plants in our catalog.",
   "quantity": "Quantity",
   "description": "Description",
   "reviews": "Reviews",

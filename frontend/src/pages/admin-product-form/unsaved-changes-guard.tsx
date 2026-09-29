@@ -20,7 +20,9 @@ export const UnsavedChangesGuard = ({ when }: UnsavedChangesGuardProps) => {
   const { t } = useTranslation('admin');
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      when && currentLocation.pathname !== nextLocation.pathname,
+      when &&
+      (currentLocation.pathname !== nextLocation.pathname ||
+        currentLocation.search !== nextLocation.search),
   );
 
   useEffect(() => {

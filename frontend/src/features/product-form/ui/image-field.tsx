@@ -1,9 +1,11 @@
 import { useId, useRef, useState, type DragEvent } from 'react';
+import { ImagePlus, Upload, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { UseFormReturn } from 'react-hook-form';
 import { cn } from '../../../shared/lib/cn';
 import { Button, Input } from '../../../shared/ui';
 import type { ProductFormValues } from '../lib/form-values';
+import { GalleryField } from './gallery-field';
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_IMAGE_KB,
@@ -27,6 +29,7 @@ export const ImageField = ({ form }: ImageFieldProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileError, setFileError] = useState<ImageFileError | null>(null);
   const [isOver, setIsOver] = useState(false);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const previewId = useId();
   const imageUrl = watch('imageUrl');
   const urlError = formState.errors.imageUrl?.message;
@@ -49,16 +52,44 @@ export const ImageField = ({ form }: ImageFieldProps) => {
   };
 
   return (
-    <fieldset className="flex flex-col gap-3">
-      <legend className="text-lg text-ink">{t('image.legend')}</legend>
-      <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
-        <div className="flex flex-col gap-3">
-          <Input
-            label={t('fields.imageUrl')}
-            description={t('image.hint', { max: MAX_IMAGE_KB })}
-            {...(urlError === undefined ? {} : { error: urlError })}
-            {...register('imageUrl')}
-          />
+    <fieldset className="product-editor-image product-editor-panel">
+      <legend className="sr-only">{t('image.legend')}</legend>
+      <h2 aria-hidden="true">{t('image.legend')}</h2>
+      <div className="product-image-content">
+        <figure className="product-image-figure">
+          <div className="product-image-preview">
+            {imageUrl === '' || failedUrl === imageUrl ? (
+              <div className="product-image-empty" role="status">
+                <ImagePlus size={36} strokeWidth={1.25} aria-hidden="true" />
+                <span>{t(imageUrl === '' ? 'image.noPreview' : 'image.loadFailed')}</span>
+              </div>
+            ) : (
+              <img
+                id={previewId}
+                src={imageUrl}
+                alt={t('image.preview')}
+                onError={() => {
+                  setFailedUrl(imageUrl);
+                }}
+                className="size-full object-contain"
+              />
+            )}
+          </div>
+          {imageUrl !== '' && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="product-image-remove"
+              onClick={() => {
+                setValue('imageUrl', '', { shouldDirty: true, shouldValidate: true });
+              }}
+            >
+              <Trash2 size={16} aria-hidden="true" />
+              {t('image.remove')}
+            </Button>
+          )}
+        </figure>
+        <div className="product-image-inputs">
           <div
             onDragOver={(event) => {
               event.preventDefault();
@@ -68,19 +99,16 @@ export const ImageField = ({ form }: ImageFieldProps) => {
               setIsOver(false);
             }}
             onDrop={handleDrop}
-            className={cn(
-              'rounded-control border border-dashed border-border-control p-6 text-center text-md text-ink-muted transition-colors',
-              isOver && 'border-ink text-ink',
-            )}
+            className={cn('product-image-dropzone', isOver && 'is-over')}
           >
-            {t('image.dropzone')}{' '}
-            <button
-              type="button"
-              className="underline underline-offset-4 hover:text-ink"
-              onClick={() => inputRef.current?.click()}
-            >
-              {t('image.browse')}
-            </button>
+            <Upload size={22} aria-hidden="true" />
+            <span>
+              {t('image.dropzone')}{' '}
+              <button type="button" onClick={() => inputRef.current?.click()}>
+                {t('image.browse')}
+              </button>
+            </span>
+            <small>{t('image.hint', { max: MAX_IMAGE_KB })}</small>
             <input
               ref={inputRef}
               type="file"
@@ -93,40 +121,20 @@ export const ImageField = ({ form }: ImageFieldProps) => {
               }}
             />
           </div>
+          <Input
+            label={t('fields.imageUrl')}
+            description={t('image.urlHint')}
+            {...(urlError === undefined ? {} : { error: urlError })}
+            {...register('imageUrl')}
+          />
           {fileError !== null && (
             <p role="alert" className="text-sm text-ink">
               {t(`image.${fileError}`, { max: MAX_IMAGE_KB })}
             </p>
           )}
         </div>
-        <figure className="flex flex-col items-center gap-2">
-          <div className="flex size-(--size-thumb) items-center justify-center overflow-hidden rounded-control border border-border-control bg-surface-glass">
-            {imageUrl === '' ? (
-              <span className="px-2 text-center text-sm text-ink-muted">
-                {t('image.noPreview')}
-              </span>
-            ) : (
-              <img
-                id={previewId}
-                src={imageUrl}
-                alt={t('image.preview')}
-                className="size-full object-contain"
-              />
-            )}
-          </div>
-          {imageUrl !== '' && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setValue('imageUrl', '', { shouldDirty: true, shouldValidate: true });
-              }}
-            >
-              {t('image.remove')}
-            </Button>
-          )}
-        </figure>
       </div>
+      <GalleryField form={form} />
     </fieldset>
   );
 };

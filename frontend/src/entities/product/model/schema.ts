@@ -19,6 +19,8 @@ export const productSchema = z.object({
   currency: currencySchema,
   category: z.string().min(1).max(100),
   imageUrl: z.string().min(1).max(420_000),
+  gallery: z.array(z.string().min(1).max(420_000)).max(5).optional(),
+  status: z.enum(['published', 'draft', 'archived']).optional(),
   inStock: z.boolean(),
   createdAt: z.iso.datetime(),
 });

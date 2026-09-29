@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=planto-2" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#141d12" />
+    <title>Planto — The film</title>
+    <link rel="stylesheet" href="/promo.css" />
+    <script src="/promo.js" defer></script>
+  </head>
+  <body>
+    <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
+      <symbol id="play" viewBox="0 0 24 24">
+        <path d="m8 5 11 7-11 7Z" fill="currentColor" stroke="none" />
+      </symbol>
+      <symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="4" /></symbol>
+      <symbol id="sound" viewBox="0 0 24 24">
+        <path d="M4 9h4l5-4v14l-5-4H4Zm13-1a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" />
+      </symbol>
+      <symbol id="muted" viewBox="0 0 24 24">
+        <path d="M4 9h4l5-4v14l-5-4H4Zm13 0 5 6m0-6-5 6" />
+      </symbol>
+      <symbol id="full" viewBox="0 0 24 24">
+        <path d="M4 9V4h5m6 0h5v5m0 6v5h-5m-6 0H4v-5" />
+      </symbol>
+    </svg>
+    <main>
+      <header class="masthead">
+        <a href="/" class="brand" aria-label="Planto home"
+          ><img src="/images/planto-logo.png" width="38" height="44" alt="" />Planto.</a
+        ><a href="/catalog" class="back"
+          ><span data-text="back">Back to shop</span><svg><use href="#arrow" /></svg
+        ></a>
+      </header>
+      <section class="intro">
+        <h1>
+          <span data-text="title">A little green.</span
+          ><em data-text="subtitle">A different feeling.</em>
+        </h1>
+        <div class="intro-copy">
+          <p data-text="intro">
+            Step inside the world of Planto.<br />Three rooms. One fresh perspective.
+          </p>
+          <span data-text="meta">20 seconds / Sound on</span>
+        </div>
+      </section>
+      <section class="cinema" aria-label="Planto film">
+        <div class="screen" id="screen">
+          <video
+            id="film"
+            controls
+            playsinline
+            preload="metadata"
+            poster="/media/planto-promo-poster.jpg"
+            aria-label="Planto promotional film"
+          >
+            <source src="/media/planto-promo.webm" type="video/webm" />
+            <source src="/media/planto-promo.mp4" type="video/mp4" />
+          </video>
+          <div class="cover" id="cover" aria-hidden="true" hidden>
+            <img class="room" src="/rooms/minimal.webp" alt="" /><img
+              class="plant"
+              src="/plants/calathea-plant.png"
+              alt=""
+            />
+          </div>
+          <button class="main-play" id="main-play" hidden>
+            <span
+              ><svg><use href="#play" /></svg></span
+            ><strong data-text="playFilm">Play film</strong>
+          </button>
+          <div class="transport" id="transport" hidden>
+            <label class="seek-label"
+              ><span class="sr-only" data-text="seek">Video position</span
+              ><input id="seek" type="range" min="0" max="20" step="0.1" value="0"
+            /></label>
+            <div class="transport-row">
+              <button id="toggle" aria-label="Play film">
+                <svg><use href="#play" /></svg></button
+              ><span id="time" aria-live="off">00:00 / 00:20</span><span class="spacer"></span
+              ><button id="mute" aria-label="Mute sound">
+                <svg><use href="#sound" /></svg></button
+              ><button id="fullscreen" aria-label="Enter fullscreen">
+                <svg><use href="#full" /></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <p id="media-status" role="status" hidden></p>
+        <nav class="chapters" aria-label="Film chapters">
+          <button data-time="0" aria-current="true">
+            <img class="chapter-plant" src="/plants/calathea-plant.png" alt="" /><span
+              ><small>01</small><strong data-text="chapter1">Make room</strong></span
+            >
+          </button>
+          <button data-time="3.7">
+            <img src="/rooms/minimal.webp" alt="" /><img
+              class="chapter-plant"
+              src="/plants/calathea-plant.png"
+              alt=""
+            /><span><small>02</small><strong data-text="chapter2">Minimal</strong></span>
+          </button>
+          <button data-time="8.2">
+            <img src="/rooms/cozy.webp" alt="" /><img
+              class="chapter-plant"
+              src="/plants/desk-plant.png"
+              alt=""
+            /><span><small>03</small><strong data-text="chapter3">Evening</strong></span>
+          </button>
+          <button data-time="12.7">
+            <img src="/rooms/gallery.webp" alt="" /><img
+              class="chapter-plant"
+              src="/plants/cal-874-plant.png"
+              alt=""
+            /><span><small>04</small><strong data-text="chapter4">Gallery</strong></span>
+          </button>
+        </nav>
+      </section>
+      <footer>
+        <p data-text="footer">Your next green corner starts here.</p>
+        <div>
+          <a class="studio-link" href="/studio"
+            ><span data-text="studio">Explore Room Studio</span><svg><use href="#arrow" /></svg
+          ></a>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

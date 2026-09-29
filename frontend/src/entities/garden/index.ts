@@ -27,6 +27,11 @@ export const gardenSlice = createSlice({
   name: 'garden',
   initialState: (): GardenState => ({ saved: [], compare: [], checked: [] }),
   reducers: {
+    replaced: (state, action: PayloadAction<{ previous: string; next: string }>) => {
+      const index = state.compare.indexOf(action.payload.previous);
+      if (index >= 0 && !state.compare.includes(action.payload.next))
+        state.compare[index] = action.payload.next;
+    },
     toggled: (state, action: PayloadAction<{ list: 'saved' | 'compare'; id: string }>) => {
       const { list, id } = action.payload;
       const at = state[list].indexOf(id);

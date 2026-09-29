@@ -1,5 +1,7 @@
 export {
   productApi,
+  useGetAdminProductsQuery,
+  useGetAdminProductQuery,
   useGetBasketProductsQuery,
   useCreateProductMutation,
   useDeleteProductMutation,

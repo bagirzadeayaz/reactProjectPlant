@@ -27,9 +27,9 @@ export const LocalizedFields = ({ form, field, multiline = false }: LocalizedFie
   const Control = multiline ? Textarea : Input;
 
   return (
-    <fieldset className="flex flex-col gap-3">
-      <legend className="text-lg text-ink">{t(`fields.${field}`)}</legend>
-      <div className="grid gap-4 sm:grid-cols-2">
+    <fieldset className="product-editor-localized">
+      <legend>{t(`fields.${field}`)}</legend>
+      <div className="product-editor-pair">
         {LOCALES.map((locale: Locale) => {
           const error = formState.errors[field]?.[locale]?.message;
           return (

@@ -2,10 +2,11 @@
   "hero": {
     "title": "Breath Natural",
     "lead": "Plants chosen for small rooms and short attention spans — packed carefully, delivered alive.",
-    "liveDemo": "Live Demo",
     "eyebrow": "Trendy House Plant",
-    "playLabel": "Play the plant preview",
-    "backgroundAlt": "Dense green foliage in soft light"
+    "playLabel": "Watch the Planto film",
+    "backgroundAlt": "Dense green foliage in soft light",
+    "watchFilm": "Watch film",
+    "filmHint": "20 seconds of green inspiration"
   },
   "sections": {
     "trendy": "Our Trendy plants",
@@ -44,7 +45,7 @@
     "invalid": "Enter a valid email address"
   },
   "demo": {
-    "title": "A little green, a little calm.",
+    "title": "Room studio",
     "body": "Discover the plants in our collection. Explore each one for its light, space and care needs, then find a place for it at home."
   },
   "care": {
@@ -92,6 +93,23 @@
     "waterTip": "Check the soil first. Water when your plant needs it, then let excess water drain away.",
     "careHint": "A small care ritual goes a long way.",
     "viewPlant": "Meet this plant",
-    "triggerHint": "Style your own green corner"
+    "triggerHint": "Style your own green corner",
+    "pauseMotion": "Pause ambient motion",
+    "enableMotion": "Enable ambient motion",
+    "pausePreview": "Pause preview",
+    "playPreview": "Play preview",
+    "dismissTip": "Dismiss care tip",
+    "roomMood": "Room mood",
+    "lightLabel": "Light",
+    "plantSize": "Plant size",
+    "position": "Position",
+    "left": "Left",
+    "right": "Right",
+    "center": "Centre",
+    "shuffle": "Shuffle",
+    "reset": "Reset",
+    "scaleNote": "Style inspiration, not a measurement tool.",
+    "pageTitle": "Room studio",
+    "pageIntro": "A new mood for your favourite plant."
   }
 }

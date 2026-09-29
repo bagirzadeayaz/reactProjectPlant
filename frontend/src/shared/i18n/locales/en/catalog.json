@@ -1,5 +1,5 @@
 {
-  "title": "Catalog",
+  "title": "Shop plants",
   "searchLabel": "Search plants",
   "searchPlaceholder": "Search by name",
   "categoryLabel": "Category",
@@ -28,5 +28,6 @@
   "pagination": "Pagination",
   "pageN": "Page {{page}}",
   "currentPage": "Current page, page {{page}}",
-  "metaDescription": "Browse every plant in the Planto catalog — filter by category, price and availability."
+  "metaDescription": "Browse every plant in the Planto catalog — filter by category, price and availability.",
+  "viewAll": "View all plants"
 }

@@ -2,17 +2,32 @@
   "brand": "Planto.",
   "nav": {
     "home": "Home",
-    "plantTypes": "Plant Type's",
-    "more": "More",
+    "plantTypes": "Shop plants",
+    "more": "Plant care",
     "contact": "Contact",
     "privacy": "Privacy",
-    "catalog": "Catalog",
-    "admin": "Login",
-    "discover": "Discover",
+    "catalog": "Shop plants",
+    "admin": "Admin login",
+    "discover": "Explore",
     "wishlist": "Wishlist",
     "compare": "Compare",
     "shopAndCare": "Shop & care",
-    "plantCare": "Plant care"
+    "plantCare": "Plant care",
+    "allPlants": "Shop all plants",
+    "finder": "Plant finder",
+    "finderHint": "Answer three questions to find your match.",
+    "finderPrompt": "Not sure? Find your plant",
+    "allExperiences": "All experiences",
+    "exploreHint": "Interactive ideas for your green space.",
+    "world": "3D plant world",
+    "worldHint": "Rotate, grow and change the light.",
+    "studio": "Room studio",
+    "studioHint": "Try a plant in different room styles.",
+    "film": "Watch film",
+    "filmHint": "A short botanical escape.",
+    "help": "Help & care",
+    "tracking": "Order journey",
+    "shopShort": "Shop"
   },
   "actions": {
     "explore": "Explore",
@@ -41,7 +56,8 @@
     "cartWithCount_one": "Cart, {{count}} item",
     "cartWithCount_other": "Cart, {{count}} items",
     "imageOf": "{{name}}",
-    "menuNavigation": "Menu"
+    "menuNavigation": "Menu",
+    "breadcrumb": "Page location"
   },
   "language": {
     "label": "Language",
@@ -55,7 +71,7 @@
     "errorDetail": "Check your connection and try again."
   },
   "footer": {
-    "quickLinks": "Quick Link's",
+    "quickLinks": "Explore Planto",
     "updates": "For Every Update's",
     "emailPlaceholder": "Enter Email...",
     "subscribe": "Subscribe",
@@ -130,5 +146,53 @@
     "confirmBasket": "Confirm basket",
     "detailsHint": "These details stay on this page and are not saved or sent.",
     "complete": "Your selection is saved for this visit."
+  },
+  "companion": {
+    "name": "Pip, your plant companion",
+    "title": "Meet Pip",
+    "menu": "Plant companion",
+    "open": "Meet Pip, your plant companion",
+    "close": "Close companion settings",
+    "intro": "A little company for your green adventures.",
+    "water": "Water Pip",
+    "hello": "Say hello",
+    "personality": "Personality",
+    "pot": "Pot color",
+    "curious": "Curious",
+    "cheerful": "Cheerful",
+    "calm": "Calm",
+    "terracotta": "Terracotta",
+    "sage": "Sage",
+    "cream": "Cream",
+    "animate": "Animate Pip",
+    "hide": "Hide companion",
+    "restore": "Bring Pip back anytime from Menu → Plant companion.",
+    "reducedMotion": "Your device’s reduced-motion preference is respected.",
+    "sleeping": "A quiet moment. Even little leaves need rest.",
+    "reactions": {
+      "curious": {
+        "peek": "That one caught my eye.",
+        "cart": "A new leaf for your collection!",
+        "studio": "Ooh, I like what you did there.",
+        "water": "A little rain, a lot of possibility.",
+        "hello": "Hello! What shall we explore?"
+      },
+      "cheerful": {
+        "peek": "Look at those lovely leaves!",
+        "cart": "More plants, more happy!",
+        "studio": "Your room is looking leafy!",
+        "water": "Rain dance time!",
+        "hello": "You just made my day!"
+      },
+      "calm": {
+        "peek": "Take your time. Let it grow on you.",
+        "cart": "A little more green. Lovely.",
+        "studio": "A peaceful corner, just for you.",
+        "water": "Thank you. That was refreshing.",
+        "hello": "Nice to be here with you."
+      }
+    },
+    "ready": "A little water? A little hello?",
+    "dragHint": "Drag Pip a little left, right, up or down, then release to switch corners. Tap for settings. Use arrow keys to switch corners or Home to reset."
   }
 }

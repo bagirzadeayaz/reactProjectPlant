@@ -1,6 +1,7 @@
 import { gardenSlice, loadGarden } from '../../entities/garden';
-import { configureStore } from '@reduxjs/toolkit';
-import { cartSlice, loadCart } from '../../entities/cart';
+import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
+import { cartActions, cartSlice, loadCart } from '../../entities/cart';
+import { companionActions, companionSlice, loadCompanion } from '../../entities/companion';
 import { baseApi } from '../../shared/api';
 
 /**
@@ -13,17 +14,27 @@ import { baseApi } from '../../shared/api';
  */
 export const makeStore = () => {
   const persistedCart = loadCart();
+  const reactions = createListenerMiddleware();
+  reactions.startListening({
+    actionCreator: cartActions.added,
+    effect: (_action, api) => {
+      api.dispatch(companionActions.reacted('cart'));
+    },
+  });
   const store = configureStore({
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
       [cartSlice.reducerPath]: cartSlice.reducer,
       garden: gardenSlice.reducer,
+      companion: companionSlice.reducer,
     },
     preloadedState: {
       garden: loadGarden(),
-      cart: persistedCart ?? {lines: []},
+      companion: loadCompanion(),
+      cart: persistedCart ?? { lines: [] },
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(reactions.middleware).concat(baseApi.middleware),
   });
 
   return store;

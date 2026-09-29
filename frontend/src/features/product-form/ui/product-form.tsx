@@ -1,8 +1,10 @@
 import type { UseFormReturn } from 'react-hook-form';
+import { useState } from 'react';
+import { Check, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useGetCategoriesQuery } from '../../../entities/category';
 import { useLocale } from '../../../shared/i18n';
-import { Button, Input, Select } from '../../../shared/ui';
+import { Button, Input, Modal, Select } from '../../../shared/ui';
 import type { ProductFormValues } from '../lib/form-values';
 import { ImageField } from './image-field';
 import { LocalizedFields } from './localized-fields';
@@ -24,6 +26,8 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
   const { t } = useTranslation('admin');
   const { localized } = useLocale();
   const categories = useGetCategoriesQuery(undefined);
+  const [preview, setPreview] = useState(false);
+  const values = form.watch();
 
   const { register, handleSubmit, formState } = form;
   const isEdit = mode === 'edit';
@@ -39,55 +43,113 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
       onSubmit={(event) => {
         void handleSubmit(onSubmit)(event);
       }}
-      className="flex flex-col gap-8"
+      className="product-editor-form"
     >
-      <LocalizedFields form={form} field="name" />
-      <LocalizedFields form={form} field="description" multiline />
+      <div className="product-editor-layout">
+        <div className="product-editor-details product-editor-panel">
+          <h2>{t('form.details')}</h2>
+          <Select
+            label={t('inventory.publication')}
+            description={t('inventory.publicationHint')}
+            options={(['draft', 'published', 'archived'] as const).map((value) => ({
+              value,
+              label: t(`inventory.${value}`),
+            }))}
+            {...register('status')}
+            value={values.status ?? 'published'}
+          />
+          <LocalizedFields form={form} field="name" />
+          <LocalizedFields form={form} field="description" multiline />
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Input
-          label={t('fields.price')}
-          description={t('fields.priceHint')}
-          type="number"
-          inputMode="numeric"
-          min={0}
-          step={1}
-          {...errorOf('price')}
-          {...register('price', { valueAsNumber: true })}
-        />
-        <Select
-          label={t('fields.category')}
-          placeholder={t('fields.categoryPlaceholder')}
-          options={(categories.data ?? []).map((category) => ({
-            value: category.slug,
-            label: localized(category.label),
-          }))}
-          {...errorOf('category')}
-          {...register('category')}
-        />
-        <Input
-          label={t('fields.slug')}
-          description={t('fields.slugHint')}
-          {...errorOf('slug')}
-          {...register('slug')}
-        />
+          <section className="product-editor-pricing" aria-label={t('form.pricing')}>
+            <h2>{t('form.pricing')}</h2>
+            <div className="product-editor-pair">
+              <Input
+                label={`${t('fields.price')} (₼)`}
+                description={t('fields.priceHint')}
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={1}
+                {...errorOf('price')}
+                {...register('price', { valueAsNumber: true })}
+              />
+              <Select
+                label={t('fields.category')}
+                placeholder={t('fields.categoryPlaceholder')}
+                options={(categories.data ?? []).map((category) => ({
+                  value: category.slug,
+                  label: localized(category.label),
+                }))}
+                {...errorOf('category')}
+                {...register('category')}
+                value={form.watch('category')}
+              />
+            </div>
+            <label className="product-editor-stock">
+              <input type="checkbox" {...register('inStock')} />
+              <span>
+                {t('fields.inStock')}
+                <small>{t('fields.stockHint')}</small>
+              </span>
+            </label>
+            <Input
+              label={t('fields.slug')}
+              description={t('fields.slugHint')}
+              {...errorOf('slug')}
+              {...register('slug')}
+            />
+          </section>
+        </div>
+
+        <ImageField form={form} />
       </div>
 
-      <ImageField form={form} />
-
-      <label className="flex items-center gap-3 text-md text-ink">
-        <input type="checkbox" className="size-5 accent-ink" {...register('inStock')} />
-        {t('fields.inStock')}
-      </label>
-
-      <div className="flex flex-wrap gap-4">
-        <Button type="submit" isLoading={formState.isSubmitting} loadingLabel={t('form.saving')}>
-          {isEdit ? t('form.save') : t('form.create')}
+      <div className="product-editor-actions">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            setPreview(true);
+          }}
+        >
+          {t('inventory.preview')}
         </Button>
-        <Button type="button" variant="ghost" onClick={onCancel}>
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={formState.isSubmitting}>
           {t('form.cancel')}
         </Button>
+        <Button
+          className="product-editor-save"
+          type="submit"
+          isLoading={formState.isSubmitting}
+          loadingLabel={t('form.saving')}
+        >
+          {isEdit ? <Check size={18} aria-hidden="true" /> : <Plus size={18} aria-hidden="true" />}
+          {isEdit ? t('form.save') : t('form.create')}
+        </Button>
       </div>
+      <Modal
+        isOpen={preview}
+        onClose={() => {
+          setPreview(false);
+        }}
+        title={t('inventory.preview')}
+        closeLabel={t('dialog.close')}
+      >
+        <div className="admin-product-preview">
+          <p>{t('inventory.previewHint')}</p>
+          {values.imageUrl && <img src={values.imageUrl} alt={localized(values.name)} />}
+          <h2>{localized(values.name) || t('image.noPreview')}</h2>
+          <strong>{Number.isFinite(values.price) ? values.price : 0} ₼</strong>
+          <p>{t(values.inStock ? 'table.inStock' : 'table.outOfStock')}</p>
+          <p>{localized(values.description)}</p>
+          <div className="admin-preview-gallery">
+            {(values.gallery ?? []).map((src, index) => (
+              <img src={src} alt={t('inventory.galleryImage', { number: index + 1 })} key={index} />
+            ))}
+          </div>
+        </div>
+      </Modal>
     </form>
   );
 };

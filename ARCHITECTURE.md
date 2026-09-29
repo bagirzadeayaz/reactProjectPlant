@@ -1,5 +1,41 @@
 # Architecture
 
+## Standalone error screens
+
+The unknown-route catch-all lives outside the storefront layout. The root render
+boundary wraps the entire layout, and the router has an explicit error element;
+both use the same themed status screen without exposing exception messages.
+Product lookup errors use that screen too. The layout suppresses its visible
+chrome when a nested status screen is present. Error pages show only the code,
+heading, and explanation, set `noindex`, and focus their heading. Navigating back
+to a healthy route resets the render boundary and restores the normal layout.
+
+## Inventory publishing workflow
+
+The deployed browser uses the Firestore adapter in `frontend/src/shared/firestore/store.ts`.
+Published records live in `products`; drafts and archives live in the admin-only
+`productWorkspace` collection. Existing records without `status` remain published.
+Publishing and archiving atomically move a record and update its public slug mapping.
+Restoring an archive returns it to drafts. Permanent deletion is offered only for
+archives. Empty or deleted public records no longer fall back to seed products;
+the existing one-time admin bootstrap remains responsible for seeding.
+
+The admin queries have separate caches from the storefront. Product mutations
+invalidate both. Inventory filters and pagination are in the URL, selection is
+limited to visible rows, and bulk changes run in bounded groups with individual
+failure reporting and retry. These are independent per-product transactions, not
+an all-or-nothing transaction for the entire selection.
+
+Products support a cover plus up to five additional images. Uploaded images keep
+the existing immutable SHA-256 image documents and 300 KB per-file limit. The
+product and all new image references are committed in the same transaction.
+The storefront gallery shows actual photos instead of alternate crops.
+
+The Node HTTP API remains the legacy single-image interface; the deployed inventory
+workflow uses the browser Firestore adapter. New publishing operations are not
+exposed through the Node HTTP API. Deploy the generated Firestore rules before
+the updated frontend so private inventory queries and gallery writes are allowed.
+
 Planto has two runtime boundaries: a React browser application and a Node.js HTTP
 server backed by Firestore Standard. The root package manages a single installation
 and deployment; frontend and backend source never import each other.
@@ -191,3 +227,74 @@ The care calendar records soil-check dates locally and makes no real watering pr
 The checkout slice also owns `/tracking`: a labelled simulation using a session receipt,
 with manual stages or a cancellable timer. No order, payment, address, or delivery is
 submitted. Room/pot styling is cosmetic and leaves product prices unchanged.
+
+## Interactive botanical sculpture
+
+The home widget lazy-loads Three.js when its canvas approaches the viewport.
+`widgets/home/lib/botanical-model.ts` owns the original curved leaf geometry,
+ceramic bowl, and instanced stones. `botanical-scene.ts` owns rendering, drag and
+keyboard rotation, lighting, growth, rain, and GPU resource disposal. React owns
+only the control state, with no per-frame component updates or server writes.
+Vertical touch gestures and wheel events remain available to page scrolling.
+Rendering stops off screen or in hidden tabs; paused/reduced-motion modes render
+only control changes. Device pixel ratio is capped at 1.5. Context loss or a failed
+WebGL import shows a static existing plant image and a retry action.
+
+## Navigation and page structure
+
+`shared/config/navigation.ts` defines the task vocabulary reused by the desktop
+header, menu and footer: shopping tools, interactive experiences, and help/care.
+Login appears only in the menu footer. Desktop disclosures support hover, click,
+keyboard opening, Escape and outside-click dismissal. The mobile bottom bar
+exposes Home, Shop, Explore and Basket and reserves space for safe-area insets;
+it is hidden for checkout, admin, dialogs, input focus and standalone errors.
+`widgets/site-navigation` owns contextual page trails and mobile navigation.
+Catalog product links carry a validated local return URL in router state, keeping
+filters when the visitor follows the Shop plants trail back from a product.
+`app/router/route-anchor.tsx` resolves section links after lazy content appears,
+including cross-page links into the 3D world and care calendar. RouteAnnouncer
+leaves hash navigation to that handler. All existing page URLs remain valid.
+The Explore hub groups interactive experiences and helper tools; shopping lists
+live in the catalog/menu. Home introduces products before the exploration sections.
+
+### Focused-page footer policy
+
+The storefront footer is omitted on admin routes, basket, checkout and confirmation,
+order tracking, comparison, plant finder and room studio. Browsing and information
+pages retain it. AppLayout owns the route policy; standalone errors and the film
+already use their own layouts. Main fills the remaining viewport instead of reserving
+a second viewport below the header. The signed-out admin gate reduces decorative
+artwork at short viewport heights so its controls fit without locking page scrolling
+or clipping content when accessibility settings require extra space.
+
+### Optional plant companion
+
+`entities/companion` owns validated, browser-persisted preferences (visibility,
+personality, pot and motion), plus transient reaction/dialog state. Store listener
+middleware reacts to basket additions; Room Studio dispatches a reaction for manual
+plant/room changes. `widgets/plant-companion` handles route peeking, local-time sleep,
+accessible settings and the lightweight animated character. Only preferences persist;
+reactions expire after 4.5 seconds. No server writes, audio or external requests are
+used. The companion is suppressed during admin, basket and checkout flows, errors,
+other dialogs and focused text inputs. It respects reduced motion and pauses character
+animation in background tabs. The menu can restore a hidden companion.
+
+The companion launcher supports mouse, pen and touch dragging with pointer capture
+and a movement threshold that distinguishes dragging from opening settings. Its
+normalized position persists with preferences and is clamped to the viewport above
+the mobile navigation. Arrow keys move the focused launcher; Home resets it. The
+floating dismiss icon is removed; the existing hide option remains in settings.
+
+Pip snaps to one of four safe viewport corners on release (including legacy saved positions). Arrow keys switch corners. Notifications never reposition Pip. When Pip occupies a lower corner, CSS places toast notifications below the header at the top center; with Pip in an upper corner, notifications keep their bottom placement.
+
+Corner switching uses a 14px directional gesture, moving only on release rather than requiring a drag past the viewport midpoint. Each gesture switches once; release saves the corner, cancellation restores it, and reduced motion disables the slide.
+
+
+While held, Pip follows the pointer within safe viewport bounds without a transition. Releasing a directional drag of at least 14px slides to the corresponding corner; smaller drags return to the original corner.
+
+
+The app uses ToastProvider in headless mode: it retains message state and expiry, while PlantCompanion presents every queued notification as an accessible speech bubble with per-message dismissal and success/error reactions. Notifications temporarily reveal Pip even if disabled or on an excluded route, without changing preferences. Separate toast boxes are not rendered.
+
+Desktop navigation owns one shared active dropdown, scoped to the route; delayed close callbacks only close their own menu. Identical notification text and tone reuse one message and refresh its expiry, preventing repeated basket clicks from stacking duplicate speech bubbles.
+
+Pip notifications now use latest-only delivery: each new message replaces its predecessor, gets a fresh expiry timer, and disappears automatically (including errors). Speech bubbles have no dismiss control and older messages never reappear.

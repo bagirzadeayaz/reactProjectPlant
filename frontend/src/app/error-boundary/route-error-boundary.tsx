@@ -1,7 +1,8 @@
+import { DocumentMeta } from '../../shared/lib/document-meta';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { Button, StatusPage } from '../../shared/ui';
+import { StatusPage } from '../../shared/ui';
 import { ErrorBoundary } from './error-boundary';
 
 export interface RouteErrorBoundaryProps {
@@ -12,8 +13,8 @@ export interface RouteErrorBoundaryProps {
  * Wraps one route's content.
  *
  * Keyed on the pathname, so navigating away clears a caught error instead of
- * leaving the user stuck on a dead screen. The header, footer and nav live
- * outside this boundary and keep working while it is showing.
+ * leaving the user stuck on a dead screen. The boundary wraps the complete
+ * layout, so a crash replaces the navigation and footer as well.
  */
 export const RouteErrorBoundary = ({ children }: RouteErrorBoundaryProps) => {
   const { t } = useTranslation();
@@ -22,13 +23,16 @@ export const RouteErrorBoundary = ({ children }: RouteErrorBoundaryProps) => {
   return (
     <ErrorBoundary
       resetKey={pathname}
-      fallback={({ reset }) => (
-        <StatusPage
-          role="alert"
-          title={t('state.error')}
-          description={t('state.errorDetail')}
-          action={<Button onClick={reset}>{t('actions.retry')}</Button>}
-        />
+      fallback={() => (
+        <>
+          <DocumentMeta title={`${t('state.error')} · ${t('meta.siteName')}`} robots="noindex" />
+          <StatusPage
+            code="500"
+            role="alert"
+            title={t('state.error')}
+            description={t('state.errorDetail')}
+          />
+        </>
       )}
     >
       {children}

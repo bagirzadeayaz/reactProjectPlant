@@ -2,7 +2,7 @@ import type { Product, ProductDraft } from '../../../entities/product';
 
 export type ProductFormValues = ProductDraft;
 
-/** An empty form. `currency` is fixed: the comp prices everything in rupees. */
+/** An empty form. Prices use Azerbaijani manat. */
 export const EMPTY_PRODUCT: ProductFormValues = {
   slug: '',
   name: { en: '', ru: '' },
@@ -11,6 +11,8 @@ export const EMPTY_PRODUCT: ProductFormValues = {
   currency: 'AZN',
   category: '',
   imageUrl: '',
+  gallery: [],
+  status: 'draft',
   inStock: true,
 };
 
@@ -23,5 +25,7 @@ export const toFormValues = (product: Product): ProductFormValues => ({
   currency: product.currency,
   category: product.category,
   imageUrl: product.imageUrl,
+  gallery: product.gallery ?? [],
+  status: product.status ?? 'published',
   inStock: product.inStock,
 });
