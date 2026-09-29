@@ -12,7 +12,7 @@ export interface HomeData {
 
 /**
  * Everything the landing page shows comes from two requests: the whole
- * catalog (six products fit in one page) and the reviews. Sections carve up
+ * catalog and the reviews. Sections carve up
  * the same cached list rather than issuing one request each.
  */
 export const useHomeData = (): HomeData => {

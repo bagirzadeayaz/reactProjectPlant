@@ -11,7 +11,7 @@ export interface ProductGridProps {
 }
 
 /**
- * Section 5 — the six-card grid under "Our Top Selling".
+ * The product grid under "Our Top Selling".
  *
  * The comp's geometry is exact — 512px columns at x = 77 / 608 / 1139 with
  * 19px gutters — so the grid is `repeat(3, var(--size-column))` with

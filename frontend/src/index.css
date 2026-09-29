@@ -113,6 +113,45 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #90a96e #1c2819;
+}
+
+/* Match the page and scrollable panels to the botanical palette. */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1c2819;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid #1c2819;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #b8cc8f, #6f9059);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #c9dda0;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: #1c2819;
+}
+
+@media (max-width: 760px) {
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-width: 1px;
+  }
 }
 
 /* ── App shell (index.html) ──────────────────────────────────────────────
@@ -717,6 +756,15 @@ h1[tabindex='-1']:focus {
   gap: calc(10 * var(--page-scale)) var(--spacing-gutter);
   padding-top: calc(12 * var(--page-scale));
 }
+.home-page .home-product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.home-page .home-product-grid > li {
+  flex: 0 0 calc((100% - 2 * var(--spacing-gutter)) / 3);
+  min-width: 0;
+}
 .product-card {
   position: relative;
   border-radius: var(--panel-radius);
@@ -1069,6 +1117,9 @@ h1[tabindex='-1']:focus {
     gap: 7rem 1.25rem;
     padding-top: 7rem;
   }
+  .home-page .home-product-grid > li {
+    flex-basis: calc((100% - 1.25rem) / 2);
+  }
   .product-card {
     min-height: 420px;
     padding-bottom: 2rem;
@@ -1191,6 +1242,9 @@ h1[tabindex='-1']:focus {
     max-width: 420px;
     margin-inline: auto;
     gap: 7rem;
+  }
+  .home-page .home-product-grid > li {
+    flex-basis: 100%;
   }
   .product-card {
     min-height: 445px;

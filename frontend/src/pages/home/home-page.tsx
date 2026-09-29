@@ -50,19 +50,7 @@ export const HomePage = () => {
   }
 
   const trendy = byCategory('trendy').toSorted((a, b) => a.createdAt.localeCompare(b.createdAt));
-  const designOrder = [
-    'calathea-plant',
-    'desk-plant',
-    'calathea-ai-plant',
-    'cal-874-plant',
-    'show-plant',
-    'calat-o2-plant',
-  ];
-  const rank = (slug: string) => {
-    const index = designOrder.indexOf(slug);
-    return index < 0 ? designOrder.length : index;
-  };
-  const topSelling = [...products].sort((a, b) => rank(a.slug) - rank(b.slug));
+  const topSelling = byCategory('top-selling');
   const selectedO2 = products.filter((p) => ['show-plant', 'calathea-plant'].includes(p.slug));
   const bestO2 =
     selectedO2.length > 0
