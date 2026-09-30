@@ -251,7 +251,7 @@ h1 em {
 }
 .chapters {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 16px;
   margin-top: 22px;
 }
@@ -646,4 +646,68 @@ body.ready .cinema {
   width: 55%;
   height: auto;
   bottom: 0;
+}
+
+.cover picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.chapters strong {
+  font-size: 18px;
+}
+.chapters button {
+  min-height: 100px;
+}
+#captions {
+  font-size: 12px;
+  font-weight: 700;
+}
+#captions[aria-pressed='true'] {
+  color: var(--lime);
+  background: #ffffff20;
+}
+video::cue {
+  font-size: 18px;
+  background: #101a11de;
+  color: #f1f3e5;
+}
+@media (max-width: 640px) {
+  .screen:not(:fullscreen) {
+    aspect-ratio: auto;
+  }
+  .screen:not(:fullscreen) video {
+    height: auto;
+    aspect-ratio: 1;
+  }
+  .screen:not(:fullscreen) .cover {
+    bottom: auto;
+    aspect-ratio: 1;
+  }
+  .screen:not(:fullscreen) .transport {
+    position: relative;
+    padding: 8px 8px 4px;
+    background: #1e2919;
+  }
+  .screen:not(:fullscreen)[data-playing][data-controls] .transport {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .transport button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+.transport {
+  transition: opacity 0.25s;
+}
+.screen[data-playing='true'][data-controls='false']:not(:focus-within) .transport {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .transport {
+    transition: none;
+  }
 }

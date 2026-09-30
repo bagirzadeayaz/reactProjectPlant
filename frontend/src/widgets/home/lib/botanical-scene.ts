@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { createBotanicalModel } from './botanical-model';
+import { createBotanicalModel, growBotanicalModel } from './botanical-model';
 
 export interface BotanicalOptions {
   night: boolean;
@@ -23,7 +23,7 @@ export function createBotanicalScene(canvas: HTMLCanvasElement, onLost: () => vo
   renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 30);
-  const { world, foliage, leaves, leafMaterial } = createBotanicalModel();
+  const { world, leaves } = createBotanicalModel();
   scene.add(world);
   const hemisphere = new THREE.HemisphereLight('#e7f0d6', '#303d28', 2.1);
   const key = new THREE.DirectionalLight('#fff1d8', 4);
@@ -109,16 +109,11 @@ export function createBotanicalScene(canvas: HTMLCanvasElement, onLost: () => vo
     light = immediate ? targetLight : THREE.MathUtils.damp(light, targetLight, 4, delta);
     world.rotation.y = rotation;
     world.position.y = animate ? Math.sin(time * 0.8) * 0.035 : 0;
-    foliage.scale.setScalar(0.38 + growth * 0.7);
-    leaves.forEach((leaf, i) => {
-      leaf.rotation.z = animate ? Math.sin(time * 1.1 + i * 0.7) * 0.025 : 0;
-      leaf.scale.setScalar(0.75 + growth * 0.25);
-    });
+    growBotanicalModel(leaves, growth, time, animate, options.rain);
     key.color.copy(warm).lerp(cool, light);
     key.intensity = 3.2 - light * 1.8;
     hemisphere.intensity = 1.8 - light * 1.0;
     rim.intensity = 2.2 + light;
-    leafMaterial.roughness = options.rain ? 0.3 : 0.5;
     rain.visible = options.rain;
     fireflies.visible = options.night;
     for (let i = 0; i < 150; i++) {

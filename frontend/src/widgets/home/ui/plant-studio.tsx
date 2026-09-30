@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { AnimatePresence, motion, useReducedMotion, type MotionStyle } from 'framer-motion';
 import {
   Sun,
@@ -22,6 +22,7 @@ import { Button, ResponsiveImage } from '../../../shared/ui';
 
 const SLUGS = ['calathea-plant', 'desk-plant', 'cal-874-plant'];
 const ROOMS = ['minimal', 'cozy', 'gallery'] as const;
+const TOUR_INTERVAL = 4000;
 type Room = (typeof ROOMS)[number];
 // Measured transparent image margins and table heights keep pots on the surface.
 const BASELINE: Record<string, number> = {
@@ -53,16 +54,21 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
   const animate = motionEnabled && !reducedMotion;
   const duration = animate ? 0.55 : 0;
 
+  const advanceScene = useCallback(() => {
+    setSelected((previous) => {
+      const available = SLUGS.filter((slug) => data?.items.some((item) => item.slug === slug));
+      if (available.length === 0) return previous;
+      return available[(available.indexOf(previous ?? '') + 1) % available.length] ?? previous;
+    });
+    setRoom((previous) => ROOMS[(ROOMS.indexOf(previous) + 1) % ROOMS.length] ?? 'minimal');
+    setEvening((previous) => !previous);
+    setWatered(false);
+    setWatering(false);
+  }, [data?.items]);
+
   useEffect(() => {
     if (!playing) return;
-    const timer = window.setInterval(() => {
-      setSelected((previous) => {
-        const available = SLUGS.filter((slug) => data?.items.some((item) => item.slug === slug));
-        return available[(available.indexOf(previous ?? '') + 1) % available.length] ?? previous;
-      });
-      setRoom((previous) => ROOMS[(ROOMS.indexOf(previous) + 1) % ROOMS.length] ?? 'minimal');
-      setWatered(false);
-    }, 5000);
+    const timer = window.setInterval(advanceScene, TOUR_INTERVAL);
     const hide = (): void => {
       if (document.hidden) setPlaying(false);
     };
@@ -71,7 +77,7 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
       window.clearInterval(timer);
       document.removeEventListener('visibilitychange', hide);
     };
-  }, [playing, data]);
+  }, [playing, advanceScene]);
   useEffect(() => {
     if (!watering) return;
     const timer = window.setTimeout(() => {
@@ -137,6 +143,11 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
           <span className="rs-scene-label">
             {evening ? <Moon size={16} aria-hidden="true" /> : <Sun size={16} aria-hidden="true" />}{' '}
             {t(`garden:${room}`)} · {t(evening ? 'studio.evening' : 'studio.day')}
+            {playing && (
+              <span className="rs-tour-count">
+                {t('studio.tourScene', { current: ROOMS.indexOf(room) + 1, total: ROOMS.length })}
+              </span>
+            )}
           </span>
           <button
             type="button"
@@ -197,7 +208,11 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
             type="button"
             aria-pressed={playing}
             onClick={() => {
-              setPlaying(!playing);
+              if (playing) setPlaying(false);
+              else {
+                advanceScene();
+                setPlaying(true);
+              }
             }}
           >
             {playing ? (
@@ -296,6 +311,7 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
                 key={String(night)}
                 aria-pressed={evening === night}
                 onClick={() => {
+                  setPlaying(false);
                   setEvening(night);
                 }}
               >
@@ -321,6 +337,7 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
             step={5}
             value={zoom}
             onChange={(e) => {
+              setPlaying(false);
               setZoom(Number(e.target.value));
             }}
           />
@@ -339,6 +356,7 @@ export const PlantStudio = ({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) => {
             step={1}
             value={position}
             onChange={(e) => {
+              setPlaying(false);
               setPosition(Number(e.target.value));
             }}
           />

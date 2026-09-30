@@ -19,7 +19,7 @@ service cloud.firestore {
         'category', 'imageUrl', 'inStock', 'createdAt'
       ]) && data.keys().hasOnly([
         'slug', 'name', 'description', 'price', 'currency',
-        'category', 'imageUrl', 'inStock', 'createdAt', 'gallery', 'status'
+        'category', 'imageUrl', 'inStock', 'createdAt', 'gallery', 'status', 'care'
       ]) &&
         data.slug is string && data.slug.size() > 0 && data.slug.size() <= 120 &&
         data.name is map && data.name.keys().hasAll(['en', 'ru']) &&
@@ -32,6 +32,15 @@ service cloud.firestore {
         data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() <= 2048 &&
         data.inStock is bool && data.createdAt is string &&
         (!('status' in data) || data.status in ['published', 'draft', 'archived']) &&
+        (!('care' in data) || (data.care is map &&
+          data.care.keys().hasAll(['light', 'watering', 'size', 'effort', 'humidity', 'pets']) &&
+          data.care.keys().hasOnly(['light', 'watering', 'size', 'effort', 'humidity', 'pets']) &&
+          data.care.light in ['low', 'bright', 'direct'] &&
+          data.care.watering in ['dry', 'top-dry', 'moist'] &&
+          data.care.size in ['compact', 'medium', 'large'] &&
+          data.care.effort in ['easy', 'regular'] &&
+          data.care.humidity in ['average', 'high'] &&
+          data.care.pets in ['safe', 'toxic', 'unknown'])) &&
         (!('gallery' in data) || (data.gallery is list && data.gallery.size() <= 5 &&
           validGalleryItem(data.gallery, 0) && validGalleryItem(data.gallery, 1) &&
           validGalleryItem(data.gallery, 2) && validGalleryItem(data.gallery, 3) &&

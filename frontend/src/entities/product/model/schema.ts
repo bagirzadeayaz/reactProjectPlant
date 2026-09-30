@@ -9,6 +9,16 @@ const productText = localizedString.extend({
 /** ISO 4217 currency used throughout the Azerbaijani storefront. */
 export const currencySchema = z.enum(['AZN']);
 
+export const plantCareSchema = z.object({
+  light: z.enum(['low', 'bright', 'direct']),
+  watering: z.enum(['dry', 'top-dry', 'moist']),
+  size: z.enum(['compact', 'medium', 'large']),
+  effort: z.enum(['easy', 'regular']),
+  humidity: z.enum(['average', 'high']),
+  pets: z.enum(['safe', 'toxic', 'unknown']),
+});
+export type PlantCare = z.infer<typeof plantCareSchema>;
+
 export const productSchema = z.object({
   id: z.string().min(1),
   slug: z.string().min(1),
@@ -18,6 +28,7 @@ export const productSchema = z.object({
   price: z.number().int().nonnegative(),
   currency: currencySchema,
   category: z.string().min(1).max(100),
+  care: plantCareSchema.optional(),
   imageUrl: z.string().min(1).max(420_000),
   gallery: z.array(z.string().min(1).max(420_000)).max(5).optional(),
   status: z.enum(['published', 'draft', 'archived']).optional(),
@@ -35,7 +46,7 @@ export type Currency = z.infer<typeof currencySchema>;
  */
 export const productDraftSchema = productSchema
   .omit({ id: true, createdAt: true })
-  .extend({ slug: z.string().max(100) })
+  .extend({ slug: z.string().max(100), care: plantCareSchema })
   .strict();
 export type ProductDraft = z.infer<typeof productDraftSchema>;
 

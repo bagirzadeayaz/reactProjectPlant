@@ -4,7 +4,7 @@ import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useGetCategoriesQuery } from '../../entities/category';
-import { ProductCard, useGetProductBySlugQuery, useGetProductsQuery } from '../../entities/product';
+import { ProductCard, ProductCare, useGetProductBySlugQuery, useGetProductsQuery } from '../../entities/product';
 import { AddToCartButton } from '../../features/add-to-cart';
 import { useFormatters, useLocale } from '../../shared/i18n';
 import { Button, Container, StatusPage, Skeleton } from '../../shared/ui';
@@ -82,8 +82,10 @@ export const ProductPage = () => {
         <ProductGallery product={item} name={name} />
 
         <div className="flex flex-col gap-6">
-          {category && <p className="text-md text-ink-muted">{localized(category.label)}</p>}
-          <ProductTools product={item} />
+          <div className="product-summary-meta">
+            {category && <p className="text-md text-ink-muted">{localized(category.label)}</p>}
+            <ProductTools product={item} />
+          </div>
           <h1 className="text-h1 font-(--font-weight-heading) text-ink">{name}</h1>
           <p className="text-h2 text-ink-muted">{format.currency(item.price, item.currency)}</p>
           <div className="product-availability" data-available={item.inStock} role="status">
@@ -112,6 +114,8 @@ export const ProductPage = () => {
           </div>
         </div>
       </div>
+
+      {item.care && <ProductCare care={item.care} />}
 
       {others.length > 0 && (
         <section aria-labelledby="related-heading" className="mt-20 lg:mt-24">

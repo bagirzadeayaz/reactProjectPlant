@@ -49,7 +49,7 @@ export function createBotanicalModel() {
   const foliage = new THREE.Group();
   foliage.position.y = 0.5;
   world.add(foliage);
-  const leaves: THREE.Group[] = [];
+  const leaves = [];
   const leafMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true,
     side: THREE.DoubleSide,
@@ -69,32 +69,45 @@ export function createBotanicalModel() {
       new THREE.Vector3(0, height * 0.6, radius * 0.23),
       new THREE.Vector3(0, height, radius),
     ]);
-    branch.add(
-      new THREE.Mesh(
-        new THREE.TubeGeometry(stem, 16, 0.018 - tier * 0.005, 6, false),
-        stemMaterial,
-      ),
+    const stalk = new THREE.Mesh(
+      new THREE.TubeGeometry(stem, 16, 0.018 - tier * 0.005, 6, false),
+      stemMaterial,
     );
+    branch.add(stalk);
     const leaf = new THREE.Group();
     leaf.position.set(0, height, radius);
     leaf.rotation.x = 1.25 - tier * 1.0;
     const surface = leafSurface(1.05 + tier * 0.28, 0.36 + (1 - tier) * 0.08);
-    const mesh = new THREE.Mesh(surface.geometry, leafMaterial);
+    const material = leafMaterial.clone();
+    const mesh = new THREE.Mesh(surface.geometry, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     leaf.add(mesh);
     const midrib = Array.from({ length: 24 }, (_, j) =>
       surface.point(j / 23, 0).add(new THREE.Vector3(0, 0, 0.009)),
     );
-    leaf.add(
-      new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(midrib), 24, 0.007, 5, false),
-        veinMaterial,
-      ),
+    const rib = new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(midrib), 24, 0.007, 5, false),
+      veinMaterial,
     );
+    leaf.add(rib);
     branch.add(leaf);
     foliage.add(branch);
-    leaves.push(branch);
+    leaves.push({
+      branch,
+      stalk,
+      leaf,
+      material,
+      height,
+      radius,
+      tilt: leaf.rotation.x,
+      length: 1.05 + tier * 0.28,
+      surfaces: [mesh.geometry, rib.geometry].map((geometry) => ({
+        geometry,
+        rest: Float32Array.from(geometry.getAttribute('position').array),
+      })),
+      lastOpen: -1,
+    });
   }
 
   // A closed ceramic shell with a rolled rim and a separate soil surface.
@@ -150,5 +163,56 @@ export function createBotanicalModel() {
   orbit.rotation.x = Math.PI / 2;
   orbit.position.y = -0.2;
   world.add(orbit);
-  return { world, foliage, leaves, leafMaterial };
+  leafMaterial.dispose();
+  return { world, foliage, leaves };
+}
+
+/** Each shoot extends from the soil, then its rolled blade opens from base to tip. */
+export function growBotanicalModel(
+  leaves: ReturnType<typeof createBotanicalModel>['leaves'],
+  growth: number,
+  time: number,
+  animate: boolean,
+  rain: boolean,
+) {
+  leaves.forEach((shoot, i) => {
+    const age = THREE.MathUtils.clamp((growth - i * 0.047 + 0.08) / 0.32, 0, 1);
+    const reach = THREE.MathUtils.smoothstep(age, 0, 0.7);
+    const open = THREE.MathUtils.smoothstep(age, 0.25, 1);
+    shoot.branch.visible = age > 0.005;
+    if (!shoot.branch.visible) return;
+    shoot.stalk.scale.set(0.35 + reach * 0.65, reach, reach);
+    shoot.leaf.position.set(0, shoot.height * reach, shoot.radius * reach);
+    shoot.leaf.rotation.x = shoot.tilt * open - (1 - open) * 0.25;
+    shoot.leaf.rotation.z = animate ? Math.sin(time * 1.2 + i * 0.8) * (0.016 + open * 0.02) : 0;
+    shoot.leaf.scale.setScalar(0.08 + 0.92 * THREE.MathUtils.smoothstep(age, 0.1, 1));
+    shoot.branch.rotation.z = animate ? Math.sin(time * 0.7 + i) * 0.012 * reach : 0;
+    shoot.material.color.setRGB(1 + (1 - open) * 0.45, 1 + (1 - open) * 0.3, 1);
+    shoot.material.roughness = rain ? 0.3 : 0.5;
+    if (Math.abs(open - shoot.lastOpen) < 0.001) return;
+    shoot.lastOpen = open;
+    for (const { geometry, rest } of shoot.surfaces) {
+      const position = geometry.getAttribute('position');
+      for (let j = 0; j < position.count; j++) {
+        const x = rest[j * 3] ?? 0;
+        const y = rest[j * 3 + 1] ?? 0;
+        const z = rest[j * 3 + 2] ?? 0;
+        const t = THREE.MathUtils.clamp(y / shoot.length, 0, 1);
+        const curl = (1 - open) * 3.8;
+        const angle = curl * t;
+        // Arc-length preserving roll, with the two sides folded along the midrib.
+        const arcY = curl < 0.001 ? y : (Math.sin(angle) * shoot.length) / curl;
+        const arcZ = curl < 0.001 ? 0 : ((1 - Math.cos(angle)) * shoot.length) / curl;
+        position.setXYZ(
+          j,
+          x * (0.12 + open * 0.88),
+          arcY - z * Math.sin(angle),
+          arcZ + z * Math.cos(angle) + Math.abs(x) * (1 - open) * 0.8,
+        );
+      }
+      position.needsUpdate = true;
+      geometry.computeVertexNormals();
+      geometry.computeBoundingSphere();
+    }
+  });
 }

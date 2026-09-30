@@ -27,7 +27,7 @@ export const ComparePage = () => {
   const value = (p: Product, row: ComparisonRow): string => {
     if (row === 'price') return format.currency(p.price, p.currency);
     if (row === 'stock') return t(p.inStock ? 'yes' : 'no');
-    const profile = plantProfile(p.slug);
+    const profile = plantProfile(p);
     return t(profile?.[row === 'effort' ? 'care' : row] ?? 'unknown');
   };
   const different = (row: ComparisonRow): boolean =>

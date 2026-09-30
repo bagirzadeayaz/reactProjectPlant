@@ -73,7 +73,9 @@ export const BestO2 = ({ products }: BestO2Props) => {
           {t('home:bestO2.title')}
         </h3>
         <p className="text-md text-ink-muted">{t('home:bestO2.body')}</p>
-        <p className="text-md text-ink-muted">{localized(product.description)}</p>
+        <p className="best-o2__description text-md text-ink-muted">
+          {localized(product.description)}
+        </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-6">
           <Button as="a" href={`/catalog/${product.slug}`}>

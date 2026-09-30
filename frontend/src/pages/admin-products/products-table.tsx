@@ -176,6 +176,9 @@ export const ProductsTable = ({
                         >
                           {t(`inventory.${product.status ?? 'published'}`)}
                         </small>
+                        {!product.care && (
+                          <small className="admin-care-missing">{t('care.missing')}</small>
+                        )}
                       </span>
                     </Link>
                   </th>

@@ -38,6 +38,11 @@
     "inStock": "In stock",
     "stockHint": "Available to add to the basket."
   },
+  "care": {
+    "title": "Plant care profile",
+    "hint": "Choose the conditions for this exact plant. Use “Species not confirmed” for pet safety if its identity is uncertain.",
+    "missing": "Care profile needed"
+  },
   "languages": {
     "en": "English",
     "ru": "Russian",
@@ -172,6 +177,6 @@
     "galleryUrl": "Additional photo URL",
     "addImage": "Add photo",
     "preview": "Preview product",
-    "previewHint": "Preview of your current edits. Nothing is published until you save with Published visibility."
+    "previewHint": "Current edits · Save to apply changes"
   }
 }

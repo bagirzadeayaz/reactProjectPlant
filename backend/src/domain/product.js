@@ -6,6 +6,14 @@ const localized = z.object({
   ru: z.string().trim().min(1).max(500),
 });
 const imageUrl = z.string().min(1).max(420_000);
+const care = z.object({
+  light: z.enum(['low', 'bright', 'direct']),
+  watering: z.enum(['dry', 'top-dry', 'moist']),
+  size: z.enum(['compact', 'medium', 'large']),
+  effort: z.enum(['easy', 'regular']),
+  humidity: z.enum(['average', 'high']),
+  pets: z.enum(['safe', 'toxic', 'unknown']),
+});
 const fields = {
   slug: z.string().max(100),
   name: localized,
@@ -13,6 +21,7 @@ const fields = {
   price: z.number().int().nonnegative(),
   currency: z.literal('AZN'),
   category: z.string().min(1).max(100),
+  care,
   imageUrl,
   inStock: z.boolean(),
 };

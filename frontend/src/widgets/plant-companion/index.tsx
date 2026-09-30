@@ -3,14 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotion } from 'framer-motion';
-import { Droplets, Hand, Heart, Moon, Sparkles, CircleAlert } from 'lucide-react';
-import {
-  companionActions,
-  selectCompanion,
-  type CompanionPreferences,
-} from '../../entities/companion';
+import { Droplets, Hand } from 'lucide-react';
+import { companionActions, selectCompanion } from '../../entities/companion';
 import { Modal, useToast } from '../../shared/ui';
 import { useCompanionDrag } from './use-companion-drag';
+import { Pip } from './pip';
 import './companion.css';
 
 const atNight = () => {
@@ -19,69 +16,6 @@ const atNight = () => {
 };
 const personalities = ['curious', 'cheerful', 'calm'] as const;
 const pots = ['terracotta', 'sage', 'cream'] as const;
-
-const Pip = ({
-  pot,
-  mood,
-  personality,
-  moving,
-}: {
-  pot: CompanionPreferences['pot'];
-  mood: string;
-  personality: CompanionPreferences['personality'];
-  moving: boolean;
-}) => (
-  <span
-    className="pip"
-    data-pot={pot}
-    data-mood={mood}
-    data-personality={personality}
-    data-moving={moving}
-    aria-hidden="true"
-  >
-    <span className="pip__body">
-      <img
-        className="pip__leaves"
-        src="/companion/pip-leaves.webp"
-        alt=""
-        width="360"
-        height="360"
-        draggable={false}
-      />
-      <span className="pip__pot">
-        <span className="pip__rim" />
-        <span className="pip__face">
-          <i />
-          <b />
-          <i />
-        </span>
-        <span className="pip__blush" />
-      </span>
-    </span>
-    <span className="pip__effect">
-      {mood === 'error' ? (
-        <CircleAlert />
-      ) : mood === 'sleep' ? (
-        <Moon />
-      ) : mood === 'water' ? (
-        <Droplets />
-      ) : mood === 'hello' ? (
-        <Heart />
-      ) : (
-        <Sparkles />
-      )}
-    </span>
-    {mood === 'water' && (
-      <span className="pip__rain">
-        <i />
-        <i />
-        <i />
-        <i />
-      </span>
-    )}
-    <span className="pip__shadow" />
-  </span>
-);
 
 export const PlantCompanion = () => {
   const { t } = useTranslation();
@@ -192,6 +126,9 @@ export const PlantCompanion = () => {
             mood={mood}
             personality={preferences.personality}
             moving={moving}
+            dragging={drag.dragging}
+            revision={`${String(revision)}:${toasts.at(-1)?.id ?? ''}`}
+            active={!panelOpen}
           />
         </button>
       </aside>
@@ -203,14 +140,21 @@ export const PlantCompanion = () => {
         className="companion-dialog"
       >
         <p className="companion-intro">{t('companion.intro')}</p>
-        <div className="companion-preview">
+        <button
+          type="button"
+          className="companion-preview"
+          aria-label={t('companion.play')}
+          onClick={() => dispatch(companionActions.reacted('dance'))}
+        >
           <Pip
             pot={preferences.pot}
             mood={mood}
             personality={preferences.personality}
             moving={moving}
+            dragging={false}
+            revision={revision}
           />
-        </div>
+        </button>
         <p className="companion-response" role="status" aria-live="polite">
           {message}
         </p>

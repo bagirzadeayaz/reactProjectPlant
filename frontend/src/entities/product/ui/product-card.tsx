@@ -94,8 +94,12 @@ export const ProductCard = ({
             {name}
           </Link>
         </Heading>
-        <p className="line-clamp-2 text-md text-ink-muted">{localized(product.description)}</p>
-        {!product.inStock && <p className="text-sm text-ink-muted">{t('outOfStock')}</p>}
+        <p className="product-card__description line-clamp-2 text-md text-ink-muted">
+          {localized(product.description)}
+        </p>
+        <p className="product-card__stock text-sm text-ink-muted" data-available={product.inStock}>
+          {t(product.inStock ? 'inStock' : 'outOfStock')}
+        </p>
       </div>
 
       <div className="product-card__price flex items-center justify-between gap-4">

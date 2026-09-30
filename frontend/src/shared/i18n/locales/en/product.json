@@ -4,6 +4,17 @@
   "outOfStockHint": "This plant is currently unavailable to purchase. Explore other plants in our catalog.",
   "quantity": "Quantity",
   "description": "Description",
+  "care": {
+    "title": "Care at a glance",
+    "intro": "The little things that help this plant feel at home.",
+    "note": "Check the soil before watering. Light, seasons and room conditions change what each plant needs.",
+    "light": { "label": "Light", "low": "Low to indirect", "bright": "Bright, indirect", "direct": "Sunny window" },
+    "watering": { "label": "Watering", "dry": "Let soil dry out", "top-dry": "When top 2 cm dries", "moist": "Keep lightly moist" },
+    "size": { "label": "Space", "compact": "Desk or shelf", "medium": "Room corner", "large": "Floor space" },
+    "effort": { "label": "Care level", "easy": "Easygoing", "regular": "Regular attention" },
+    "humidity": { "label": "Humidity", "average": "Typical room", "high": "Humid room" },
+    "pets": { "label": "Around pets", "safe": "Non-toxic to cats & dogs", "toxic": "Keep away from pets", "unknown": "Species not confirmed" }
+  },
   "reviews": "Reviews",
   "reviewCount_one": "{{count}} review",
   "reviewCount_other": "{{count}} reviews",

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#141d12" />
     <title>Planto — The film</title>
-    <link rel="stylesheet" href="/promo.css" />
-    <script src="/promo.js" defer></script>
+    <link rel="stylesheet" href="/promo.css?v=4" />
+    <script src="/promo.js?v=4" defer></script>
   </head>
   <body>
     <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -41,9 +41,9 @@
         </h1>
         <div class="intro-copy">
           <p data-text="intro">
-            Step inside the world of Planto.<br />Three rooms. One fresh perspective.
+            Step inside the world of Planto.<br />From first leaf to a place called home.
           </p>
-          <span data-text="meta">20 seconds / Sound on</span>
+          <span data-text="meta">28 seconds / Sound on</span>
         </div>
       </section>
       <section class="cinema" aria-label="Planto film">
@@ -53,18 +53,36 @@
             controls
             playsinline
             preload="metadata"
-            poster="/media/planto-promo-poster.jpg"
+            poster="/media/planto-promo-poster.jpg?v=4"
             aria-label="Planto promotional film"
           >
-            <source src="/media/planto-promo.webm" type="video/webm" />
-            <source src="/media/planto-promo.mp4" type="video/mp4" />
+            <source
+              src="/media/planto-promo-mobile.mp4?v=4"
+              type="video/mp4"
+              media="(max-width: 640px)"
+            />
+            <source src="/media/planto-promo.mp4?v=4" type="video/mp4" />
+            <source src="/media/planto-promo.webm?v=4" type="video/webm" />
+            <track
+              kind="subtitles"
+              src="/media/planto-promo.en.vtt?v=4"
+              srclang="en"
+              label="English"
+            />
+            <track
+              kind="subtitles"
+              src="/media/planto-promo.ru.vtt?v=4"
+              srclang="ru"
+              label="Русский"
+            />
           </video>
           <div class="cover" id="cover" aria-hidden="true" hidden>
-            <img class="room" src="/rooms/minimal.webp" alt="" /><img
-              class="plant"
-              src="/plants/calathea-plant.png"
-              alt=""
-            />
+            <picture
+              ><source
+                media="(max-width: 640px)"
+                srcset="/media/planto-promo-mobile-poster.jpg?v=4" />
+              <img class="room" src="/media/planto-promo-poster.jpg?v=4" alt=""
+            /></picture>
           </div>
           <button class="main-play" id="main-play" hidden>
             <span
@@ -74,12 +92,13 @@
           <div class="transport" id="transport" hidden>
             <label class="seek-label"
               ><span class="sr-only" data-text="seek">Video position</span
-              ><input id="seek" type="range" min="0" max="20" step="0.1" value="0"
+              ><input id="seek" type="range" min="0" max="28" step="0.1" value="0"
             /></label>
             <div class="transport-row">
               <button id="toggle" aria-label="Play film">
                 <svg><use href="#play" /></svg></button
-              ><span id="time" aria-live="off">00:00 / 00:20</span><span class="spacer"></span
+              ><span id="time" aria-live="off">00:00 / 00:28</span><span class="spacer"></span
+              ><button id="captions" aria-label="Show captions" aria-pressed="false">CC</button
               ><button id="mute" aria-label="Mute sound">
                 <svg><use href="#sound" /></svg></button
               ><button id="fullscreen" aria-label="Enter fullscreen">
@@ -91,30 +110,34 @@
         <p id="media-status" role="status" hidden></p>
         <nav class="chapters" aria-label="Film chapters">
           <button data-time="0" aria-current="true">
-            <img class="chapter-plant" src="/plants/calathea-plant.png" alt="" /><span
-              ><small>01</small><strong data-text="chapter1">Make room</strong></span
+            <img src="/media/planto-scene-1.jpg?v=4" alt="" /><span
+              ><small>01</small><strong data-text="chapter1">Beginnings</strong></span
             >
           </button>
-          <button data-time="3.7">
-            <img src="/rooms/minimal.webp" alt="" /><img
-              class="chapter-plant"
-              src="/plants/calathea-plant.png"
-              alt=""
-            /><span><small>02</small><strong data-text="chapter2">Minimal</strong></span>
+          <button data-time="5">
+            <img src="/media/planto-scene-2.jpg?v=4" alt="" /><span
+              ><small>02</small><strong data-text="chapter2">Grow</strong></span
+            >
           </button>
-          <button data-time="8.2">
-            <img src="/rooms/cozy.webp" alt="" /><img
-              class="chapter-plant"
-              src="/plants/desk-plant.png"
-              alt=""
-            /><span><small>03</small><strong data-text="chapter3">Evening</strong></span>
+          <button data-time="12">
+            <img src="/media/planto-scene-3.jpg?v=4" alt="" /><span
+              ><small>03</small><strong data-text="chapter3">Make room</strong></span
+            >
           </button>
-          <button data-time="12.7">
-            <img src="/rooms/gallery.webp" alt="" /><img
-              class="chapter-plant"
-              src="/plants/cal-874-plant.png"
-              alt=""
-            /><span><small>04</small><strong data-text="chapter4">Gallery</strong></span>
+          <button data-time="16">
+            <img src="/media/planto-scene-4.jpg?v=4" alt="" /><span
+              ><small>04</small><strong data-text="chapter4">Exhale</strong></span
+            >
+          </button>
+          <button data-time="20">
+            <img src="/media/planto-scene-5.jpg?v=4" alt="" /><span
+              ><small>05</small><strong data-text="chapter5">Find your green</strong></span
+            >
+          </button>
+          <button data-time="24">
+            <img src="/media/planto-scene-6.jpg?v=4" alt="" /><span
+              ><small>06</small><strong data-text="chapter6">Planto</strong></span
+            >
           </button>
         </nav>
       </section>

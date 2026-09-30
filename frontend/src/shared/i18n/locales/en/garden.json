@@ -40,7 +40,7 @@
   "large": "Floor space",
   "easy": "Low effort",
   "regular": "Regular attention",
-  "profileNote": "Sample profiles for this demo; confirm actual care needs for a real plant.",
+  "profileNote": "Check the soil and your room conditions; care needs can change with the season.",
   "unknown": "Not specified",
   "price": "Price",
   "stock": "Availability",
@@ -56,7 +56,7 @@
   "resultTitle": "Your green shortlist",
   "match": "{{count}} of 3 preferences matched",
   "retake": "Start again",
-  "noMatches": "No available plants with sample profiles right now.",
+  "noMatches": "No available plants with care profiles right now.",
   "choose": "Choose a plant",
   "month": "Sample care calendar",
   "previousMonth": "Previous month",
@@ -152,7 +152,7 @@
   "playgroundDescription": "Find your plant. Style your space. Make it yours.",
   "world": {
     "title": "A little world. In your hands.",
-    "description": "Turn it. Grow it. Change the light.",
+    "description": "From first shoot to full canopy. Shape a little life.",
     "lighting": "Lighting",
     "day": "Day",
     "night": "Night",
@@ -166,7 +166,13 @@
     "reset": "Reset the world",
     "loading": "Growing your little world…",
     "unavailable": "3D is unavailable in this browser. You can still explore the rest of Planto.",
-    "retry": "Try 3D again"
+    "retry": "Try 3D again",
+    "stages": {
+      "sprout": "First shoots",
+      "young": "New leaves",
+      "unfurling": "Unfurling",
+      "canopy": "Full canopy"
+    }
   },
   "shoppingTools": "Your shopping lists",
   "exploreTitle": "Explore Planto",

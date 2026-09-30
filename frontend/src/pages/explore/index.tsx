@@ -121,7 +121,7 @@ export const FinderPage = () => {
   };
   const ranked = (query.data?.items ?? [])
     .flatMap((product) => {
-      const profile = plantProfile(product.slug);
+      const profile = plantProfile(product);
       return profile && product.inStock
         ? [{ product, profile, score: matchProfile(profile, answers as PlantProfile) }]
         : [];

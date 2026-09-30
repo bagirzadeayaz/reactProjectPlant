@@ -6,7 +6,7 @@
     "playLabel": "Смотреть ролик Planto",
     "backgroundAlt": "Густая зелёная листва в мягком свете",
     "watchFilm": "Смотреть ролик",
-    "filmHint": "20 секунд зелёного вдохновения"
+    "filmHint": "28 секунд зелёного вдохновения"
   },
   "sections": {
     "trendy": "Модные растения",
@@ -96,8 +96,9 @@
     "triggerHint": "Создайте свой зелёный уголок",
     "pauseMotion": "Приостановить анимацию",
     "enableMotion": "Включить анимацию",
-    "pausePreview": "Пауза",
-    "playPreview": "Автопросмотр",
+    "pausePreview": "Пауза тура",
+    "playPreview": "Начать тур",
+    "tourScene": "Тур {{current}}/{{total}}",
     "dismissTip": "Закрыть совет",
     "roomMood": "Стиль комнаты",
     "lightLabel": "Освещение",

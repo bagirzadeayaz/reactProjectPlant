@@ -156,6 +156,7 @@
     "intro": "A little company for your green adventures.",
     "water": "Water Pip",
     "hello": "Say hello",
+    "play": "Give Pip a happy spin",
     "personality": "Personality",
     "pot": "Pot color",
     "curious": "Curious",
@@ -175,24 +176,27 @@
         "cart": "A new leaf for your collection!",
         "studio": "Ooh, I like what you did there.",
         "water": "A little rain, a lot of possibility.",
-        "hello": "Hello! What shall we explore?"
+        "hello": "Hello! What shall we explore?",
+        "dance": "A new perspective. All the way around!"
       },
       "cheerful": {
         "peek": "Look at those lovely leaves!",
         "cart": "More plants, more happy!",
         "studio": "Your room is looking leafy!",
         "water": "Rain dance time!",
-        "hello": "You just made my day!"
+        "hello": "You just made my day!",
+        "dance": "Wheee! A little happy leaf dance!"
       },
       "calm": {
         "peek": "Take your time. Let it grow on you.",
         "cart": "A little more green. Lovely.",
         "studio": "A peaceful corner, just for you.",
         "water": "Thank you. That was refreshing.",
-        "hello": "Nice to be here with you."
+        "hello": "Nice to be here with you.",
+        "dance": "A gentle twirl. That feels lovely."
       }
     },
-    "ready": "A little water? A little hello?",
+    "ready": "Tap me for a twirl. Or try a little water.",
     "dragHint": "Drag Pip a little left, right, up or down, then release to switch corners. Tap for settings. Use arrow keys to switch corners or Home to reset."
   }
 }

@@ -42,7 +42,15 @@
       "category": "trendy",
       "imageUrl": "/plants/calathea-plant.png",
       "inStock": true,
-      "createdAt": "2026-01-12T09:00:00.000Z"
+      "createdAt": "2026-01-12T09:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "moist",
+        "size": "medium",
+        "effort": "regular",
+        "humidity": "high",
+        "pets": "safe"
+      }
     },
     {
       "id": "p-2",
@@ -60,7 +68,15 @@
       "category": "trendy",
       "imageUrl": "/plants/cal-874-plant.png",
       "inStock": true,
-      "createdAt": "2026-01-14T09:00:00.000Z"
+      "createdAt": "2026-01-14T09:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "top-dry",
+        "size": "compact",
+        "effort": "regular",
+        "humidity": "average",
+        "pets": "unknown"
+      }
     },
     {
       "id": "p-3",
@@ -78,7 +94,15 @@
       "category": "top-selling",
       "imageUrl": "/plants/desk-plant.png",
       "inStock": true,
-      "createdAt": "2026-01-16T09:00:00.000Z"
+      "createdAt": "2026-01-16T09:00:00.000Z",
+      "care": {
+        "light": "low",
+        "watering": "dry",
+        "size": "compact",
+        "effort": "easy",
+        "humidity": "average",
+        "pets": "unknown"
+      }
     },
     {
       "id": "p-4",
@@ -96,7 +120,15 @@
       "category": "top-selling",
       "imageUrl": "/plants/show-plant.png",
       "inStock": false,
-      "createdAt": "2026-01-18T09:00:00.000Z"
+      "createdAt": "2026-01-18T09:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "top-dry",
+        "size": "large",
+        "effort": "regular",
+        "humidity": "average",
+        "pets": "unknown"
+      }
     },
     {
       "id": "p-5",
@@ -114,7 +146,15 @@
       "category": "best-o2",
       "imageUrl": "/plants/calathea-ai-plant.png",
       "inStock": true,
-      "createdAt": "2026-01-20T09:00:00.000Z"
+      "createdAt": "2026-01-20T09:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "moist",
+        "size": "compact",
+        "effort": "regular",
+        "humidity": "high",
+        "pets": "unknown"
+      }
     },
     {
       "id": "p-6",
@@ -132,7 +172,15 @@
       "category": "best-o2",
       "imageUrl": "/plants/calat-o2-plant.png",
       "inStock": true,
-      "createdAt": "2026-01-22T09:00:00.000Z"
+      "createdAt": "2026-01-22T09:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "moist",
+        "size": "medium",
+        "effort": "regular",
+        "humidity": "high",
+        "pets": "unknown"
+      }
     },
     {
       "id": "p-snake-plant",
@@ -151,7 +199,15 @@
       "imageUrl": "/plants/snake-plant.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "low",
+        "watering": "dry",
+        "size": "medium",
+        "effort": "easy",
+        "humidity": "average",
+        "pets": "toxic"
+      }
     },
     {
       "id": "p-zz-plant",
@@ -170,7 +226,15 @@
       "imageUrl": "/plants/zz-plant.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "low",
+        "watering": "dry",
+        "size": "medium",
+        "effort": "easy",
+        "humidity": "average",
+        "pets": "toxic"
+      }
     },
     {
       "id": "p-peace-lily",
@@ -189,7 +253,15 @@
       "imageUrl": "/plants/peace-lily.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "moist",
+        "size": "medium",
+        "effort": "regular",
+        "humidity": "high",
+        "pets": "toxic"
+      }
     },
     {
       "id": "p-monstera-deliciosa",
@@ -208,7 +280,15 @@
       "imageUrl": "/plants/monstera-deliciosa.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "top-dry",
+        "size": "large",
+        "effort": "regular",
+        "humidity": "high",
+        "pets": "toxic"
+      }
     },
     {
       "id": "p-rubber-plant",
@@ -227,7 +307,15 @@
       "imageUrl": "/plants/rubber-plant.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "top-dry",
+        "size": "large",
+        "effort": "regular",
+        "humidity": "average",
+        "pets": "toxic"
+      }
     },
     {
       "id": "p-golden-pothos",
@@ -246,7 +334,15 @@
       "imageUrl": "/plants/golden-pothos.png",
       "status": "published",
       "inStock": true,
-      "createdAt": "2026-09-29T08:00:00.000Z"
+      "createdAt": "2026-09-29T08:00:00.000Z",
+      "care": {
+        "light": "bright",
+        "watering": "top-dry",
+        "size": "compact",
+        "effort": "easy",
+        "humidity": "average",
+        "pets": "toxic"
+      }
     }
   ],
   "reviews": [

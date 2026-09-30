@@ -15,6 +15,7 @@ export interface ModalProps {
   /** Footer row, usually actions. */
   footer?: ReactNode;
   className?: string;
+  bodyClassName?: string;
 }
 
 /**
@@ -32,6 +33,7 @@ export const Modal = ({
   children,
   footer,
   className,
+  bodyClassName,
 }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
@@ -97,7 +99,7 @@ export const Modal = ({
           </button>
         </div>
 
-        <div className="text-md text-ink-muted">{children}</div>
+        <div className={cn('text-md text-ink-muted', bodyClassName)}>{children}</div>
 
         {footer !== undefined && <div className="flex justify-end gap-gutter">{footer}</div>}
       </div>

@@ -6,7 +6,7 @@
     "playLabel": "Watch the Planto film",
     "backgroundAlt": "Dense green foliage in soft light",
     "watchFilm": "Watch film",
-    "filmHint": "20 seconds of green inspiration"
+    "filmHint": "28 seconds of green inspiration"
   },
   "sections": {
     "trendy": "Our Trendy plants",
@@ -96,8 +96,9 @@
     "triggerHint": "Style your own green corner",
     "pauseMotion": "Pause ambient motion",
     "enableMotion": "Enable ambient motion",
-    "pausePreview": "Pause preview",
-    "playPreview": "Play preview",
+    "pausePreview": "Pause tour",
+    "playPreview": "Start tour",
+    "tourScene": "Tour {{current}}/{{total}}",
     "dismissTip": "Dismiss care tip",
     "roomMood": "Room mood",
     "lightLabel": "Light",

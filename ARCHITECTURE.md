@@ -232,7 +232,10 @@ submitted. Room/pot styling is cosmetic and leaves product prices unchanged.
 
 The home widget lazy-loads Three.js when its canvas approaches the viewport.
 `widgets/home/lib/botanical-model.ts` owns the original curved leaf geometry,
-ceramic bowl, and instanced stones. `botanical-scene.ts` owns rendering, drag and
+ceramic bowl, and instanced stones. Growth advances staggered shoots: stalks extend,
+folded blades unroll along an arc with matching midribs, then widen and deepen in color.
+Only changing growth deforms geometry; mature leaves use inexpensive sway transforms.
+`botanical-scene.ts` owns rendering, drag and
 keyboard rotation, lighting, growth, rain, and GPU resource disposal. React owns
 only the control state, with no per-frame component updates or server writes.
 Vertical touch gestures and wheel events remain available to page scrolling.
@@ -279,6 +282,17 @@ used. The companion is suppressed during admin, basket and checkout flows, error
 other dialogs and focused text inputs. It respects reduced motion and pauses character
 animation in background tabs. The menu can restore a hidden companion.
 
+Pip uses a dynamically imported Three.js scene with procedural sculpted leaves,
+ceramic materials, a modeled face, soft lighting, and mood-specific poses and particles.
+The renderer runs at 30 fps with capped pixel density, pauses offscreen/backgrounded,
+and renders static poses when motion is disabled. The launcher renderer is unmounted
+while the settings preview is open, so only one Pip WebGL context is active. Geometry,
+materials, environment maps, observers and listeners are disposed on unmount. WebGL
+failure retains the accessible controls and a static render of the same 3D character.
+The three pot-color posters also cover loading until the first rendered frame; the old
+CSS character and its leaf artwork are removed. Tapping the settings
+preview triggers a twirl; its water/hello controls and the existing store events drive reactions.
+
 The companion launcher supports mouse, pen and touch dragging with pointer capture
 and a movement threshold that distinguishes dragging from opening settings. Its
 normalized position persists with preferences and is clamped to the viewport above
@@ -298,3 +312,24 @@ The app uses ToastProvider in headless mode: it retains message state and expiry
 Desktop navigation owns one shared active dropdown, scoped to the route; delayed close callbacks only close their own menu. Identical notification text and tone reuse one message and refresh its expiry, preventing repeated basket clicks from stacking duplicate speech bubbles.
 
 Pip notifications now use latest-only delivery: each new message replaces its predecessor, gets a fresh expiry timer, and disappears automatically (including errors). Speech bubbles have no dismiss control and older messages never reappear.
+
+### Plant care specifications
+
+Each product can store a structured `care` profile: light, watering, placement size,
+care effort, humidity and pet safety. The storefront product detail, plant finder and
+comparison read this one profile; the admin product editor writes it. New products
+require a complete profile. The twelve seeded products have profiles in `seed.json`.
+For older records, the Firestore adapter supplies the matching seeded profile by
+product ID until an approved administrator opens the admin area; a versioned,
+idempotent backfill then persists missing profiles without replacing edited values.
+Custom older products with no profile remain visible and can be completed in the
+admin editor. Pet safety remains “unknown” when the sample plant's species is not
+clearly identified.
+The named species' broad care guidance follows RHS houseplant guides; pet labels
+follow ASPCA plant listings and university extension guidance. These are
+environmental ranges, not fixed watering schedules or measured stock dimensions.
+
+## Promotional film
+
+The standalone promo player serves a 28-second pre-rendered film with desktop and phone compositions. Authoring lives in scripts/film; it reuses botanical geometry and existing artwork, renders deterministic frames with Three.js/Canvas, and synthesizes an original soundtrack. FFmpeg and Playwright are external authoring tools, not shipped dependencies. The player exposes six synchronized chapters, native video fallback and EN/RU subtitle tracks. The phone composition is selected once on load to avoid interrupting playback during rotation.
+

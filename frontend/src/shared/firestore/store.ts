@@ -22,6 +22,14 @@ interface Product {
   price: number;
   currency: 'AZN';
   category: string;
+  care?: {
+    light: 'low' | 'bright' | 'direct';
+    watering: 'dry' | 'top-dry' | 'moist';
+    size: 'compact' | 'medium' | 'large';
+    effort: 'easy' | 'regular';
+    humidity: 'average' | 'high';
+    pets: 'safe' | 'toxic' | 'unknown';
+  };
   imageUrl: string;
   gallery?: string[];
   status?: 'published' | 'draft' | 'archived';
@@ -34,6 +42,7 @@ type ProductPatch = Partial<ProductDraft>;
 
 const database = getFirestore(firebaseApp);
 const ADMIN_EMAIL = 'bagirzadeayaz2005@gmail.com';
+const seededCare = new Map(seed.products.map(({ id, care }) => [id, care as Product['care']]));
 
 const toSlug = (value: string): string =>
   value
@@ -100,16 +109,20 @@ const prepareImage = async (
   };
 };
 
-const productFrom = async (id: string, data: Omit<Product, 'id'>): Promise<Product> => ({
-  ...data,
-  id,
-  // Older records predate the storefront's switch to Azerbaijani manat.
-  currency: 'AZN',
-  price: data.status ? data.price : catalogPrice(data.slug, data.price),
-  imageUrl: await resolveStoredImage(data.imageUrl),
-  gallery: await Promise.all((data.gallery ?? []).map(resolveStoredImage)),
-  status: data.status ?? 'published',
-});
+const productFrom = async (id: string, data: Omit<Product, 'id'>): Promise<Product> => {
+  const care = data.care ?? seededCare.get(id);
+  return {
+    ...data,
+    id,
+    ...(care ? { care } : {}),
+    // Older records predate the storefront's switch to Azerbaijani manat.
+    currency: 'AZN',
+    price: data.status ? data.price : catalogPrice(data.slug, data.price),
+    imageUrl: await resolveStoredImage(data.imageUrl),
+    gallery: await Promise.all((data.gallery ?? []).map(resolveStoredImage)),
+    status: data.status ?? 'published',
+  };
+};
 
 const listProducts = async (params: URLSearchParams) => {
   const snapshots = await getDocs(collection(database, 'products'));
@@ -324,21 +337,38 @@ export const ensureAdminSession = async (
 ): Promise<void> => {
   if (!emailVerified || email?.toLowerCase() !== ADMIN_EMAIL) throw new Error('Forbidden');
   const marker = doc(database, 'metadata', 'initial-seed');
-  if ((await getDoc(marker)).exists()) return;
-  const records = [
-    ...seed.categories.map((item) => ['categories', item.slug, item] as const),
-    ...seed.products.flatMap(({ id, ...product }) => [
-      ['products', id, product] as const,
-      ['productSlugs', product.slug, { productId: id }] as const,
-    ]),
-    ...seed.reviews.map(({ id, ...review }) => ['reviews', id, review] as const),
-  ];
-  const existing = await Promise.all(records.map(([name, id]) => getDoc(doc(database, name, id))));
+  if (!(await getDoc(marker)).exists()) {
+    const records = [
+      ...seed.categories.map((item) => ['categories', item.slug, item] as const),
+      ...seed.products.flatMap(({ id, ...product }) => [
+        ['products', id, product] as const,
+        ['productSlugs', product.slug, { productId: id }] as const,
+      ]),
+      ...seed.reviews.map(({ id, ...review }) => ['reviews', id, review] as const),
+    ];
+    const existing = await Promise.all(records.map(([name, id]) => getDoc(doc(database, name, id))));
+    const batch = writeBatch(database);
+    records.forEach(([name, id, data], index) => {
+      if (!existing[index]?.exists()) batch.set(doc(database, name, id), data);
+    });
+    batch.set(marker, { completedAt: new Date().toISOString() });
+    await batch.commit();
+  }
+
+  const careMarker = doc(database, 'metadata', 'care-specifications-v1');
+  if ((await getDoc(careMarker)).exists()) return;
+  const references = seed.products.flatMap(({ id, care }) =>
+    ['products', 'productWorkspace'].map((collectionName) => ({
+      reference: doc(database, collectionName, id),
+      care,
+    })),
+  );
+  const snapshots = await Promise.all(references.map(({ reference }) => getDoc(reference)));
   const batch = writeBatch(database);
-  records.forEach(([name, id, data], index) => {
-    if (!existing[index]?.exists()) batch.set(doc(database, name, id), data);
+  references.forEach(({ reference, care }, index) => {
+    if (snapshots[index]?.exists() && !snapshots[index].data().care) batch.update(reference, { care });
   });
-  batch.set(marker, { completedAt: new Date().toISOString() });
+  batch.set(careMarker, { completedAt: new Date().toISOString() });
   await batch.commit();
 };
 

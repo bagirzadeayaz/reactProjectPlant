@@ -57,6 +57,8 @@ export const BotanicalWorld = () => {
     };
   }, [attempt]);
 
+  const stage =
+    growth < 35 ? 'sprout' : growth < 65 ? 'young' : growth < 90 ? 'unfurling' : 'canopy';
   const reset = () => {
     setNight(false);
     setRain(false);
@@ -150,12 +152,17 @@ export const BotanicalWorld = () => {
             {t(rain ? 'world.stopRain' : 'world.rain')}
           </button>
           <label className="botanical-growth">
-            <span>{t('world.growth')}</span>
+            <span className="botanical-growth-label">
+              {t('world.growth')}
+              <small>{t(`world.stages.${stage}`)}</small>
+            </span>
             <input
               type="range"
-              min="20"
+              min="0"
               max="100"
               value={growth}
+              aria-label={t('world.growth')}
+              aria-valuetext={t(`world.stages.${stage}`)}
               disabled={status !== 'ready'}
               onChange={(event) => {
                 setGrowth(Number(event.target.value));

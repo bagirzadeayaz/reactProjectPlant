@@ -12,7 +12,7 @@ const preferences = z.object({
     .default(null),
 });
 export type CompanionPreferences = z.infer<typeof preferences>;
-export type CompanionReaction = 'idle' | 'peek' | 'cart' | 'studio' | 'water' | 'hello';
+export type CompanionReaction = 'idle' | 'peek' | 'cart' | 'studio' | 'water' | 'hello' | 'dance';
 export interface CompanionState {
   preferences: CompanionPreferences;
   panelOpen: boolean;

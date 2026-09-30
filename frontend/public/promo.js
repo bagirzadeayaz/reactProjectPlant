@@ -4,15 +4,19 @@ const copy = {
     back: 'Back to shop',
     title: 'A little green.',
     subtitle: 'A different feeling.',
-    intro: 'Step inside the world of Planto.\nThree rooms. One fresh perspective.',
-    meta: '20 seconds / Sound on',
+    intro: 'Step inside the world of Planto.\nFrom first leaf to a place called home.',
+    meta: '28 seconds / Sound on',
     playFilm: 'Play film',
     pauseFilm: 'Pause film',
     seek: 'Video position',
-    chapter1: 'Make room',
-    chapter2: 'Minimal',
-    chapter3: 'Evening',
-    chapter4: 'Gallery',
+    chapter1: 'Beginnings',
+    chapter2: 'Grow',
+    chapter3: 'Make room',
+    chapter4: 'Exhale',
+    chapter5: 'Your green',
+    chapter6: 'Planto',
+    captionsOn: 'Show captions',
+    captionsOff: 'Hide captions',
     footer: 'Your next green corner starts here.',
     studio: 'Explore Room Studio',
     mute: 'Mute sound',
@@ -27,15 +31,19 @@ const copy = {
     back: 'В магазин',
     title: 'Немного зелени.',
     subtitle: 'Другое настроение.',
-    intro: 'Загляните в мир Planto.\nТри комнаты. Свежий взгляд.',
-    meta: '20 секунд / Со звуком',
+    intro: 'Загляните в мир Planto.\nОт первого листа до уютного дома.',
+    meta: '28 секунд / Со звуком',
     playFilm: 'Смотреть ролик',
     pauseFilm: 'Пауза',
     seek: 'Положение видео',
-    chapter1: 'Место для зелени',
-    chapter2: 'Минимализм',
-    chapter3: 'Вечер',
-    chapter4: 'Галерея',
+    chapter1: 'Начало',
+    chapter2: 'Рост',
+    chapter3: 'Новый уют',
+    chapter4: 'Выдох',
+    chapter5: 'Ваша зелень',
+    chapter6: 'Planto',
+    captionsOn: 'Показать субтитры',
+    captionsOff: 'Скрыть субтитры',
     footer: 'Ваш зелёный уголок начинается здесь.',
     studio: 'Открыть студию',
     mute: 'Выключить звук',
@@ -55,7 +63,40 @@ for (const el of document.querySelectorAll('a[href="/"],a[href="/catalog"],a[hre
   el.href += '?lang=' + lang;
 document.querySelector('.chapters').setAttribute('aria-label', t.chapters);
 const video = document.querySelector('#film');
+const mobileFilm = window.matchMedia('(max-width: 640px)').matches;
+video.src = mobileFilm ? '/media/planto-promo-mobile.mp4?v=4' : '/media/planto-promo.mp4?v=4';
+video.poster = mobileFilm
+  ? '/media/planto-promo-mobile-poster.jpg?v=4'
+  : '/media/planto-promo-poster.jpg?v=4';
+const captions = document.querySelector('#captions');
+let captionsEnabled = lang === 'ru';
+function updateCaptions() {
+  for (const track of video.textTracks)
+    track.mode = captionsEnabled && track.language === lang ? 'showing' : 'disabled';
+  captions.setAttribute('aria-label', t[captionsEnabled ? 'captionsOff' : 'captionsOn']);
+  captions.setAttribute('aria-pressed', String(captionsEnabled));
+}
+captions.addEventListener('click', () => {
+  captionsEnabled = !captionsEnabled;
+  updateCaptions();
+});
+video.addEventListener('loadedmetadata', updateCaptions);
+updateCaptions();
 const screen = document.querySelector('#screen');
+let hideControlsTimer;
+function revealControls() {
+  screen.dataset.controls = 'true';
+  window.clearTimeout(hideControlsTimer);
+  if (!video.paused)
+    hideControlsTimer = window.setTimeout(() => {
+      screen.dataset.controls = 'false';
+    }, 2000);
+}
+screen.addEventListener('pointermove', revealControls);
+screen.addEventListener('pointerdown', revealControls);
+screen.addEventListener('focusin', revealControls);
+video.addEventListener('play', revealControls);
+video.addEventListener('pause', revealControls);
 const cover = document.querySelector('#cover');
 const mainPlay = document.querySelector('#main-play');
 const toggle = document.querySelector('#toggle');
@@ -71,9 +112,10 @@ function message(text) {
 }
 function update() {
   const playing = !video.paused && !video.ended;
+  screen.dataset.playing = String(playing);
   toggle.setAttribute('aria-label', playing ? t.pauseFilm : t.playFilm);
   toggle.querySelector('use').setAttribute('href', playing ? '#pause' : '#play');
-  mainPlay.hidden = playing;
+  mainPlay.hidden = playing || (video.currentTime > 0 && !video.ended);
   mainPlay.setAttribute('aria-label', t.playFilm);
   mute.setAttribute('aria-label', video.muted ? t.unmute : t.mute);
   mute.querySelector('use').setAttribute('href', video.muted ? '#muted' : '#sound');
@@ -81,15 +123,15 @@ function update() {
     'aria-label',
     document.fullscreenElement ? t.exitFullscreen : t.fullscreen,
   );
-  seek.max = Number.isFinite(video.duration) ? video.duration : 20;
+  seek.max = Number.isFinite(video.duration) ? video.duration : 28;
   seek.value = video.currentTime;
   seek.style.setProperty('--played', `${(video.currentTime / Number(seek.max)) * 100}%`);
   seek.setAttribute(
     'aria-valuetext',
-    clock(video.currentTime) + ' / ' + clock(video.duration || 20),
+    clock(video.currentTime) + ' / ' + clock(video.duration || 28),
   );
   document.querySelector('#time').textContent =
-    clock(video.currentTime) + ' / ' + clock(video.duration || 20);
+    clock(video.currentTime) + ' / ' + clock(video.duration || 28);
   let active = 0;
   chapters.forEach((b, i) => {
     if (video.currentTime >= Number(b.dataset.time)) active = i;

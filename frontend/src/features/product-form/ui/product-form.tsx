@@ -8,6 +8,8 @@ import { Button, Input, Modal, Select } from '../../../shared/ui';
 import type { ProductFormValues } from '../lib/form-values';
 import { ImageField } from './image-field';
 import { LocalizedFields } from './localized-fields';
+import { CareFields } from './care-fields';
+import { ProductPreview } from './product-preview';
 
 export interface ProductFormProps {
   /** From `useProductForm`, owned by the page. */
@@ -60,6 +62,7 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
           />
           <LocalizedFields form={form} field="name" />
           <LocalizedFields form={form} field="description" multiline />
+          <CareFields form={form} />
 
           <section className="product-editor-pricing" aria-label={t('form.pricing')}>
             <h2>{t('form.pricing')}</h2>
@@ -135,20 +138,10 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
         }}
         title={t('inventory.preview')}
         closeLabel={t('dialog.close')}
+        className="admin-preview-dialog"
+        bodyClassName="admin-preview-body"
       >
-        <div className="admin-product-preview">
-          <p>{t('inventory.previewHint')}</p>
-          {values.imageUrl && <img src={values.imageUrl} alt={localized(values.name)} />}
-          <h2>{localized(values.name) || t('image.noPreview')}</h2>
-          <strong>{Number.isFinite(values.price) ? values.price : 0} ₼</strong>
-          <p>{t(values.inStock ? 'table.inStock' : 'table.outOfStock')}</p>
-          <p>{localized(values.description)}</p>
-          <div className="admin-preview-gallery">
-            {(values.gallery ?? []).map((src, index) => (
-              <img src={src} alt={t('inventory.galleryImage', { number: index + 1 })} key={index} />
-            ))}
-          </div>
-        </div>
+        <ProductPreview values={values} />
       </Modal>
     </form>
   );
