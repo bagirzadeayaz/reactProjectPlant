@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { cartActions, type CartLine as CartLineModel } from '../../../entities/cart';
-import type { Product } from '../../../entities/product';
+import { resolvePurchase, type Product } from '../../../entities/product';
 import { useFormatters, useLocale } from '../../../shared/i18n';
 import { cn } from '../../../shared/lib/cn';
 import { Icon } from '../../../shared/ui';
@@ -30,16 +30,24 @@ export const CartLine = ({ line, product, onNavigate }: CartLineProps) => {
   const format = useFormatters(locale);
   const dispatch = useDispatch();
   const name = product ? localized(product.name) : t('common:cart.unavailable');
+  const choice = resolvePurchase(product, line.variantId);
+  const available = choice?.inStock === true && line.quantity <= choice.stock;
 
   const setQuantity = (quantity: number): void => {
-    dispatch(cartActions.quantitySet({ productId: line.productId, quantity }));
+    dispatch(
+      cartActions.quantitySet({
+        ...line,
+        quantity,
+        max: choice?.inStock ? choice.stock : line.quantity,
+      }),
+    );
   };
 
   return (
     <li className="cart-line flex items-center gap-4 py-4">
       {product && (
         <img
-          src={product.imageUrl}
+          src={choice?.imageUrl ?? product.imageUrl}
           alt=""
           width={64}
           height={64}
@@ -60,13 +68,22 @@ export const CartLine = ({ line, product, onNavigate }: CartLineProps) => {
         ) : (
           <span className="text-md text-ink-muted">{name}</span>
         )}
-        {product && (
+        {choice?.variant && (
           <span className="text-sm text-ink-muted">
-            {format.currency(product.price * line.quantity, product.currency)}
+            {t(`product:options.sizes.${choice.variant.size}`)} ·{' '}
+            {t('product:options.height', { height: choice.variant.heightCm })} ·{' '}
+            {t(`product:options.pots.${choice.variant.pot}`)}
           </span>
         )}
-        {product && !product.inStock && (
-          <span className="text-sm text-ink-muted">{t('product:outOfStock')}</span>
+        {choice && product && (
+          <span className="text-sm text-ink-muted">
+            {format.currency(choice.price * line.quantity, product.currency)}
+          </span>
+        )}
+        {!available && (
+          <span className="text-sm text-ink-muted">
+            {t(choice?.inStock ? 'product:options.stockChanged' : 'product:outOfStock')}
+          </span>
         )}
       </div>
 
@@ -88,6 +105,7 @@ export const CartLine = ({ line, product, onNavigate }: CartLineProps) => {
         <span className="min-w-6 text-center tabular-nums text-ink">{line.quantity}</span>
         <button
           type="button"
+          disabled={!choice?.inStock || line.quantity >= choice.stock}
           onClick={() => {
             setQuantity(line.quantity + 1);
           }}
@@ -101,7 +119,7 @@ export const CartLine = ({ line, product, onNavigate }: CartLineProps) => {
       <button
         type="button"
         onClick={() => {
-          dispatch(cartActions.removed(line.productId));
+          dispatch(cartActions.removed(line));
         }}
         aria-label={t('common:cart.remove', { name })}
         className="rounded-icon p-1 text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"

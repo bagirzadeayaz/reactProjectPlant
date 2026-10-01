@@ -8,12 +8,40 @@
     "title": "Care at a glance",
     "intro": "The little things that help this plant feel at home.",
     "note": "Check the soil before watering. Light, seasons and room conditions change what each plant needs.",
-    "light": { "label": "Light", "low": "Low to indirect", "bright": "Bright, indirect", "direct": "Sunny window" },
-    "watering": { "label": "Watering", "dry": "Let soil dry out", "top-dry": "When top 2 cm dries", "moist": "Keep lightly moist" },
-    "size": { "label": "Space", "compact": "Desk or shelf", "medium": "Room corner", "large": "Floor space" },
-    "effort": { "label": "Care level", "easy": "Easygoing", "regular": "Regular attention" },
-    "humidity": { "label": "Humidity", "average": "Typical room", "high": "Humid room" },
-    "pets": { "label": "Around pets", "safe": "Non-toxic to cats & dogs", "toxic": "Keep away from pets", "unknown": "Species not confirmed" }
+    "light": {
+      "label": "Light",
+      "low": "Low to indirect",
+      "bright": "Bright, indirect",
+      "direct": "Sunny window"
+    },
+    "watering": {
+      "label": "Watering",
+      "dry": "Let soil dry out",
+      "top-dry": "When top 2 cm dries",
+      "moist": "Keep lightly moist"
+    },
+    "size": {
+      "label": "Space",
+      "compact": "Desk or shelf",
+      "medium": "Room corner",
+      "large": "Floor space"
+    },
+    "effort": {
+      "label": "Care level",
+      "easy": "Easygoing",
+      "regular": "Regular attention"
+    },
+    "humidity": {
+      "label": "Humidity",
+      "average": "Typical room",
+      "high": "Humid room"
+    },
+    "pets": {
+      "label": "Around pets",
+      "safe": "Non-toxic to cats & dogs",
+      "toxic": "Keep away from pets",
+      "unknown": "Species not confirmed"
+    }
   },
   "reviews": "Reviews",
   "reviewCount_one": "{{count}} review",
@@ -30,5 +58,43 @@
   "decrease": "Decrease quantity",
   "increase": "Increase quantity",
   "category": "Category",
-  "metaDescription": "{{name}} — {{description}}"
+  "metaDescription": "{{name}} — {{description}}",
+  "options": {
+    "size": "Plant size",
+    "height": "{{height}} cm",
+    "pot": "Choose a pot",
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "pots": {
+      "original": "Signature pot",
+      "cream": "Cream ceramic",
+      "sage": "Sage ceramic",
+      "terracotta": "Terracotta"
+    },
+    "note": "Height includes the pot. Every plant grows a little differently; photos show the selected pot style.",
+    "choose": "Choose options",
+    "inBasket": "All available stock is in your basket",
+    "stockChanged": "Quantity exceeds available stock",
+    "from": "From {{price}}"
+  },
+  "delivery": {
+    "title": "Delivery, made easy",
+    "careful": "Packed with care",
+    "area": "Delivery area",
+    "areas": {
+      "baku": "Baku",
+      "absheron": "Absheron & Sumgayit",
+      "regions": "Other Azerbaijan regions"
+    },
+    "arrives": "Estimated arrival",
+    "estimate": "Business days · estimate, not a guarantee",
+    "fee": "Delivery",
+    "free": "Free",
+    "freeFrom": "Free on baskets from {{amount}}",
+    "notAvailable": "This plant cannot be delivered to this area. Choose another area or pickup at checkout.",
+    "pickup": "Free pickup is available at checkout."
+  }
 }

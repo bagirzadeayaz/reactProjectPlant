@@ -121,7 +121,7 @@
     "reviewBasket": "Review basket",
     "continueShopping": "Continue shopping",
     "summary": "Order summary",
-    "deliveryNote": "Plant subtotal only. Delivery costs are not included.",
+    "deliveryNote": "Delivery is charged once per basket. Choose pickup at checkout for free collection.",
     "unavailable": "Remove unavailable or out-of-stock plants from your basket before continuing.",
     "proceed": "Continue to checkout",
     "reviewOrder": "Review your order",
@@ -145,7 +145,8 @@
     "notice": "Your basket is saved in this browser. No order is sent or payment taken.",
     "confirmBasket": "Confirm basket",
     "detailsHint": "These details stay on this page and are not saved or sent.",
-    "complete": "Your selection is saved for this visit."
+    "complete": "Your selection is saved for this visit.",
+    "estimatedTotal": "Estimated total with delivery"
   },
   "companion": {
     "name": "Pip, your plant companion",

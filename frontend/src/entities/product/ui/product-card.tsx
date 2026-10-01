@@ -97,13 +97,13 @@ export const ProductCard = ({
         <p className="product-card__description line-clamp-2 text-md text-ink-muted">
           {localized(product.description)}
         </p>
-        <p className="product-card__stock text-sm text-ink-muted" data-available={product.inStock}>
-          {t(product.inStock ? 'inStock' : 'outOfStock')}
+        <p className="product-card__stock text-sm text-ink-muted" data-available={product.inStock && (!product.variants?.length || product.variants.some((variant) => variant.stock > 0))}>
+          {t(product.inStock && (!product.variants?.length || product.variants.some((variant) => variant.stock > 0)) ? 'inStock' : 'outOfStock')}
         </p>
       </div>
 
       <div className="product-card__price flex items-center justify-between gap-4">
-        <p className="text-h2 text-ink-muted">{format.currency(product.price, product.currency)}</p>
+        <p className="text-h2 text-ink-muted">{product.variants && new Set(product.variants.map((variant) => variant.price)).size > 1 ? t('options.from', { price: format.currency(product.price, product.currency) }) : format.currency(product.price, product.currency)}</p>
         {action}
       </div>
     </motion.article>

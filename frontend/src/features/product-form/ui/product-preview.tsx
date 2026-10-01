@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ImageIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { ProductCare } from '../../../entities/product';
+import { ProductCare, ProductOptions, DeliveryInfo } from '../../../entities/product';
+import type { DeliveryArea } from '../../../shared/commerce';
 import { useFormatters, useLocale } from '../../../shared/i18n';
 import type { ProductFormValues } from '../lib/form-values';
 
@@ -10,7 +11,15 @@ export const ProductPreview = ({ values }: { values: ProductFormValues }) => {
   const { locale, localized } = useLocale();
   const format = useFormatters(locale);
   const [selectedImage, setSelectedImage] = useState(0);
-  const images = [values.imageUrl, ...(values.gallery ?? [])].filter(Boolean);
+  const [variantId, setVariantId] = useState('');
+  const [area, setArea] = useState<DeliveryArea>('baku');
+  const selected =
+    values.variants?.find((variant) => variant.id === variantId) ?? values.variants?.[0];
+  const price = selected?.price ?? values.price;
+  const available = values.inStock && (!selected || selected.stock > 0);
+  const images = [
+    ...new Set([selected?.imageUrl ?? values.imageUrl, ...(values.gallery ?? [])].filter(Boolean)),
+  ];
   const activeImage = images[selectedImage] ?? images[0];
   const name = localized(values.name) || t('image.noPreview');
 
@@ -50,12 +59,22 @@ export const ProductPreview = ({ values }: { values: ProductFormValues }) => {
         <p className="admin-product-preview__hint">{t('inventory.previewHint')}</p>
         <h3>{name}</h3>
         <p className="admin-product-preview__price">
-          {format.currency(Number.isFinite(values.price) ? values.price : 0, values.currency)}
+          {format.currency(Number.isFinite(price) ? price : 0, values.currency)}
         </p>
-        <p className="admin-product-preview__availability" data-available={values.inStock}>
+        <p className="admin-product-preview__availability" data-available={available}>
           <span aria-hidden="true" />
-          {t(values.inStock ? 'table.inStock' : 'table.outOfStock')}
+          {t(available ? 'table.inStock' : 'table.outOfStock')}
         </p>
+        {selected && values.variants && (
+          <ProductOptions
+            variants={values.variants}
+            selected={selected}
+            onChange={(variant) => {
+              setVariantId(variant.id);
+              setSelectedImage(0);
+            }}
+          />
+        )}
         {localized(values.description) && (
           <div className="admin-product-preview__description">
             <h4>{t('fields.description')}</h4>
@@ -63,6 +82,12 @@ export const ProductPreview = ({ values }: { values: ProductFormValues }) => {
           </div>
         )}
         <ProductCare care={values.care} compact />
+        <DeliveryInfo
+          {...(values.delivery ? { delivery: values.delivery } : {})}
+          area={area}
+          onAreaChange={setArea}
+          subtotal={Number.isFinite(price) ? price : 0}
+        />
       </div>
     </div>
   );

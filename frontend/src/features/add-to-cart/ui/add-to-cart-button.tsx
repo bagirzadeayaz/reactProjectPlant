@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { cartActions } from '../../../entities/cart';
-import type { Product } from '../../../entities/product';
+import { cartActions, type CartState } from '../../../entities/cart';
+import { defaultVariant, resolvePurchase, type Product } from '../../../entities/product';
 import { useLocale } from '../../../shared/i18n';
 import { cn } from '../../../shared/lib/cn';
 import { Button, Icon, useToast } from '../../../shared/ui';
@@ -10,6 +10,7 @@ import { Button, Icon, useToast } from '../../../shared/ui';
 export interface AddToCartButtonProps {
   product: Product;
   quantity?: number;
+  variantId?: string;
   /** `icon` is the 57px square bag (node 22:100); `label` is the full "Buy Now" (22:70). */
   variant?: 'icon' | 'label';
   className?: string;
@@ -26,16 +27,45 @@ export const AddToCartButton = ({
   quantity = 1,
   variant = 'icon',
   className,
+  variantId,
 }: AddToCartButtonProps) => {
   const { t } = useTranslation(['common', 'product']);
   const { localized } = useLocale();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { show } = useToast();
+  const choice = resolvePurchase(product, variantId);
+  const inBasket = useSelector((state: { cart: CartState }) =>
+    state.cart.lines
+      .filter(
+        (line) =>
+          line.productId === product.id &&
+          (line.variantId === choice?.variant?.id ||
+            (!line.variantId && choice?.variant?.id === defaultVariant(product)?.id)),
+      )
+      .reduce((sum, line) => sum + line.quantity, 0),
+  );
+  const needsSelection = (product.variants?.length ?? 0) > 1 && !variantId;
+  const available =
+    choice?.inStock === true && (needsSelection || inBasket + quantity <= choice.stock);
 
   const add = (): void => {
-    if (!product.inStock) return;
-    dispatch(cartActions.added({ productId: product.id, quantity }));
+    if (!available) return;
+    if (needsSelection) {
+      void navigate(`/catalog/${product.slug}`);
+      return;
+    }
+    const initial = defaultVariant(product);
+    if (initial)
+      dispatch(cartActions.legacyMapped({ productId: product.id, variantId: initial.id }));
+    dispatch(
+      cartActions.added({
+        productId: product.id,
+        quantity,
+        max: choice.stock,
+        ...(choice.variant ? { variantId: choice.variant.id } : {}),
+      }),
+    );
     show({ message: t('product:addedToCart', { name: localized(product.name) }), tone: 'success' });
   };
 
@@ -44,8 +74,8 @@ export const AddToCartButton = ({
       <button
         type="button"
         onClick={add}
-        disabled={!product.inStock}
-        aria-label={t('common:actions.addToCart')}
+        disabled={!available}
+        aria-label={t(needsSelection ? 'product:options.choose' : 'common:actions.addToCart')}
         className={cn(
           'flex size-(--size-icon-button) shrink-0 items-center justify-center rounded-icon',
           'border-(length:--border-width-control) border-border-control text-ink-muted',
@@ -65,12 +95,18 @@ export const AddToCartButton = ({
       variant="primary"
       onClick={() => {
         add();
-        void navigate('/cart');
+        if (!needsSelection && available) void navigate('/cart');
       }}
-      disabled={!product.inStock}
+      disabled={!available}
       {...(className === undefined ? {} : { className })}
     >
-      {product.inStock ? t('common:actions.buyNow') : t('product:outOfStock')}
+      {needsSelection
+        ? t('product:options.choose')
+        : !choice?.inStock
+          ? t('product:outOfStock')
+          : !available
+            ? t('product:options.inBasket')
+            : t('common:actions.buyNow')}
     </Button>
   );
 };

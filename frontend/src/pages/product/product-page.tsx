@@ -1,10 +1,21 @@
 import { ProductTools } from '../../features/garden-tools';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { cartActions, type CartState } from '../../entities/cart';
 import { DocumentMeta } from '../../shared/lib/document-meta';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useGetCategoriesQuery } from '../../entities/category';
-import { ProductCard, ProductCare, useGetProductBySlugQuery, useGetProductsQuery } from '../../entities/product';
+import {
+  ProductCard,
+  ProductCare,
+  ProductOptions,
+  DeliveryInfo,
+  defaultVariant,
+  resolvePurchase,
+  useGetProductBySlugQuery,
+  useGetProductsQuery,
+} from '../../entities/product';
 import { AddToCartButton } from '../../features/add-to-cart';
 import { useFormatters, useLocale } from '../../shared/i18n';
 import { Button, Container, StatusPage, Skeleton } from '../../shared/ui';
@@ -25,6 +36,9 @@ export const ProductPage = () => {
   const { locale, localized } = useLocale();
   const format = useFormatters(locale);
   const [quantity, setQuantity] = useState(1);
+  const [selection, setSelection] = useState({ productId: '', variantId: '' });
+  const dispatch = useDispatch();
+  const cart = useSelector((state: { cart: CartState }) => state.cart);
 
   const product = useGetProductBySlugQuery(slug);
   const categories = useGetCategoriesQuery(undefined);
@@ -67,6 +81,22 @@ export const ProductPage = () => {
   }
 
   const item = product.data;
+  const selected =
+    (selection.productId === item.id
+      ? item.variants?.find((variant) => variant.id === selection.variantId)
+      : undefined) ?? defaultVariant(item);
+  const purchase = resolvePurchase(item, selected?.id);
+  const available = purchase?.inStock === true;
+  const inBasket = cart.lines
+    .filter(
+      (line) =>
+        line.productId === item.id &&
+        (line.variantId === selected?.id ||
+          (!line.variantId && selected?.id === defaultVariant(item)?.id)),
+    )
+    .reduce((sum, line) => sum + line.quantity, 0);
+  const remaining = Math.max(0, (purchase?.stock ?? 99) - inBasket);
+  const selectedQuantity = Math.min(quantity, Math.max(1, remaining));
   const name = localized(item.name);
   const description = localized(item.description);
   const category = categories.data?.find((entry) => entry.slug === item.category);
@@ -79,7 +109,12 @@ export const ProductPage = () => {
         description={t('product:metaDescription', { name, description })}
       />
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
-        <ProductGallery product={item} name={name} />
+        <ProductGallery
+          key={`${item.id}:${selected?.id ?? ''}`}
+          product={item}
+          name={name}
+          {...(purchase ? { selectedImage: purchase.imageUrl } : {})}
+        />
 
         <div className="flex flex-col gap-6">
           <div className="product-summary-meta">
@@ -87,16 +122,28 @@ export const ProductPage = () => {
             <ProductTools product={item} />
           </div>
           <h1 className="text-h1 font-(--font-weight-heading) text-ink">{name}</h1>
-          <p className="text-h2 text-ink-muted">{format.currency(item.price, item.currency)}</p>
-          <div className="product-availability" data-available={item.inStock} role="status">
+          <p className="text-h2 text-ink-muted" aria-live="polite">
+            {format.currency(purchase?.price ?? item.price, item.currency)}
+          </p>
+          <div className="product-availability" data-available={available} role="status">
             <p className="product-availability__label">
               <span className="product-availability__dot" aria-hidden="true" />
-              {item.inStock ? t('product:inStock') : t('product:outOfStock')}
+              {available ? t('product:inStock') : t('product:outOfStock')}
             </p>
-            {!item.inStock && (
+            {!available && (
               <p className="mt-2 text-sm text-ink-muted">{t('product:outOfStockHint')}</p>
             )}
           </div>
+          {selected && item.variants && (
+            <ProductOptions
+              variants={item.variants}
+              selected={selected}
+              onChange={(variant) => {
+                setSelection({ productId: item.id, variantId: variant.id });
+                setQuantity(1);
+              }}
+            />
+          )}
 
           <section aria-labelledby="product-description">
             <h2 id="product-description" className="text-lg text-ink">
@@ -106,12 +153,30 @@ export const ProductPage = () => {
           </section>
 
           <div className="mt-4 flex flex-wrap items-center gap-6">
-            <QuantityStepper value={quantity} onChange={setQuantity} disabled={!item.inStock} />
-            <AddToCartButton product={item} quantity={quantity} variant="label" />
+            <QuantityStepper
+              value={selectedQuantity}
+              max={Math.max(1, remaining)}
+              onChange={setQuantity}
+              disabled={!available || remaining === 0}
+            />
+            <AddToCartButton
+              product={item}
+              quantity={selectedQuantity}
+              variant="label"
+              {...(selected ? { variantId: selected.id } : {})}
+            />
             <Button as="a" href="/cart" variant="ghost">
               {t('common:checkout.reviewBasket')}
             </Button>
           </div>
+          <DeliveryInfo
+            {...(item.delivery ? { delivery: item.delivery } : {})}
+            area={cart.area ?? 'baku'}
+            onAreaChange={(area) => {
+              dispatch(cartActions.areaSet(area));
+            }}
+            subtotal={(purchase?.price ?? item.price) * selectedQuantity}
+          />
         </div>
       </div>
 

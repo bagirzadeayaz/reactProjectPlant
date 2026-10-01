@@ -10,6 +10,7 @@ import { ImageField } from './image-field';
 import { LocalizedFields } from './localized-fields';
 import { CareFields } from './care-fields';
 import { ProductPreview } from './product-preview';
+import { CommerceFields } from './commerce-fields';
 
 export interface ProductFormProps {
   /** From `useProductForm`, owned by the page. */
@@ -30,6 +31,9 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
   const categories = useGetCategoriesQuery(undefined);
   const [preview, setPreview] = useState(false);
   const values = form.watch();
+  const startingPrice = values.variants?.length
+    ? Math.min(...values.variants.map((variant) => Number.isFinite(variant.price) ? variant.price : 0))
+    : values.price;
 
   const { register, handleSubmit, formState } = form;
   const isEdit = mode === 'edit';
@@ -76,6 +80,8 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
                 step={1}
                 {...errorOf('price')}
                 {...register('price', { valueAsNumber: true })}
+                readOnly={Boolean(values.variants?.length)}
+                value={Number.isFinite(startingPrice) ? startingPrice : ''}
               />
               <Select
                 label={t('fields.category')}
@@ -103,6 +109,7 @@ export const ProductForm = ({ form, mode, onSubmit, onCancel }: ProductFormProps
               {...register('slug')}
             />
           </section>
+          <CommerceFields form={form} />
         </div>
 
         <ImageField form={form} />

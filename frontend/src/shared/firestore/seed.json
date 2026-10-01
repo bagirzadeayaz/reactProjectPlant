@@ -50,6 +50,34 @@
         "effort": "regular",
         "humidity": "high",
         "pets": "safe"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "original",
+          "price": 35,
+          "stock": 12,
+          "imageUrl": "/plants/calathea-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 50,
+          "stock": 6,
+          "imageUrl": "/plants/calathea-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -76,6 +104,34 @@
         "effort": "regular",
         "humidity": "average",
         "pets": "unknown"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 25,
+          "pot": "original",
+          "price": 15,
+          "stock": 12,
+          "imageUrl": "/plants/cal-874-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 35,
+          "pot": "original",
+          "price": 25,
+          "stock": 6,
+          "imageUrl": "/plants/cal-874-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -102,6 +158,52 @@
         "effort": "easy",
         "humidity": "average",
         "pets": "unknown"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 25,
+          "pot": "original",
+          "price": 30,
+          "stock": 12,
+          "imageUrl": "/plants/desk-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 35,
+          "pot": "original",
+          "price": 40,
+          "stock": 6,
+          "imageUrl": "/plants/desk-plant.png"
+        },
+        {
+          "id": "small-sage",
+          "size": "small",
+          "heightCm": 25,
+          "pot": "sage",
+          "price": 38,
+          "stock": 7,
+          "imageUrl": "/plants/desk-plant-sage.webp"
+        },
+        {
+          "id": "medium-sage",
+          "size": "medium",
+          "heightCm": 35,
+          "pot": "sage",
+          "price": 48,
+          "stock": 7,
+          "imageUrl": "/plants/desk-plant-sage.webp"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -128,6 +230,34 @@
         "effort": "regular",
         "humidity": "average",
         "pets": "unknown"
+      },
+      "variants": [
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 70,
+          "stock": 0,
+          "imageUrl": "/plants/show-plant.png"
+        },
+        {
+          "id": "large-original",
+          "size": "large",
+          "heightCm": 90,
+          "pot": "original",
+          "price": 88,
+          "stock": 0,
+          "imageUrl": "/plants/show-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 1
       }
     },
     {
@@ -154,6 +284,34 @@
         "effort": "regular",
         "humidity": "high",
         "pets": "unknown"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 25,
+          "pot": "original",
+          "price": 18,
+          "stock": 12,
+          "imageUrl": "/plants/calathea-ai-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 35,
+          "pot": "original",
+          "price": 28,
+          "stock": 6,
+          "imageUrl": "/plants/calathea-ai-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -180,6 +338,34 @@
         "effort": "regular",
         "humidity": "high",
         "pets": "unknown"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "original",
+          "price": 45,
+          "stock": 12,
+          "imageUrl": "/plants/calat-o2-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 60,
+          "stock": 6,
+          "imageUrl": "/plants/calat-o2-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -207,6 +393,52 @@
         "effort": "easy",
         "humidity": "average",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "original",
+          "price": 25,
+          "stock": 12,
+          "imageUrl": "/plants/snake-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 40,
+          "stock": 6,
+          "imageUrl": "/plants/snake-plant.png"
+        },
+        {
+          "id": "small-sage",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "sage",
+          "price": 33,
+          "stock": 7,
+          "imageUrl": "/plants/snake-plant-sage.webp"
+        },
+        {
+          "id": "medium-sage",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "sage",
+          "price": 48,
+          "stock": 0,
+          "imageUrl": "/plants/snake-plant-sage.webp"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -234,6 +466,34 @@
         "effort": "easy",
         "humidity": "average",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "original",
+          "price": 35,
+          "stock": 12,
+          "imageUrl": "/plants/zz-plant.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 50,
+          "stock": 6,
+          "imageUrl": "/plants/zz-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -261,6 +521,34 @@
         "effort": "regular",
         "humidity": "high",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 40,
+          "pot": "original",
+          "price": 30,
+          "stock": 12,
+          "imageUrl": "/plants/peace-lily.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 45,
+          "stock": 6,
+          "imageUrl": "/plants/peace-lily.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     },
     {
@@ -288,6 +576,52 @@
         "effort": "regular",
         "humidity": "high",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 45,
+          "stock": 12,
+          "imageUrl": "/plants/monstera-deliciosa.png"
+        },
+        {
+          "id": "large-original",
+          "size": "large",
+          "heightCm": 90,
+          "pot": "original",
+          "price": 63,
+          "stock": 6,
+          "imageUrl": "/plants/monstera-deliciosa.png"
+        },
+        {
+          "id": "medium-sage",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "sage",
+          "price": 53,
+          "stock": 7,
+          "imageUrl": "/plants/monstera-deliciosa-sage.webp"
+        },
+        {
+          "id": "large-sage",
+          "size": "large",
+          "heightCm": 90,
+          "pot": "sage",
+          "price": 71,
+          "stock": 7,
+          "imageUrl": "/plants/monstera-deliciosa-sage.webp"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 1
       }
     },
     {
@@ -315,6 +649,34 @@
         "effort": "regular",
         "humidity": "average",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 60,
+          "pot": "original",
+          "price": 40,
+          "stock": 12,
+          "imageUrl": "/plants/rubber-plant.png"
+        },
+        {
+          "id": "large-original",
+          "size": "large",
+          "heightCm": 90,
+          "pot": "original",
+          "price": 58,
+          "stock": 6,
+          "imageUrl": "/plants/rubber-plant.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 1
       }
     },
     {
@@ -342,6 +704,34 @@
         "effort": "easy",
         "humidity": "average",
         "pets": "toxic"
+      },
+      "variants": [
+        {
+          "id": "small-original",
+          "size": "small",
+          "heightCm": 25,
+          "pot": "original",
+          "price": 18,
+          "stock": 12,
+          "imageUrl": "/plants/golden-pothos.png"
+        },
+        {
+          "id": "medium-original",
+          "size": "medium",
+          "heightCm": 35,
+          "pot": "original",
+          "price": 28,
+          "stock": 6,
+          "imageUrl": "/plants/golden-pothos.png"
+        }
+      ],
+      "delivery": {
+        "areas": [
+          "baku",
+          "absheron",
+          "regions"
+        ],
+        "dispatchDays": 0
       }
     }
   ],

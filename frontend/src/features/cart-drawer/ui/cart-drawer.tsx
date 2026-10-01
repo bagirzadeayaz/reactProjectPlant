@@ -3,8 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
-import { cartActions, cartSelectors, type CartState } from '../../../entities/cart';
-import { useGetBasketProductsQuery } from '../../../entities/product';
+import { cartActions, cartSelectors, cartLineKey, type CartState } from '../../../entities/cart';
+import {
+  defaultVariant,
+  resolvePurchase,
+  useGetBasketProductsQuery,
+} from '../../../entities/product';
 import { useFormatters, useLocale } from '../../../shared/i18n';
 import { cn } from '../../../shared/lib/cn';
 import { Button, EmptyState, Icon, useFocusTrap } from '../../../shared/ui';
@@ -39,6 +43,14 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
     { skip: !isOpen },
   );
   const products = new Map((data ?? []).map((product) => [product.id, product]));
+  useEffect(() => {
+    for (const line of lines) {
+      const product = data?.find((item) => item.id === line.productId);
+      const initial = product ? defaultVariant(product) : undefined;
+      if (!line.variantId && initial)
+        dispatch(cartActions.legacyMapped({ productId: line.productId, variantId: initial.id }));
+    }
+  }, [dispatch, lines, data]);
 
   useFocusTrap(panelRef, isOpen);
 
@@ -60,7 +72,8 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
   const subtotal = lines.reduce((total, line) => {
     const product = products.get(line.productId);
-    return product ? total + product.price * line.quantity : total;
+    const choice = resolvePurchase(product, line.variantId);
+    return choice ? total + choice.price * line.quantity : total;
   }, 0);
   const currency = data?.[0]?.currency ?? 'AZN';
 
@@ -124,7 +137,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
               ) : (
                 lines.map((line) => (
                   <CartLine
-                    key={line.productId}
+                    key={cartLineKey(line)}
                     line={line}
                     product={products.get(line.productId)}
                     onNavigate={onClose}

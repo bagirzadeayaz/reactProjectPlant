@@ -12,6 +12,20 @@ service cloud.firestore {
         items[index].size() > 0 && items[index].size() <= 2048);
     }
 
+    function validVariant(items, index) {
+      let variant = items.size() > index ? items[index] : {};
+      return items.size() <= index || (variant is map &&
+        variant.keys().hasAll(['id', 'size', 'heightCm', 'pot', 'price', 'stock', 'imageUrl']) &&
+        variant.keys().hasOnly(['id', 'size', 'heightCm', 'pot', 'price', 'stock', 'imageUrl']) &&
+        variant.id is string && variant.id.matches('^[a-zA-Z0-9-]{1,80}$') &&
+        variant.size in ['small', 'medium', 'large'] &&
+        variant.heightCm is int && variant.heightCm >= 5 && variant.heightCm <= 300 &&
+        variant.pot in ['original', 'cream', 'sage', 'terracotta'] &&
+        variant.price is int && variant.price >= 0 &&
+        variant.stock is int && variant.stock >= 0 && variant.stock <= 999 &&
+        variant.imageUrl is string && variant.imageUrl.size() > 0 && variant.imageUrl.size() <= 2048);
+    }
+
     function validProduct() {
       let data = request.resource.data;
       return data.keys().hasAll([
@@ -19,7 +33,7 @@ service cloud.firestore {
         'category', 'imageUrl', 'inStock', 'createdAt'
       ]) && data.keys().hasOnly([
         'slug', 'name', 'description', 'price', 'currency',
-        'category', 'imageUrl', 'inStock', 'createdAt', 'gallery', 'status', 'care'
+        'category', 'imageUrl', 'inStock', 'createdAt', 'gallery', 'status', 'care', 'variants', 'delivery'
       ]) &&
         data.slug is string && data.slug.size() > 0 && data.slug.size() <= 120 &&
         data.name is map && data.name.keys().hasAll(['en', 'ru']) &&
@@ -31,6 +45,19 @@ service cloud.firestore {
         data.category is string && data.category.size() > 0 &&
         data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() <= 2048 &&
         data.inStock is bool && data.createdAt is string &&
+        (!('variants' in data) || (data.variants is list && data.variants.size() <= 12 &&
+          validVariant(data.variants, 0) && validVariant(data.variants, 1) &&
+          validVariant(data.variants, 2) && validVariant(data.variants, 3) &&
+          validVariant(data.variants, 4) && validVariant(data.variants, 5) &&
+          validVariant(data.variants, 6) && validVariant(data.variants, 7) &&
+          validVariant(data.variants, 8) && validVariant(data.variants, 9) &&
+          validVariant(data.variants, 10) && validVariant(data.variants, 11))) &&
+        (!('delivery' in data) || (data.delivery is map &&
+          data.delivery.keys().hasAll(['areas', 'dispatchDays']) &&
+          data.delivery.keys().hasOnly(['areas', 'dispatchDays']) &&
+          data.delivery.areas is list && data.delivery.areas.size() >= 1 && data.delivery.areas.size() <= 3 &&
+          data.delivery.areas.hasOnly(['baku', 'absheron', 'regions']) &&
+          data.delivery.dispatchDays is int && data.delivery.dispatchDays >= 0 && data.delivery.dispatchDays <= 14)) &&
         (!('status' in data) || data.status in ['published', 'draft', 'archived']) &&
         (!('care' in data) || (data.care is map &&
           data.care.keys().hasAll(['light', 'watering', 'size', 'effort', 'humidity', 'pets']) &&

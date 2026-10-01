@@ -7,5 +7,6 @@
   "notWhole": "Enter a whole number",
   "invalidUrl": "Enter a valid URL",
   "bothLanguages": "Fill in both English and Russian",
-  "invalid": "Invalid value"
+  "invalid": "Invalid value",
+  "duplicateOption": "This size and pot combination already exists."
 }

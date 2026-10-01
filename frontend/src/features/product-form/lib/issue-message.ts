@@ -10,6 +10,7 @@ export type ValidationTranslate = (
     | 'negative'
     | 'notWhole'
     | 'invalidUrl'
+    | 'duplicateOption'
     | 'invalid',
   values?: Record<string, number>,
 ) => string;
@@ -23,6 +24,8 @@ export type ValidationTranslate = (
  */
 export const issueMessage = (issue: z.core.$ZodRawIssue, t: ValidationTranslate): string => {
   switch (issue.code) {
+    case 'custom':
+      return t('duplicateOption');
     case 'too_small': {
       if (issue.origin === 'number') return t('negative');
       const min = Number(issue.minimum);

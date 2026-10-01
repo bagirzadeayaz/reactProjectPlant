@@ -32,12 +32,35 @@ export const createProductService = ({
       const base = toSlug(draft.slug || draft.name.en);
       if (!base) throw new AppError('VALIDATION', 'Invalid product slug');
       const imageUrl = await images.store(draft.imageUrl, token);
+      const variants =
+        draft.variants === undefined
+          ? undefined
+          : await Promise.all(
+              draft.variants.map(async (variant) => ({
+                ...variant,
+                imageUrl: await images.store(variant.imageUrl, token),
+              })),
+            );
       const id = newId();
       const createdAt = now();
       for (let suffix = 1; suffix < 1000; suffix += 1) {
         const slug = suffix === 1 ? base : `${base}-${suffix}`;
         if (await products.hasSlug(slug)) continue;
-        const product = { ...draft, id, slug, imageUrl, createdAt };
+        const product = {
+          ...draft,
+          ...(variants
+            ? {
+                variants,
+                price: variants.length
+                  ? Math.min(...variants.map((variant) => variant.price))
+                  : draft.price,
+              }
+            : {}),
+          id,
+          slug,
+          imageUrl,
+          createdAt,
+        };
         try {
           await products.create(product, token);
           return product;
@@ -61,6 +84,23 @@ export const createProductService = ({
         ? await images.store(patch.imageUrl, token)
         : record.product.imageUrl;
       const product = { ...record.product, ...patch, slug, imageUrl };
+      if (patch.variants !== undefined)
+        product.variants = await Promise.all(
+          patch.variants.map(async (variant) => ({
+            ...variant,
+            imageUrl: await images.store(variant.imageUrl, token),
+          })),
+        );
+      else if (patch.price !== undefined && product.variants?.length) {
+        const difference =
+          patch.price - Math.min(...product.variants.map((variant) => variant.price));
+        product.variants = product.variants.map((variant) => ({
+          ...variant,
+          price: Math.max(0, variant.price + difference),
+        }));
+      }
+      if (product.variants?.length)
+        product.price = Math.min(...product.variants.map((variant) => variant.price));
       await products.update(product, record, token);
       return product;
     },

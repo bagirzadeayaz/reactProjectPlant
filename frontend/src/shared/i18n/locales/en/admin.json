@@ -178,5 +178,23 @@
     "addImage": "Add photo",
     "preview": "Preview product",
     "previewHint": "Current edits · Save to apply changes"
+  },
+  "options": {
+    "title": "Sizes, pots & stock",
+    "hint": "Each size and pot combination has its own price, stock and matching photo. Leave this empty to sell one standard product. The catalog uses the lowest option price.",
+    "option": "Option {{number}}",
+    "remove": "Remove option {{number}}",
+    "height": "Height with pot (cm)",
+    "stock": "Units in stock",
+    "photo": "Option photo",
+    "photoHint": "Use a photo of this exact pot style. A zero stock quantity marks it unavailable.",
+    "upload": "Upload photo for option {{number}}",
+    "add": "Add size / pot combination"
+  },
+  "delivery": {
+    "title": "Delivery availability",
+    "hint": "Choose where this plant can be shipped. Pickup remains available. Store delivery rates apply to the whole basket.",
+    "dispatch": "Extra preparation days",
+    "dispatchHint": "Add 0–14 business days to the arrival estimate. Use 0 for ready-to-ship plants."
   }
 }

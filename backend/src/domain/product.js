@@ -24,6 +24,35 @@ const fields = {
   care,
   imageUrl,
   inStock: z.boolean(),
+  variants: z
+    .array(
+      z.object({
+        id: z.string().regex(/^[a-zA-Z0-9-]{1,80}$/),
+        size: z.enum(['small', 'medium', 'large']),
+        heightCm: z.number().int().min(5).max(300),
+        pot: z.enum(['original', 'cream', 'sage', 'terracotta']),
+        price: z.number().int().nonnegative(),
+        stock: z.number().int().min(0).max(999),
+        imageUrl,
+      }),
+    )
+    .max(12)
+    .refine(
+      (variants) =>
+        new Set(variants.map((variant) => variant.id)).size === variants.length &&
+        new Set(variants.map((variant) => `${variant.size}:${variant.pot}`)).size ===
+          variants.length,
+    )
+    .optional(),
+  delivery: z
+    .object({
+      areas: z
+        .array(z.enum(['baku', 'absheron', 'regions']))
+        .min(1)
+        .max(3),
+      dispatchDays: z.number().int().min(0).max(14),
+    })
+    .optional(),
 };
 export const draftSchema = z.strictObject(fields);
 export const patchSchema = draftSchema.partial();

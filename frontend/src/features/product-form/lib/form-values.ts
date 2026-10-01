@@ -1,4 +1,5 @@
 import type { Product, ProductDraft } from '../../../entities/product';
+import { DEFAULT_DELIVERY } from '../../../shared/commerce';
 
 export type ProductFormValues = ProductDraft;
 
@@ -22,6 +23,8 @@ export const EMPTY_PRODUCT: ProductFormValues = {
   gallery: [],
   status: 'draft',
   inStock: true,
+  variants: [],
+  delivery: DEFAULT_DELIVERY,
 };
 
 /** The editable part of an existing product, in form order. */
@@ -37,4 +40,6 @@ export const toFormValues = (product: Product): ProductFormValues => ({
   gallery: product.gallery ?? [],
   status: product.status ?? 'published',
   inStock: product.inStock,
+  variants: product.variants?.map((variant) => ({ ...variant })) ?? [],
+  delivery: product.delivery ?? DEFAULT_DELIVERY,
 });

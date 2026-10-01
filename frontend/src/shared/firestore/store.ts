@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseApp } from '../config/firebase';
 import seed from './seed.json';
+import type { ProductVariant, ProductDelivery } from '../commerce';
 
 interface Product {
   id: string;
@@ -30,6 +31,8 @@ interface Product {
     humidity: 'average' | 'high';
     pets: 'safe' | 'toxic' | 'unknown';
   };
+  variants?: ProductVariant[];
+  delivery?: ProductDelivery;
   imageUrl: string;
   gallery?: string[];
   status?: 'published' | 'draft' | 'archived';
@@ -43,6 +46,16 @@ type ProductPatch = Partial<ProductDraft>;
 const database = getFirestore(firebaseApp);
 const ADMIN_EMAIL = 'bagirzadeayaz2005@gmail.com';
 const seededCare = new Map(seed.products.map(({ id, care }) => [id, care as Product['care']]));
+const seededCommerce = new Map(
+  seed.products.map((product) => [
+    product.id,
+    {
+      price: product.price,
+      variants: product.variants as ProductVariant[],
+      delivery: product.delivery as ProductDelivery,
+    },
+  ]),
+);
 
 const toSlug = (value: string): string =>
   value
@@ -111,13 +124,30 @@ const prepareImage = async (
 
 const productFrom = async (id: string, data: Omit<Product, 'id'>): Promise<Product> => {
   const care = data.care ?? seededCare.get(id);
+  const price = data.status ? data.price : catalogPrice(data.slug, data.price);
+  const seeded = seededCommerce.get(id);
+  const variants =
+    data.variants ??
+    seeded?.variants.map((variant) => ({
+      ...variant,
+      price: Math.max(0, variant.price + price - seeded.price),
+    })) ??
+    [];
   return {
     ...data,
     id,
     ...(care ? { care } : {}),
     // Older records predate the storefront's switch to Azerbaijani manat.
     currency: 'AZN',
-    price: data.status ? data.price : catalogPrice(data.slug, data.price),
+    price: variants.length ? Math.min(...variants.map((variant) => variant.price)) : price,
+    variants: await Promise.all(
+      variants.map(async (variant) => ({
+        ...variant,
+        imageUrl: await resolveStoredImage(variant.imageUrl),
+      })),
+    ),
+    delivery: data.delivery ??
+      seeded?.delivery ?? { areas: ['baku', 'absheron', 'regions'], dispatchDays: 0 },
     imageUrl: await resolveStoredImage(data.imageUrl),
     gallery: await Promise.all((data.gallery ?? []).map(resolveStoredImage)),
     status: data.status ?? 'published',
@@ -204,7 +234,20 @@ const saveProduct = async (
   const prepared = patch.imageUrl === undefined ? null : await prepareImage(patch.imageUrl);
   const gallery =
     patch.gallery === undefined ? null : await Promise.all(patch.gallery.map(prepareImage));
-  const images = [...(prepared ? [prepared] : []), ...(gallery ?? [])];
+  const variants =
+    patch.variants === undefined
+      ? null
+      : await Promise.all(
+          patch.variants.map(async (variant) => ({
+            variant,
+            image: await prepareImage(variant.imageUrl),
+          })),
+        );
+  const images = [
+    ...(prepared ? [prepared] : []),
+    ...(gallery ?? []),
+    ...(variants?.map(({ image }) => image) ?? []),
+  ];
   const result = await runTransaction(database, async (transaction) => {
     const publicRef = doc(database, 'products', id);
     const privateRef = doc(database, 'productWorkspace', id);
@@ -223,14 +266,28 @@ const saveProduct = async (
     ) as ProductPatch;
     const data = {
       ...current,
-      ...(current ? { price: current.status ? current.price : catalogPrice(current.slug, current.price) } : {}),
+      ...(current
+        ? { price: current.status ? current.price : catalogPrice(current.slug, current.price) }
+        : {}),
       ...changes,
       id,
       createdAt: current?.createdAt ?? new Date().toISOString(),
       status: patch.status ?? current?.status ?? (creating ? 'draft' : 'published'),
       ...(prepared ? { imageUrl: prepared.url } : {}),
       ...(gallery ? { gallery: gallery.map((image) => image.url) } : {}),
+      ...(variants
+        ? { variants: variants.map(({ variant, image }) => ({ ...variant, imageUrl: image.url })) }
+        : {}),
     } as Product;
+    if (patch.price !== undefined && !variants && data.variants?.length) {
+      const difference = patch.price - Math.min(...data.variants.map((variant) => variant.price));
+      data.variants = data.variants.map((variant) => ({
+        ...variant,
+        price: Math.max(0, variant.price + difference),
+      }));
+    }
+    if (data.variants?.length)
+      data.price = Math.min(...data.variants.map((variant) => variant.price));
     if (!(await transaction.get(doc(database, 'categories', data.category))).exists())
       throw new Error('Unknown category');
     const base = toSlug(data.slug || data.name.en);
@@ -346,7 +403,9 @@ export const ensureAdminSession = async (
       ]),
       ...seed.reviews.map(({ id, ...review }) => ['reviews', id, review] as const),
     ];
-    const existing = await Promise.all(records.map(([name, id]) => getDoc(doc(database, name, id))));
+    const existing = await Promise.all(
+      records.map(([name, id]) => getDoc(doc(database, name, id))),
+    );
     const batch = writeBatch(database);
     records.forEach(([name, id, data], index) => {
       if (!existing[index]?.exists()) batch.set(doc(database, name, id), data);
@@ -356,20 +415,51 @@ export const ensureAdminSession = async (
   }
 
   const careMarker = doc(database, 'metadata', 'care-specifications-v1');
-  if ((await getDoc(careMarker)).exists()) return;
-  const references = seed.products.flatMap(({ id, care }) =>
-    ['products', 'productWorkspace'].map((collectionName) => ({
-      reference: doc(database, collectionName, id),
-      care,
+  if (!(await getDoc(careMarker)).exists()) {
+    const references = seed.products.flatMap(({ id, care }) =>
+      ['products', 'productWorkspace'].map((collectionName) => ({
+        reference: doc(database, collectionName, id),
+        care,
+      })),
+    );
+    const snapshots = await Promise.all(references.map(({ reference }) => getDoc(reference)));
+    const batch = writeBatch(database);
+    references.forEach(({ reference, care }, index) => {
+      if (snapshots[index]?.exists() && !snapshots[index].data().care)
+        batch.update(reference, { care });
+    });
+    batch.set(careMarker, { completedAt: new Date().toISOString() });
+    await batch.commit();
+  }
+
+  const commerceMarker = doc(database, 'metadata', 'product-options-delivery-v1');
+  if ((await getDoc(commerceMarker)).exists()) return;
+  const commerceReferences = seed.products.flatMap((product) =>
+    ['products', 'productWorkspace'].map((name) => ({
+      reference: doc(database, name, product.id),
+      product,
     })),
   );
-  const snapshots = await Promise.all(references.map(({ reference }) => getDoc(reference)));
-  const batch = writeBatch(database);
-  references.forEach(({ reference, care }, index) => {
-    if (snapshots[index]?.exists() && !snapshots[index].data().care) batch.update(reference, { care });
+  const commerceSnapshots = await Promise.all(
+    commerceReferences.map(({ reference }) => getDoc(reference)),
+  );
+  const commerceBatch = writeBatch(database);
+  commerceReferences.forEach(({ reference, product }, index) => {
+    const snapshot = commerceSnapshots[index];
+    if (!snapshot?.exists()) return;
+    const data = snapshot.data() as Omit<Product, 'id'>;
+    const price = data.status ? data.price : catalogPrice(data.slug, data.price);
+    const changes: ProductPatch = {};
+    if (data.variants === undefined)
+      changes.variants = (product.variants as ProductVariant[]).map((variant) => ({
+        ...variant,
+        price: Math.max(0, variant.price + price - product.price),
+      }));
+    if (data.delivery === undefined) changes.delivery = product.delivery as ProductDelivery;
+    if (Object.keys(changes).length) commerceBatch.update(reference, changes);
   });
-  batch.set(careMarker, { completedAt: new Date().toISOString() });
-  await batch.commit();
+  commerceBatch.set(commerceMarker, { completedAt: new Date().toISOString() });
+  await commerceBatch.commit();
 };
 
 export const subscribeInFirestore = async (value: string): Promise<void> => {

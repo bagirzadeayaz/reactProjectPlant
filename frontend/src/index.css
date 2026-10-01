@@ -1,5 +1,6 @@
 /* Typefaces are loaded from index.html without blocking first paint. */
 @import 'tailwindcss';
+@import './shared/commerce/commerce.css';
 
 @theme {
   /* ─────────────────────────────────────────────────────────────────────────

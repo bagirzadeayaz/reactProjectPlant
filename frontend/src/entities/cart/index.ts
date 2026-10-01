@@ -2,6 +2,7 @@ export {
   cartActions,
   cartSelectors,
   cartSlice,
+  cartLineKey,
   type CartLine,
   type CartState,
 } from './model/cart-slice';

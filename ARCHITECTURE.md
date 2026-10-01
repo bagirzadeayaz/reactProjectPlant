@@ -329,7 +329,37 @@ The named species' broad care guidance follows RHS houseplant guides; pet labels
 follow ASPCA plant listings and university extension guidance. These are
 environmental ranges, not fixed watering schedules or measured stock dimensions.
 
-## Promotional film
+## Product options and delivery
+
+Products may store up to twelve stable size/pot variants. Each variant owns its
+height including pot, whole-manat price, available quantity and matching photo.
+The shared commerce contract defines the option enums and delivery areas;
+entity purchase helpers resolve a selection against the current catalog.
+Cart lines store product ID, variant ID and quantity, while prices and stock
+remain in the RTK Query catalog. Older ID-only lines migrate to the default
+available variant. Removed or depleted variants block checkout rather than
+silently selecting a different item. Confirmation rechecks prices and stock,
+then stores a receipt snapshot locally; this demonstration does not reserve
+inventory or submit an order.
+
+Delivery policy uses Baku (4 manat, 1–2 business days), Absheron/Sumgayit
+(7 manat, 2–3 days) and other Azerbaijan regions (10 manat, 3–5 days), with
+free delivery from 80 manat and free pickup. These are sample store settings
+in `shared/commerce`, not externally verified carrier quotes. Per-product
+regions and additional preparation days are editable in admin. Mixed baskets
+use the intersection of eligible regions and the longest preparation time;
+one delivery fee applies to the whole basket. The selected area persists with
+the cart, and the checkout summary and receipt include the delivery fee.
+
+The twelve seed products include sample heights, stock and size options;
+Desk plant, Snake plant and Monstera include generated sage-pot photos.
+The adapter supplies these fields for existing seed IDs until the additive
+backfill stores them, without restoring deleted records or replacing saved
+options. Variant uploads join cover/gallery uploads in the product transaction.
+Frontend and Node schemas and Firestore rules validate these additional fields;
+the existing approved-admin allowlist remains responsible for catalog writes.
+
+## Promotional film rendering
 
 The standalone promo player serves a 28-second pre-rendered film with desktop and phone compositions. Authoring lives in scripts/film; it reuses botanical geometry and existing artwork, renders deterministic frames with Three.js/Canvas, and synthesizes an original soundtrack. FFmpeg and Playwright are external authoring tools, not shipped dependencies. The player exposes six synchronized chapters, native video fallback and EN/RU subtitle tracks. The phone composition is selected once on load to avoid interrupting playback during rotation.
 

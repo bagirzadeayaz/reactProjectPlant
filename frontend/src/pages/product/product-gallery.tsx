@@ -7,12 +7,13 @@ import { ResponsiveImage } from '../../shared/ui';
 export interface ProductGalleryProps {
   product: Product;
   name: string;
+  selectedImage?: string;
 }
 
-export const ProductGallery = ({ product, name }: ProductGalleryProps) => {
+export const ProductGallery = ({ product, name, selectedImage }: ProductGalleryProps) => {
   const { t } = useTranslation('product');
   const [frame, setFrame] = useState(0);
-  const images = [product.imageUrl, ...(product.gallery ?? [])];
+  const images = [...new Set([selectedImage ?? product.imageUrl, ...(product.gallery ?? [])])];
   const activeIndex = Math.min(frame, images.length - 1);
   const activeImage = images[activeIndex] ?? product.imageUrl;
   const sources = activeImage === product.imageUrl ? productImageSources(product) : undefined;

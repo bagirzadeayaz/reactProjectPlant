@@ -54,7 +54,7 @@ export const productApi = baseApi.injectEndpoints({
     getBasketProducts: build.query<Product[], string[]>({
       async queryFn(ids, _api, _options, query) {
         const results = await Promise.all(
-          ids.map(async (id) => query(`/products/${encodeURIComponent(id)}`)),
+          [...new Set(ids)].map(async (id) => query(`/products/${encodeURIComponent(id)}`)),
         );
         const failed = results.find(
           (result) => result.error && result.error.error !== 'Product not found',
@@ -62,7 +62,10 @@ export const productApi = baseApi.injectEndpoints({
         if (failed?.error) return { error: failed.error };
         return { data: results.flatMap((result) => (result.data ? [result.data as Product] : [])) };
       },
-      providesTags: ['Product'],
+      providesTags: (result) => [
+        { type: 'Product' as const, id: 'LIST' },
+        ...(result ?? []).map((product) => ({ type: 'Product' as const, id: product.id })),
+      ],
     }),
     getProducts: build.query<ProductPage, ProductListParams | undefined>({
       query: (params) => ({ url: '/products', params: { ...params } }),
